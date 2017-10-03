@@ -3,34 +3,53 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_anuncio"
+            android:icon="@drawable/ic_add_circle_black_24dp"
+            android:title="@string/navigation_drawer_novo_anuncio" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_negociacoes"
+            android:icon="@drawable/ic_message_black_24dp"
+            android:title="@string/navigation_drawer_negociacoes" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_lista_desejos"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="@string/navigation_drawer_lista_desejos" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_categorias"
+            android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+            android:title="@string/navigation_drawer_categorias" />
+        <item
+            android:id="@+id/nav_perfil"
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="@string/navigation_drawer_perfil" />
+
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Controle">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_configuracoes"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="@string/navigation_drawer_configuracoes" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_sair"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="@string/navigation_drawer_sair" />
         </menu>
     </item>
+
+
+    <!--<item android:title="Communicate">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_share"-->
+                <!--android:icon="@drawable/ic_menu_share"-->
+                <!--android:title="Share" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_send"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="Send" />-->
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>

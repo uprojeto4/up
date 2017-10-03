@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\26.0.0-alpha1\support-annotations-26.0.0-alpha1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="023ee503b631f69511e335a061ea008f8da60f40">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\support-annotations-26.0.0-alpha1_e5ed3c1d2e58089308a022aebe650c9047573bda.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.2\constraint-layout-solver-1.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\constraint-layout-solver-1.0.2_ecafe07fd4f99cba4c8a16710bfc5f28cff0b208.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\18274e75efa5bc56d423d115de93d13477ee2efa\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="6a022bf00ccd0948a8180c505e8e458bbddd43a6">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_009994101998e587cc46c9dec785b0318f6d67b9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\b196dc8a89c34c649fc71de28364e6f375ad0ef3\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="c4f45092eee6cdf1a5dbd597b2b6819be652ce2e">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_9b460a8e9fb329b49ed2c321eb995c5d07ec51e7.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\0771c9a59a53257939875b1572022759acae39cf\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_ecc561eb54a0623b9be5b64a51b73127b4fe82c3.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\up\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="C:\up\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_e095fd856fcc24ed7e15816056f2ebab7500be16\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\92d8858833850eb253ff0ca5b2453cce5c84558b\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="18d31838aa4fcc768a8a0516e22cc13b94655d89">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_bb0393589d58378f87c8b16276fb32de7f739ccd.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\2cf886d044a7e3deb534975b95fb71da4e815724\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="fcd01fd11233459f546c437ec927e9b61bf7caf1">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_21bc0399e991effa507c010378576f3e2146cc51.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\5150e72ef82769149ce7f59ad2daba406b353eab\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="2e92aa0163544a804a0b34f169ca61801770839a">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_a925f13166ce4a4be59aab607b0eea312d11df81.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\up\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="654b5057076368bc57692bc5b43f16447fc9ce2d">
+        <dex dex="C:\up\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_55ee1e742e917e4d769f2b123b4e909fabd49746\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\0be068f2561c081fe5b365f4208dcc655bf1a89f\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_6cd639fc70b7403688d8f0fde02ebfaa89eb9557.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\c7e0f46a06e6dbb7e92c45afd8509110bbe0a106\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="952944218ecedea1554a513dec0c14d570642843">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_1ee6396651792de7c777f0c89a54981eff2b6d57.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\ed86dc7be3682f294341cb5713732fa9a5e7c9b9\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="47471eb19df288158b00b8d9cfa41bce7373f5cc">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_683b40659d22cef412e53d5edf7adba0654951af.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\80bb010eb765c8ed65cb44670a67e41bcf7e3330\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="9935891f23923f39d002087085d9696568a9f657">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_77723f91c8816d25ce4b51966da39b5fdc6699a2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\d01bd7c849859b82cbdaf7b9384f41735f6e0e2a\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="88246166d5afb106f532f6e6deae683c66b42c89">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_52868bf673d8dc45d248f92e96eb05010fbb73fd.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\0bc15cef6fd1515a82a7b947d7a84895fc1d2a99\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="cddcd0fb93bc70e27325f2f715b2710332004ebb">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_5290cdd39ac21d65982afc537649621d372af00d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Brendon\.android\build-cache\8ed57c6dbc309670d988d90148cf502de1d1f478\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="8df0e365e40beb151bc42dee20817721a6cab7b0">
+        <dex dex="C:\up\app\build\intermediates\pre-dexed\debug\classes_39d99b3fd373268c13a323c8194ed1c10852560c.jar" />
+    </item>
+
+</items>

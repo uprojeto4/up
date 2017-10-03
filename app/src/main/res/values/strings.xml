@@ -5,4 +5,13 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="navigation_drawer_novo_anuncio">Novo anúncio</string>
+    <string name="navigation_drawer_negociacoes">Negociações</string>
+    <string name="navigation_drawer_lista_desejos">Lista de desejos</string>
+    <string name="navigation_drawer_categorias">Categorias</string>
+    <string name="navigation_drawer_perfil">Meu perfil</string>
+    <string name="navigation_drawer_configuracoes">Configurações</string>
+    <string name="navigation_drawer_sair">Sair</string>
+
 </resources>
