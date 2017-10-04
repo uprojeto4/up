@@ -15,5 +15,6 @@
     <string name="navigation_drawer_configuracoes">Configurações</string>
     <string name="navigation_drawer_sair">Sair</string>
     <string name="title_activity_novo_anuncio">NovoAnuncioActivity</string>
+    <string name="title_activity_negociacoes">NegociacoesActivity</string>
 
 </resources>
