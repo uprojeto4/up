@@ -10,7 +10,7 @@
     tools:showIn="@layout/activity_novo_anuncio">
 
     <include
-    layout="@layout/app_bar_main"
+    layout="@layout/app_bar_novo_anuncio"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
 

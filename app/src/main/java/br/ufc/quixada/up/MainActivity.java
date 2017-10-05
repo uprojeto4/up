@@ -83,14 +83,22 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_inicio){
             Intent intent = new Intent(this, MainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
         else if (id == R.id.nav_anuncio) {
             // Handle the camera action
             Intent intent = new Intent(this, NovoAnuncioActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
+//            overridePendingTransition(0, 0);
         } else if (id == R.id.nav_negociacoes) {
-
+            Intent intent = new Intent(this, NegociacoesActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
         } else if (id == R.id.nav_lista_desejos) {
 
         } else if (id == R.id.nav_categorias) {
