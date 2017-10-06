@@ -15,4 +15,5 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="backgroundDarker">#f0f0f0</color>
+    <color name="colorAccent2">#00948c</color>
 </resources>

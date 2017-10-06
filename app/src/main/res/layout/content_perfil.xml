@@ -1,11 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="br.ufc.quixada.up.PerfilActivity"
-    tools:showIn="@layout/activity_perfil">
+    tools:showIn="@layout/app_bar_perfil">
 
-</android.support.constraint.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/filter"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:alpha=".70"
+            android:background="@color/colorPrimary"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/header_cover_image"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:alpha=".50"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_test_1" />
+
+
+        <!--<ImageView-->
+            <!--android:id="@+id/user_profile_photo"-->
+            <!--android:layout_width="120dp"-->
+            <!--android:layout_height="120dp"-->
+            <!--android:layout_below="@+id/header_cover_image"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="-60dp"-->
+            <!--android:background="@drawable/img"-->
+            <!--android:elevation="5dp"-->
+            <!--android:scaleType="centerCrop" />-->
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@+id/header_cover_image"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="-60dp"
+            android:elevation="5dp"
+            android:src="@drawable/image_test_1"
+            app:border_color="@android:color/white"
+            app:border_width="3dp" />
+
+        <!--<FrameLayout-->
+            <!--android:id="@+id/frame"-->
+            <!--android:layout_width="200dp"-->
+            <!--android:layout_height="200dp">-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/pic"-->
+                <!--android:layout_width="200dp"-->
+                <!--android:layout_height="200dp"-->
+                <!--android:src="@drawable/image_test_1" />-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/circle_crop"-->
+                <!--android:layout_width="200dp"-->
+                <!--android:layout_height="200dp"-->
+                <!--android:src="@drawable/profile_circular_border_imageview" />-->
+
+
+        <!--</FrameLayout>-->
+
+
+        <RelativeLayout
+            android:id="@+id/profile_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header_cover_image"
+            android:background="@android:color/transparent"
+            android:elevation="4dp"
+            android:paddingBottom="24dp">
+
+
+            <!--<ImageView-->
+                <!--android:id="@+id/add_friend"-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:layout_toLeftOf="@+id/drop_down_option_menu" />-->
+
+
+            <!--<ImageView-->
+                <!--android:id="@+id/drop_down_option_menu"-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginTop="16dp" />-->
+
+
+            <TextView
+                android:id="@+id/user_profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="76dp"
+                android:text="Fulano da Silva"
+                android:textColor="#2a2a2a"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+
+            <!--<TextView-->
+                <!--android:id="@+id/user_profile_short_bio"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/user_profile_name"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginTop="12dp"-->
+                <!--android:text="Android free tutorials and example"-->
+                <!--android:textColor="#2a2a2a"-->
+                <!--android:textSize="14sp" />-->
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profile_layout"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="Meus anúncios" />
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="Minhas vendas" />
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="Minhas compras" />
+
+
+            <!--<TextView-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:layout_marginBottom="3dp"-->
+                <!--android:layout_marginTop="3dp"-->
+                <!--android:background="#fff"-->
+                <!--android:clickable="true"-->
+                <!--android:elevation="4dp"-->
+                <!--android:padding="20dp"-->
+                <!--android:text="Coisa número quatro" />-->
+
+
+            <!--<TextView-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:background="#fff"-->
+                <!--android:clickable="true"-->
+                <!--android:elevation="4dp"-->
+                <!--android:padding="20dp"-->
+                <!--android:text="Coisa número cinco" />-->
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <!--tools:context="br.ufc.quixada.up.PerfilActivity"-->
+    <!--tools:showIn="@layout/activity_perfil">-->
+
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="240dp"-->
+        <!--android:orientation="vertical"-->
+        <!--android:gravity="center">-->
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/user_profile_photo"-->
+            <!--android:layout_width="120dp"-->
+            <!--android:layout_height="120dp"-->
+            <!--android:layout_below="@+id/header_cover_image"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="-60dp"-->
+            <!--android:background="@drawable/profile_circular_border_imageview"-->
+            <!--android:elevation="5dp"-->
+            <!--android:padding="20dp"-->
+            <!--android:scaleType="centerCrop" />-->
+    <!--</LinearLayout>-->
+
+<!--</LinearLayout>-->
