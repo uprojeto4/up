@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -21,131 +21,296 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="4dp"
-        android:orientation="vertical"
-        android:paddingBottom="92dp">
+        android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
+        <ListView
+            android:divider="@null"
+            android:dividerHeight="0dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="2dp"
-            app:cardElevation="3dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            android:id="@+id/lv_cards"/>
+        <!--android:paddingBottom="92dp"-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+        <!--<android.support.v7.widget.CardView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:cardCornerRadius="2dp"-->
+        <!--app:cardElevation="3dp"-->
+        <!--app:cardUseCompatPadding="true"-->
+        <!--app:layout_constraintHorizontal_bias="0.0"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent">-->
 
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    app:srcCompat="@drawable/image_test_1" />
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical">-->
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="24dp">
+        <!--<ImageView-->
+        <!--android:id="@+id/imageView3"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--app:srcCompat="@drawable/image_test_1" />-->
 
-                    <TextView
-                        android:id="@+id/textView3"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="Primeiro Anúncio do Up!"
-                        android:textColor="@color/secondaryTextColor"
-                        android:textSize="24sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+        <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:paddingBottom="16dp"-->
+        <!--android:paddingLeft="16dp"-->
+        <!--android:paddingRight="16dp"-->
+        <!--android:paddingTop="24dp">-->
 
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingTop="8dp"
-                        android:text="Apenas uma breve desrição do produto nada que seja maior do que tres linhas" />
+        <!--<TextView-->
+        <!--android:id="@+id/textView3"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:text="Primeiro Anúncio do Up!"-->
+        <!--android:textColor="@color/secondaryTextColor"-->
+        <!--android:textSize="24sp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingTop="8dp"
-                        android:text="R$ 10,45 KG"
-                        android:textColor="@color/colorAccent2"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+        <!--<TextView-->
+        <!--android:id="@+id/textView2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:paddingTop="8dp"-->
+        <!--android:text="Apenas uma breve desrição do produto nada que seja maior do que tres linhas" />-->
 
-                </LinearLayout>
+        <!--<TextView-->
+        <!--android:id="@+id/textView4"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:paddingTop="8dp"-->
+        <!--android:text="R$ 10,45 KG"-->
+        <!--android:textColor="@color/colorAccent2"-->
+        <!--android:textSize="18sp"-->
+        <!--android:textStyle="bold" />-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/divider_horizontal_bright"
-                    android:orientation="horizontal"></LinearLayout>
+        <!--</LinearLayout>-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@android:drawable/divider_horizontal_bright"-->
+        <!--android:orientation="horizontal"></LinearLayout>-->
 
-                    <ImageButton
-                        android:id="@+id/imageButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:backgroundTint="@color/cardview_light_background"
-                        android:tint="#444444"
-                        app:srcCompat="@drawable/ic_menu_share" />
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="horizontal">-->
 
-                    <ImageButton
-                        android:id="@+id/imageButton2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:backgroundTint="@color/cardview_light_background"
-                        android:tint="#444444"
-                        app:srcCompat="@drawable/ic_favorite_black_24dp" />
+        <!--<ImageButton-->
+        <!--android:id="@+id/imageButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:backgroundTint="@color/cardview_light_background"-->
+        <!--android:tint="#444444"-->
+        <!--app:srcCompat="@drawable/ic_menu_share" />-->
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+        <!--<ImageButton-->
+        <!--android:id="@+id/imageButton2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:backgroundTint="@color/cardview_light_background"-->
+        <!--android:tint="#444444"-->
+        <!--app:srcCompat="@drawable/ic_favorite_black_24dp" />-->
 
-                        <Button
-                            android:id="@+id/button3"
-                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="right"
-                            android:layout_weight="1"
-                            android:elevation="0dp"
-                            android:text="@string/button_comprar" />
-                    </LinearLayout>
+        <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="vertical">-->
 
-                </LinearLayout>
+        <!--<Button-->
+        <!--android:id="@+id/button3"-->
+        <!--style="@style/Widget.AppCompat.Button.Borderless.Colored"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="right"-->
+        <!--android:layout_weight="1"-->
+        <!--android:elevation="0dp"-->
+        <!--android:text="@string/button_comprar" />-->
+        <!--</LinearLayout>-->
 
-            </LinearLayout>
+        <!--</LinearLayout>-->
 
-        </android.support.v7.widget.CardView>
+        <!--</LinearLayout>-->
+
+        <!--</android.support.v7.widget.CardView>-->
 
     </LinearLayout>
 
 
-</ScrollView>
+</LinearLayout>
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical"-->
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <!--tools:context="br.ufc.quixada.up.MainActivity"-->
+    <!--tools:showIn="@layout/app_bar_main">-->
+
+    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:text="Hello World!"&ndash;&gt;-->
+    <!--&lt;!&ndash;app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;app:layout_constraintLeft_toLeftOf="parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;app:layout_constraintRight_toRightOf="parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
+
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_margin="4dp"-->
+        <!--android:orientation="vertical"-->
+        <!--android:paddingBottom="92dp">-->
+
+        <!--<ListView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:id="@+id/lv_cards"/>-->
+
+        <!--&lt;!&ndash;<android.support.v7.widget.CardView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;app:cardCornerRadius="2dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;app:cardElevation="3dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;app:cardUseCompatPadding="true"&ndash;&gt;-->
+            <!--&lt;!&ndash;app:layout_constraintHorizontal_bias="0.0"&ndash;&gt;-->
+            <!--&lt;!&ndash;app:layout_constraintLeft_toLeftOf="parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;app:layout_constraintRight_toRightOf="parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;app:layout_constraintTop_toTopOf="parent">&ndash;&gt;-->
+
+            <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:orientation="vertical">&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/imageView3"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:adjustViewBounds="true"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:srcCompat="@drawable/image_test_1" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:orientation="vertical"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:paddingBottom="16dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:paddingLeft="16dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:paddingRight="16dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:paddingTop="24dp">&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/textView3"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:text="Primeiro Anúncio do Up!"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:textColor="@color/secondaryTextColor"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:textSize="24sp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:layout_constraintLeft_toLeftOf="parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:layout_constraintRight_toRightOf="parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/textView2"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:paddingTop="8dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:text="Apenas uma breve desrição do produto nada que seja maior do que tres linhas" />&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/textView4"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:paddingTop="8dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:text="R$ 10,45 KG"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:textColor="@color/colorAccent2"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:textSize="18sp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:textStyle="bold" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="1dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:background="@android:drawable/divider_horizontal_bright"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:orientation="horizontal"></LinearLayout>&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:orientation="horizontal">&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<ImageButton&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/imageButton"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:backgroundTint="@color/cardview_light_background"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:tint="#444444"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:srcCompat="@drawable/ic_menu_share" />&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<ImageButton&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/imageButton2"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:backgroundTint="@color/cardview_light_background"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:tint="#444444"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:srcCompat="@drawable/ic_favorite_black_24dp" />&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:orientation="vertical">&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<Button&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:id="@+id/button3"&ndash;&gt;-->
+                            <!--&lt;!&ndash;style="@style/Widget.AppCompat.Button.Borderless.Colored"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_gravity="right"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:elevation="0dp"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:text="@string/button_comprar" />&ndash;&gt;-->
+                    <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
+
+                <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
+
+            <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;</android.support.v7.widget.CardView>&ndash;&gt;-->
+
+    <!--</LinearLayout>-->
+
+
+<!--</ScrollView>-->
