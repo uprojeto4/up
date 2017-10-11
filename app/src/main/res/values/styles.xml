@@ -19,8 +19,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
     </style>
 
-    <style name="ThemeActionBar"
-        parent="Widget.AppCompat.Light.ActionBar.Solid">
+    <style name="ThemeActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
         <item name="android:background">@null</item>
         <!-- Support library compatibility -->
         <item name="background">@null</item>
@@ -37,9 +36,9 @@
     </style>
 
     <!--<style name="AppTheme.ActionBar" parent="AppTheme">-->
-        <!--<item name="windowActionBarOverlay">false</item>-->
-        <!--<item name="windowActionBar">true</item>-->
-        <!--<item name="colorPrimary">@android:color/transparent</item>-->
+    <!--<item name="windowActionBarOverlay">false</item>-->
+    <!--<item name="windowActionBar">true</item>-->
+    <!--<item name="colorPrimary">@android:color/transparent</item>-->
     <!--</style>-->
 
 </resources>
