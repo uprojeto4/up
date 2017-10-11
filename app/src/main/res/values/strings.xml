@@ -19,7 +19,7 @@
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_lista_desejos">ListaDesejosActivity</string>
     <string name="title_activity_categorias">CategoriasActivity</string>
-    <string name="title_activity_perfil">PerfilActivity</string>
+    <string name="title_activity_perfil">Meu perfil</string>
     <string name="title_activity_configuracoes">ConfiguracoesActivity</string>
     <string name="input_novo_anuncio_titulo">O que deseja anunciar?</string>
     <string name="input_novo_anuncio_descricao">Descreva seu anúncio aqui</string>
@@ -44,5 +44,11 @@
     <string name="text_view_salvar_anuncio">Salvar anúncio</string>
   
     <string name="button_comprar">negociar</string>
+    <string name="button_marcar_vendido">marcar como vendido</string>
+
+    <string-array name="tabs_perfil">
+        <item>Perfil</item>
+        <item>Anúncios</item>
+    </string-array>
 
 </resources>
