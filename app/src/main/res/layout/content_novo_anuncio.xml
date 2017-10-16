@@ -29,16 +29,14 @@
             android:orientation="vertical"
             android:weightSum="2">
 
-            <RelativeLayout
+            <FrameLayout
                 android:id="@+id/layoutAddImages"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
                 android:layout_weight="0.95"
                 android:background="@color/backgroundDarker"
-                android:gravity="center_horizontal"
                 android:orientation="vertical"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -46,9 +44,11 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/layoutNoImage"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical|center_horizontal"
                     android:orientation="vertical"
                     android:weightSum="2">
 
@@ -73,9 +73,10 @@
                     android:id="@+id/recyclerView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="-5dp" />
+                    android:layout_gravity="center_horizontal"
+                    android:clipToPadding="false" />
 
-            </RelativeLayout>
+            </FrameLayout>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabAddFotos"

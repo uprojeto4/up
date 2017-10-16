@@ -15,9 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
@@ -29,12 +28,14 @@ import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.adapters.RecyclerViewImageAdapter;
+import br.ufc.quixada.up.utils.RecyclerViewSeparationUtil;
 
 public class NovoAnuncioActivity extends BaseActivity{
 
     RecyclerView recyclerView;
-    ImageView imgViewIcone;
-    TextView txtViewAddImagens;
+    LinearLayout linearLayoutNoImage;
+    RecyclerView.LayoutManager layoutManager;
+    RecyclerView.ItemDecoration itemDecoration;
     private RecyclerViewImageAdapter imageAdapter;
     private ArrayList<Image> images = new ArrayList<>();
 
@@ -42,23 +43,22 @@ public class NovoAnuncioActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novo_anuncio);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         recyclerView = findViewById(R.id.recyclerView);
-        imgViewIcone = findViewById(R.id.imageViewNovoAnuncioPlaceholder);
-        txtViewAddImagens = findViewById((R.id.textViewAddImagens));
+        linearLayoutNoImage = findViewById((R.id.layoutNoImage));
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Spinner spinnerCategorias = (Spinner) findViewById(R.id.spinnerCategorias);
+        Spinner spinnerCategorias = findViewById(R.id.spinnerCategorias);
 
         spinnerCategorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -75,7 +75,7 @@ public class NovoAnuncioActivity extends BaseActivity{
             }
         });
 
-        FloatingActionButton fabAddFotos = (FloatingActionButton) findViewById(R.id.fabAddFotos);
+        FloatingActionButton fabAddFotos = findViewById(R.id.fabAddFotos);
 
         fabAddFotos.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,9 +125,12 @@ public class NovoAnuncioActivity extends BaseActivity{
         });
 
         imageAdapter = new RecyclerViewImageAdapter(this);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        itemDecoration = new RecyclerViewSeparationUtil(4);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(itemDecoration);
         recyclerView.setAdapter(imageAdapter);
+
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.UP | ItemTouchHelper.DOWN) {
 
             @Override
@@ -139,6 +142,8 @@ public class NovoAnuncioActivity extends BaseActivity{
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
 
                 imageAdapter.removeImage(viewHolder.getAdapterPosition());
+                manageItemDecoration();
+
                 new CountDownTimer(500, 1000) {
 
                     public void onTick(long msUntilFinished) {
@@ -147,9 +152,7 @@ public class NovoAnuncioActivity extends BaseActivity{
 
                     public void onFinish() {
                         if (imageAdapter.getItemCount() <= 1) {
-                            imgViewIcone.setVisibility(View.VISIBLE);
-                            txtViewAddImagens.setVisibility(View.VISIBLE);
-
+                            linearLayoutNoImage.setVisibility(View.VISIBLE);
                         }
                     }
                 }.start();
@@ -165,6 +168,11 @@ public class NovoAnuncioActivity extends BaseActivity{
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
+    protected void manageItemDecoration() {
+        recyclerView.removeItemDecoration(itemDecoration);
+        recyclerView.addItemDecoration(itemDecoration);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Config.RC_PICK_IMAGES && resultCode == RESULT_OK && data != null) {
@@ -172,12 +180,11 @@ public class NovoAnuncioActivity extends BaseActivity{
             ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
             imageAdapter.addData(images);
 
-            if (images.size() > 1) {
-                imgViewIcone.setVisibility(View.GONE);
-                txtViewAddImagens.setVisibility(View.GONE);
+            if (imageAdapter.getItemCount() > 1) {
+                linearLayoutNoImage.setVisibility(View.GONE);
             } else {
-                imgViewIcone.setVisibility(View.VISIBLE);
-                txtViewAddImagens.setVisibility(View.VISIBLE);
+                linearLayoutNoImage.setVisibility(View.VISIBLE);
+                manageItemDecoration();
             }
             
         }

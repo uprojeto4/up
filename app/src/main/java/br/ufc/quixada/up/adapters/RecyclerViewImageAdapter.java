@@ -60,15 +60,13 @@ public class RecyclerViewImageAdapter extends RecyclerView.Adapter<RecyclerViewI
 
     public void addData(List<Image> imageList) {
         images.addAll(imageList);
-//        notifyItemInserted(this.images.size());
-        notifyDataSetChanged();
+        notifyItemInserted(this.images.size());
     }
 
     public void removeImage(int position) {
         images.remove(position);
-//        notifyItemRemoved(position);
-//        notifyItemRangeChanged(position, images.size());
-        notifyDataSetChanged();
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, images.size());
     }
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {
