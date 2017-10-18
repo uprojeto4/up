@@ -37,12 +37,17 @@ public class RecyclerViewImageAdapter extends RecyclerView.Adapter<RecyclerViewI
 
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
+
         final Image image = images.get(position);
 
         Glide.with(context)
                 .load(image.getPath())
                 .apply(options)
                 .into(holder.imageView);
+
+//        if (position == getItemCount() - 1){
+//            images.get(position - 1).
+//        }
     }
 
     @Override
