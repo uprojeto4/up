@@ -19,7 +19,7 @@
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_lista_desejos">ListaDesejosActivity</string>
     <string name="title_activity_categorias">CategoriasActivity</string>
-    <string name="title_activity_perfil">PerfilActivity</string>
+    <string name="title_activity_perfil">Meu perfil</string>
     <string name="title_activity_configuracoes">ConfiguracoesActivity</string>
     <string name="input_novo_anuncio_titulo">O que deseja anunciar?</string>
     <string name="input_novo_anuncio_descricao">Descreva seu anúncio aqui</string>
@@ -42,10 +42,24 @@
 
     <string name="text_view_adicionar_imagens">Adicionar imagens</string>
     <string name="text_view_salvar_anuncio">Salvar anúncio</string>
-
     <string name="button_comprar">negociar</string>
     <string name="title_activity_anuncio">AnuncioActivity</string>
     <string name="price">Preço</string>
     <string name="available">Quantidade</string>
+    <string name="perfil_botao_salvar_edicao">Salvar edição</string>
+    <string name="button_marcar_vendido">marcar como vendido</string>
+
+    <string-array name="tabs_perfil">
+        <item>Perfil</item>
+        <item>Anúncios</item>
+    </string-array>
+
+    <string name="title_activity_edit_perfil">Editar perfil</string>
+    <string name="input_edit_nome_hint">Altere o seu nome</string>
+    <string name="input_edit_endereco_hint">Altere o seu endereço</string>
+    <string name="input_edit_telefone_hint">Altere o seu telefone</string>
+    <string name="input_edit_email_hint">Altere o seu email</string>
+    <string name="input_edit_senha_hint">Altere a sua senha</string>
+    <string name="input_edit_confirm_senha_hint">Confirme a sua nova senha</string>
 
 </resources>
