@@ -54,6 +54,15 @@
             android:label="@string/title_activity_configuracoes"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AnuncioActivity"
+            android:label="@string/title_activity_anuncio"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.ufc.quixada.up.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

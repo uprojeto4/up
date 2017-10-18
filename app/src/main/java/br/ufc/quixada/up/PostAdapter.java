@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -53,7 +54,10 @@ public class PostAdapter extends BaseAdapter {
         subtitle.setText(post.getSubtitle());
 
         TextView price = (TextView) layout.findViewById(R.id.textView_price);
-        price.setText("R$ " + post.getPrice() + " KG");
+        price.setText("R$ " + post.getPrice());
+
+        ImageView image = (ImageView) layout.findViewById(R.id.imageView3);
+        image.setImageResource(post.getImage(i));
 
         return layout;
     }

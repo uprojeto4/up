@@ -42,7 +42,10 @@
 
     <string name="text_view_adicionar_imagens">Adicionar imagens</string>
     <string name="text_view_salvar_anuncio">Salvar anúncio</string>
-  
+
     <string name="button_comprar">negociar</string>
+    <string name="title_activity_anuncio">AnuncioActivity</string>
+    <string name="price">Preço</string>
+    <string name="available">Quantidade</string>
 
 </resources>
