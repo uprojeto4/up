@@ -1,4 +1,4 @@
-package br.ufc.quixada.up.adapters;
+package br.ufc.quixada.up.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

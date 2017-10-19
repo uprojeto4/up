@@ -27,7 +27,7 @@ import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
 import java.util.ArrayList;
 
-import br.ufc.quixada.up.adapters.RecyclerViewImageAdapter;
+import br.ufc.quixada.up.Adapters.RecyclerViewImageAdapter;
 import br.ufc.quixada.up.utils.RecyclerViewSeparationUtil;
 
 public class NovoAnuncioActivity extends BaseActivity{
