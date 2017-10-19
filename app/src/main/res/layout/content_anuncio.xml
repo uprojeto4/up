@@ -33,6 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:elevation="1dp"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -83,10 +84,10 @@
                         android:layout_weight="1"
                         android:paddingTop="8dp"
                         android:text="@string/price"
+                        android:textAllCaps="true"
                         android:textColor="@color/colorAccent2"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textAllCaps="true"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView_price"
@@ -114,10 +115,10 @@
                         android:layout_weight="1"
                         android:paddingTop="8dp"
                         android:text="@string/available"
+                        android:textAllCaps="true"
                         android:textColor="@color/colorAccent2"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textAllCaps="true"/>
+                        android:textStyle="bold" />
 
                     <Spinner
                         android:id="@+id/spinner"
@@ -168,6 +169,24 @@
                 android:tint="#444444"
                 app:srcCompat="@drawable/ic_menu_share" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_weight="0"
+            android:orientation="horizontal"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/header_cover_image"
+                android:layout_marginRight="20dp"
+                android:layout_weight="0"
+                android:src="@drawable/image_test_1" />
         </LinearLayout>
 
     </LinearLayout>
