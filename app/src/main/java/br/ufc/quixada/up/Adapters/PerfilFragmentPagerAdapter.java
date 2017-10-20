@@ -11,11 +11,11 @@ import br.ufc.quixada.up.Fragments.fragmentPerfilPerfil;
  * Created by Brendon on 09/10/2017.
  */
 
-public class PerfilFragmentPagerAdapater extends FragmentPagerAdapter {
+public class PerfilFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private String[] perfilTabTitles;
 
-    public PerfilFragmentPagerAdapater(FragmentManager fm, String[] perfilTabTitles) {
+    public PerfilFragmentPagerAdapter(FragmentManager fm, String[] perfilTabTitles) {
         super(fm);
         this.perfilTabTitles = perfilTabTitles;
     }
