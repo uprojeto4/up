@@ -2,6 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.ufc.quixada.up">
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,23 +20,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
-            android:name=".NovoAnuncioActivity"
+            android:name=".Activities.NovoAnuncioActivity"
             android:label="@string/title_activity_novo_anuncio"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".NegociacoesActivity"
+            android:name=".Activities.NegociacoesActivity"
             android:label="@string/title_activity_negociacoes"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -35,25 +45,51 @@
         <!-- android:label="@string/title_activity_base" -->
         <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
         <activity
-            android:name=".ListaDesejosActivity"
+            android:name=".Activities.ListaDesejosActivity"
             android:label="@string/title_activity_lista_desejos"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CategoriasActivity"
+            android:name=".Activities.CategoriasActivity"
             android:label="@string/title_activity_categorias"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PerfilActivity"
+            android:name=".Activities.PerfilActivity"
             android:label="@string/title_activity_perfil"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ConfiguracoesActivity"
+            android:name=".Activities.ConfiguracoesActivity"
             android:label="@string/title_activity_configuracoes"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.AnuncioActivity"
+            android:label="@string/title_activity_anuncio"
+            android:parentActivityName=".Activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.ufc.quixada.up.Activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Activities.EditPerfilActivity"
+            android:label="@string/title_activity_edit_perfil"
+            android:parentActivityName=".Activities.PerfilActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.ufc.quixada.up.Activities.PerfilActivity" />
+        </activity>
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".CadastroActivity"></activity>
     </application>
 
 </manifest>
