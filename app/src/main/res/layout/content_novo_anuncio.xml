@@ -6,14 +6,13 @@
     android:layout_height="match_parent"
     android:theme="@style/ThemeOverlay.AppCompat.Light"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="br.ufc.quixada.up.NovoAnuncioActivity"
+    tools:context="br.ufc.quixada.up.Activities.NovoAnuncioActivity"
     tools:showIn="@layout/app_bar_novo_anuncio">
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="0dp"
-        android:layout_marginTop="0dp"
         android:fillViewport="true"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -37,6 +36,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_weight="0.95"
                 android:background="@color/backgroundDarker"
+                android:minHeight="100dp"
                 android:orientation="vertical"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -150,12 +150,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="3">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.6"
+                        android:gravity="bottom"
                         android:orientation="vertical">
 
                         <android.support.design.widget.TextInputLayout
@@ -173,7 +175,37 @@
                                 android:layout_marginRight="8dp"
                                 android:focusedByDefault="false"
                                 android:hint="@string/input_novo_anuncio_preco"
-                                android:inputType="numberDecimal" />
+                                android:inputType="numberDecimal"
+                                android:singleLine="true" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.8"
+                        android:gravity="bottom"
+                        android:orientation="vertical">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_layout_novo_anuncio_qtd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusableInTouchMode="false"
+                            android:focusedByDefault="false"
+                            tools:layout_editor_absoluteX="8dp"
+                            tools:layout_editor_absoluteY="0dp">
+
+                            <EditText
+                                android:id="@+id/input_novo_anuncio_qtd"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusedByDefault="false"
+                                android:hint="@string/text_view_quantidade"
+                                android:inputType="number"
+                                android:singleLine="true" />
 
                         </android.support.design.widget.TextInputLayout>
 
@@ -183,7 +215,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="8dp"
-                        android:layout_weight="2"
+                        android:layout_marginRight="-16dp"
+                        android:layout_weight="1.6"
                         android:gravity="bottom"
                         android:orientation="vertical">
 

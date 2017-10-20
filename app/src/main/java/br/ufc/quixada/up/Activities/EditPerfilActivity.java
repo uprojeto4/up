@@ -1,4 +1,4 @@
-package br.ufc.quixada.up;
+package br.ufc.quixada.up.Activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import static br.ufc.quixada.up.R.drawable.image_test_1;
+
+import br.ufc.quixada.up.R;
 
 public class EditPerfilActivity extends AppCompatActivity {
 

@@ -1,14 +1,14 @@
-package br.ufc.quixada.up.utils;
+package br.ufc.quixada.up.Utils;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class RecyclerViewSeparationUtil extends RecyclerView.ItemDecoration {
+public class RecyclerViewPhotoSeparator extends RecyclerView.ItemDecoration {
 
     private final int rightPadding;
 
-    public RecyclerViewSeparationUtil(int edgePadding) {
+    public RecyclerViewPhotoSeparator(int edgePadding) {
         this.rightPadding = edgePadding;
     }
 

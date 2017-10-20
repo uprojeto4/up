@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="br.ufc.quixada.up.AnuncioActivity"
+    tools:context="br.ufc.quixada.up.Activities.AnuncioActivity"
     tools:showIn="@layout/activity_anuncio">
 
     <LinearLayout
@@ -33,6 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:elevation="1dp"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -66,6 +67,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:paddingTop="16dp">
@@ -83,10 +85,10 @@
                         android:layout_weight="1"
                         android:paddingTop="8dp"
                         android:text="@string/price"
+                        android:textAllCaps="true"
                         android:textColor="@color/colorAccent2"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textAllCaps="true"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView_price"
@@ -114,10 +116,10 @@
                         android:layout_weight="1"
                         android:paddingTop="8dp"
                         android:text="@string/available"
+                        android:textAllCaps="true"
                         android:textColor="@color/colorAccent2"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textAllCaps="true"/>
+                        android:textStyle="bold" />
 
                     <Spinner
                         android:id="@+id/spinner"
@@ -167,6 +169,114 @@
                 android:onClick="share"
                 android:tint="#444444"
                 app:srcCompat="@drawable/ic_menu_share" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_weight="0"
+            android:background="@android:drawable/divider_horizontal_bright"
+            android:orientation="horizontal"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="horizontal"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/header_cover_image"
+                android:layout_margin="4dp"
+                android:layout_weight="0"
+                android:src="@drawable/image_test_1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:orientation="vertical"
+                android:paddingLeft="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="Felipe Coutinho"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:tint="@color/goldYellow"
+                            app:srcCompat="@drawable/ic_star_black_24dp" />
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="4.5"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView12"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="Senior" />
+
+                        <TextView
+                            android:id="@+id/textView15"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.4"
+                            android:text="(15) Vendas"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

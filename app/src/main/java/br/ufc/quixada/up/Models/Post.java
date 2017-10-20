@@ -1,8 +1,10 @@
-package br.ufc.quixada.up;
+package br.ufc.quixada.up.Models;
 
 import android.graphics.drawable.Drawable;
 
 import com.bumptech.glide.load.engine.Resource;
+
+import br.ufc.quixada.up.R;
 
 /**
  * Created by Isaac Bruno on 09/10/2017.

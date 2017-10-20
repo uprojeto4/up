@@ -27,6 +27,7 @@
     <string name="text_view_categoria_label">Categoria</string>
 
     <string-array name="categorias">
+        <item>Selecione...</item>
         <item>Eletrônicos</item>
         <item>Eletrodomésticos</item>
         <item>Móveis/Decoração</item>
@@ -41,7 +42,17 @@
     </string-array>
 
     <string name="text_view_adicionar_imagens">Adicionar imagens</string>
+    <string name="text_view_quantidade">Quantidade</string>
     <string name="text_view_salvar_anuncio">Salvar anúncio</string>
+
+    <string name="alert_sair_sem_salvar_title"></string>
+    <string name="alert_sair_sem_salvar_message">Deseja sair sem salvar seu anúncio?</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+
+    <string name="erro_novo_anuncio_titulo">Seu anúncio precisa de um título.</string>
+    <string name="erro_novo_anuncio_descricao">Seu anúncio precisa de uma descrição.</string>
+    <string name="erro_novo_anuncio_preco">Seu anúncio precisa de um preço.</string>
     <string name="button_comprar">negociar</string>
     <string name="title_activity_anuncio">AnuncioActivity</string>
     <string name="price">Preço</string>

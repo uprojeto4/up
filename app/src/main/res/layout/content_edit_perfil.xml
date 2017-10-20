@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="0.08"
-    tools:context="br.ufc.quixada.up.EditPerfilActivity">
+    tools:context="br.ufc.quixada.up.Activities.EditPerfilActivity">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,7 +16,7 @@
         android:paddingTop="?attr/actionBarSize"
         android:weightSum="1"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="br.ufc.quixada.up.EditPerfilActivity"
+        tools:context="br.ufc.quixada.up.Activities.EditPerfilActivity"
         tools:showIn="@layout/activity_edit_perfil">
 
 

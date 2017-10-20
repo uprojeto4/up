@@ -1,6 +1,7 @@
-package br.ufc.quixada.up;
+package br.ufc.quixada.up.Activities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -9,15 +10,18 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
@@ -26,18 +30,30 @@ import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
 
 import br.ufc.quixada.up.Adapters.RecyclerViewImageAdapter;
-import br.ufc.quixada.up.utils.RecyclerViewSeparationUtil;
+import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.InputMask;
+import br.ufc.quixada.up.Utils.RecyclerViewPhotoSeparator;
 
-public class NovoAnuncioActivity extends BaseActivity{
+public class NovoAnuncioActivity extends BaseActivity implements View.OnClickListener {
 
     RecyclerView recyclerView;
     LinearLayout linearLayoutNoImage;
+    EditText tituloAnuncio;
+    EditText descricaoAnuncio;
+    EditText precoAnuncio;
+    EditText qtdItensAnuncio;
+    Spinner spinnerCategoriasAnuncio;
+    String spinnerCategoriasItemSelecionado = null;
+    Button buttonSalvarAnuncio;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.ItemDecoration itemDecoration;
     private RecyclerViewImageAdapter imageAdapter;
     private ArrayList<Image> images = new ArrayList<>();
+    Locale locale = new Locale("pt", "BR");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +61,6 @@ public class NovoAnuncioActivity extends BaseActivity{
         setContentView(R.layout.activity_novo_anuncio);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        recyclerView = findViewById(R.id.recyclerView);
-        linearLayoutNoImage = findViewById((R.id.layoutNoImage));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -58,14 +71,70 @@ public class NovoAnuncioActivity extends BaseActivity{
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Spinner spinnerCategorias = findViewById(R.id.spinnerCategorias);
+        recyclerView = findViewById(R.id.recyclerView);
+        linearLayoutNoImage = findViewById((R.id.layoutNoImage));
+        tituloAnuncio = findViewById(R.id.input_novo_anuncio_titulo);
+        descricaoAnuncio = findViewById(R.id.input_novo_anuncio_descricao);
+        precoAnuncio = findViewById(R.id.input_novo_anuncio_preco);
+        qtdItensAnuncio = findViewById(R.id.input_novo_anuncio_qtd);
+        spinnerCategoriasAnuncio = findViewById(R.id.spinnerCategorias);
+        buttonSalvarAnuncio = (Button) findViewById(R.id.buttonSalvarAnuncio);
 
-        spinnerCategorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // imageAdapter e implementações de swipe para deletar
+        imageAdapter = new RecyclerViewImageAdapter(this);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        itemDecoration = new RecyclerViewPhotoSeparator(4);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(itemDecoration);
+        recyclerView.setAdapter(imageAdapter);
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.UP | ItemTouchHelper.DOWN) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
+                imageAdapter.removeImage(viewHolder.getAdapterPosition());
+                manageItemDecoration();
+
+                new CountDownTimer(500, 1000) {
+
+                    public void onTick(long msUntilFinished) {
+
+                    }
+
+                    public void onFinish() {
+                        if (imageAdapter.getItemCount() <= 1) {
+                            linearLayoutNoImage.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }.start();
+            }
+
+            @Override
+            public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
+                super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        // máscara de preço
+        TextWatcher quantidadeMask = InputMask.monetario(precoAnuncio);
+        precoAnuncio.addTextChangedListener(quantidadeMask);
+
+        //spinner de categorias (valor é setado em spinnerCategoriasItemSelecionado)
+        spinnerCategoriasAnuncio.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                String selectedItemText = (String) adapterView.getItemAtPosition(position);
                 if (position > 0){
-                    Toast.makeText(getApplicationContext(), "Selected: " + selectedItemText, Toast.LENGTH_SHORT).show();
+                    spinnerCategoriasItemSelecionado = (String) adapterView.getItemAtPosition(position);
+//                    Toast.makeText(getApplicationContext(), "Selected: " + spinnerCategoriasItemSelecionado, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -124,55 +193,27 @@ public class NovoAnuncioActivity extends BaseActivity{
             }
         });
 
-        imageAdapter = new RecyclerViewImageAdapter(this);
-        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        itemDecoration = new RecyclerViewSeparationUtil(4);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(itemDecoration);
-        recyclerView.setAdapter(imageAdapter);
-
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.UP | ItemTouchHelper.DOWN) {
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-
-                imageAdapter.removeImage(viewHolder.getAdapterPosition());
-                manageItemDecoration();
-
-                new CountDownTimer(500, 1000) {
-
-                    public void onTick(long msUntilFinished) {
-
-                    }
-
-                    public void onFinish() {
-                        if (imageAdapter.getItemCount() <= 1) {
-                            linearLayoutNoImage.setVisibility(View.VISIBLE);
-                        }
-                    }
-                }.start();
-            }
-
-            @Override
-            public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
-                super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
-            }
-        };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        buttonSalvarAnuncio.setOnClickListener(this);
     }
 
+    //gerencia o padding à direita de cada foto, para mantê-las separadas
     protected void manageItemDecoration() {
         recyclerView.removeItemDecoration(itemDecoration);
         recyclerView.addItemDecoration(itemDecoration);
+
     }
 
+    //gerencia o click nos botões
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonSalvarAnuncio: {
+                //implementar ações de enviar dados e verificar se as informações estão corretas
+            }
+        }
+    }
+
+    //resultados da seleção de imagens
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Config.RC_PICK_IMAGES && resultCode == RESULT_OK && data != null) {
@@ -189,6 +230,25 @@ public class NovoAnuncioActivity extends BaseActivity{
             
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    //caixa de diálogo sair sem salvar
+    @Override
+    public void onBackPressed() {
+        if (imageAdapter.getItemCount() > 0 || tituloAnuncio.getText().length() != 0 || descricaoAnuncio.getText().length() != 0 ||
+                precoAnuncio.getText().length() != 0 || qtdItensAnuncio.getText().length() != 0 || spinnerCategoriasItemSelecionado != null) {
+            new AlertDialog.Builder(this)
+                .setMessage(NovoAnuncioActivity.this.getString(R.string.alert_sair_sem_salvar_message))
+                .setPositiveButton(NovoAnuncioActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }).setNegativeButton(NovoAnuncioActivity.this.getString(R.string.nao), null)
+                .show();
+        } else {
+            finish();
+        }
     }
 
 }

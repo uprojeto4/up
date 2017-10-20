@@ -1,4 +1,4 @@
-package br.ufc.quixada.up;
+package br.ufc.quixada.up.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import br.ufc.quixada.up.Models.Post;
+import br.ufc.quixada.up.R;
 
 /**
  * Created by Isaac Bruno on 09/10/2017.
