@@ -1,4 +1,4 @@
-package br.ufc.quixada.up;
+package br.ufc.quixada.up.Activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

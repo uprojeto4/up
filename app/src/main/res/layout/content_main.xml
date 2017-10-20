@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="br.ufc.quixada.up.MainActivity"
+    tools:context="br.ufc.quixada.up.Activities.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <!--<TextView-->
@@ -170,7 +170,7 @@
     <!--android:layout_height="match_parent"-->
     <!--android:orientation="vertical"-->
     <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-    <!--tools:context="br.ufc.quixada.up.MainActivity"-->
+    <!--tools:context="br.ufc.quixada.up.Activities.MainActivity"-->
     <!--tools:showIn="@layout/app_bar_main">-->
 
     <!--&lt;!&ndash;<TextView&ndash;&gt;-->

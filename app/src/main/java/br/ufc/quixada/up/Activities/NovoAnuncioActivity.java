@@ -1,4 +1,4 @@
-package br.ufc.quixada.up;
+package br.ufc.quixada.up.Activities;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -16,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -35,8 +34,9 @@ import java.util.Locale;
 
 
 import br.ufc.quixada.up.Adapters.RecyclerViewImageAdapter;
-import br.ufc.quixada.up.utils.InputMask;
-import br.ufc.quixada.up.utils.RecyclerViewPhotoSeparator;
+import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.InputMask;
+import br.ufc.quixada.up.Utils.RecyclerViewPhotoSeparator;
 
 public class NovoAnuncioActivity extends BaseActivity implements View.OnClickListener {
 

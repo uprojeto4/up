@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="100dp"
-    tools:context="br.ufc.quixada.up.PerfilActivity"
+    tools:context="br.ufc.quixada.up.Activities.PerfilActivity"
     tools:showIn="@layout/app_bar_perfil">
 
 
@@ -23,7 +23,7 @@
     <!--xmlns:tools="http://schemas.android.com/tools"-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->
-    <!--tools:context="br.ufc.quixada.up.PerfilActivity"-->
+    <!--tools:context="br.ufc.quixada.up.Activities.PerfilActivity"-->
     <!--tools:showIn="@layout/app_bar_perfil">-->
 
 
@@ -431,7 +431,7 @@
     <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
     <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
     <!--&lt;!&ndash;app:layout_behavior="@string/appbar_scrolling_view_behavior"&ndash;&gt;-->
-    <!--&lt;!&ndash;tools:context="br.ufc.quixada.up.PerfilActivity"&ndash;&gt;-->
+    <!--&lt;!&ndash;tools:context="br.ufc.quixada.up.Activities.PerfilActivity"&ndash;&gt;-->
     <!--&lt;!&ndash;tools:showIn="@layout/activity_perfil">&ndash;&gt;-->
 
 

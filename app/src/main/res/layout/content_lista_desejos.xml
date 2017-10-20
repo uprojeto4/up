@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="br.ufc.quixada.up.ListaDesejosActivity"
+    tools:context="br.ufc.quixada.up.Activities.ListaDesejosActivity"
     tools:showIn="@layout/activity_lista_desejos">
 
 </android.support.constraint.ConstraintLayout>
