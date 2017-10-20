@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import br.ufc.quixada.up.Adapters.perfilFragmentPagerAdapater;
+import br.ufc.quixada.up.Adapters.PerfilFragmentPagerAdapter;
 
 public class PerfilActivity extends BaseActivity {
 
@@ -28,7 +28,7 @@ public class PerfilActivity extends BaseActivity {
         perfilTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         perfilViewPager = (ViewPager) findViewById(R.id.view_pager_perfil);
 
-        perfilViewPager.setAdapter(new perfilFragmentPagerAdapater(getSupportFragmentManager(), getResources().getStringArray(R.array.tabs_perfil)));
+        perfilViewPager.setAdapter(new PerfilFragmentPagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.tabs_perfil)));
 
         perfilTabLayout.setupWithViewPager(perfilViewPager);
 

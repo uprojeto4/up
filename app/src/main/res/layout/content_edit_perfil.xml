@@ -33,7 +33,6 @@
                 android:layout_height="match_parent"
                 android:padding="24dp"
                 android:scaleType="fitCenter"
-                android:tint="?android:attr/textColorSecondaryNoDisable"
                 app:srcCompat="@drawable/ic_photo_black_24dp" />
 
         </LinearLayout>
