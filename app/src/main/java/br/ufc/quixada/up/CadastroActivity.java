@@ -71,6 +71,12 @@ public class CadastroActivity extends AppCompatActivity {
         });
     }
 
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        finish();
+//    }
+
     private void cadastrarUsuario() {
         auth = FirebaseConfig.getAuth();
         auth.createUserWithEmailAndPassword(user.getEmail(), user.getSenha())
@@ -89,6 +95,7 @@ public class CadastroActivity extends AppCompatActivity {
                            preferences.SaveUserPreferences(userId, user.getNome());
 
                            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                           intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                            startActivity(intent);
                        } else{
                            String erro = "";
