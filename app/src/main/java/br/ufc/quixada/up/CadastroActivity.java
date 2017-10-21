@@ -48,16 +48,24 @@ public class CadastroActivity extends AppCompatActivity {
         buttonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editTextPassword.getText().toString().equals(editTextPasswordConfirm.getText().toString())) {
-                    user = new User();
-                    user.setNome(editTextName.getText().toString());
-                    user.setEmail(editTextEmail.getText().toString());
-                    user.setSenha(editTextPassword.getText().toString());
-                } else {
-                    Toast.makeText(CadastroActivity.this, "As senhas não são correspondentes", Toast.LENGTH_LONG).show();
+                if( !editTextName.getText().toString().equals("") &&
+                    !editTextEmail.getText().toString().equals("") &&
+                    !editTextPassword.getText().toString().equals("") &&
+                    !editTextPasswordConfirm.getText().toString().equals("")){
+
+                    if (editTextPassword.getText().toString().equals(editTextPasswordConfirm.getText().toString())) {
+                        user = new User();
+                        user.setNome(editTextName.getText().toString());
+                        user.setEmail(editTextEmail.getText().toString());
+                        user.setSenha(editTextPassword.getText().toString());
+                    } else {
+                        Toast.makeText(CadastroActivity.this, "As senhas não são correspondentes", Toast.LENGTH_LONG).show();
+                    }
+                    cadastrarUsuario();
+                }else{
+                    Toast.makeText(getBaseContext(), "Por favor preencha os campos vazios!", Toast.LENGTH_SHORT).show();
                 }
 
-                cadastrarUsuario();
 
             }
         });
