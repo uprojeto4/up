@@ -3,6 +3,7 @@ package br.ufc.quixada.up.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -13,8 +14,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 
+import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.R;

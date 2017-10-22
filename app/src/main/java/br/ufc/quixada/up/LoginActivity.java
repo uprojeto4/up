@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
@@ -26,17 +27,27 @@ public class LoginActivity extends AppCompatActivity {
     User usuarios;
 
     private FirebaseAuth auth;
+    private FirebaseUser user;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         email = (EditText) findViewById(R.id.editText_email);
         senha = (EditText) findViewById(R.id.editText_senha);
 
-    }
 
+
+        //teste de user Logged
+        auth = FirebaseConfig.getAuth();
+        user = auth.getCurrentUser();
+
+        if(user != null){
+            openHome();
+        }
+
+    }
 
     public void fazerLogin(View view){
 
@@ -59,21 +70,25 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void validarLogin(){
-                Log.d("tag", "testetetetete");
         auth = FirebaseConfig.getAuth();
         auth.signInWithEmailAndPassword(usuarios.getEmail(), usuarios.getSenha()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                    startActivity(intent);
-                    Toast.makeText(getBaseContext(), "Olá "+ usuarios.getNome() +"! :)", Toast.LENGTH_SHORT).show();
+                    openHome();
+                    Toast.makeText(getBaseContext(), "Olá "+ user.getDisplayName() +"! :)", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getBaseContext(), "Sinto muito :( email ou senha incorretos!", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
+    }
+
+    private void openHome(){
+        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
 }
