@@ -39,8 +39,8 @@ public class CategoriasActivity extends BaseActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        recyclerView = findViewById(R.id.recyclerViewCategorias);
-        categorias = getResources().getStringArray(R.array.categorias);
+//        recyclerView = findViewById(R.id.recyclerViewCategorias);
+//        categorias = getResources().getStringArray(R.array.categorias);
     }
 
 }
