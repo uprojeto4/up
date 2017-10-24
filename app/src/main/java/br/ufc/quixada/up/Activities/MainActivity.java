@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.like.LikeButton;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,9 @@ public class MainActivity extends BaseActivity{
     Post post = new Post();
     Post post2 = new Post();
     Post post3 = new Post();
+
+    LikeButton likeButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,6 +60,9 @@ public class MainActivity extends BaseActivity{
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        likeButton = (LikeButton) findViewById(R.id.heart_button);
 
 
 //        for (int i = 0; i<5; i++){
@@ -145,5 +152,12 @@ public class MainActivity extends BaseActivity{
 
     public void negociar(View view){
         Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
+    }
+
+    public void favorite(View view){
+//        favorite = (ImageButton) findViewById(R.id.favorite);
+//        favorite.setColorFilter(Color.argb(255, 68, 68, 68));
+        likeButton.setLiked(true);
+//        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
     }
 }
