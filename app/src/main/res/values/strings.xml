@@ -22,7 +22,7 @@
     <string name="title_activity_perfil">Meu perfil</string>
     <string name="title_activity_configuracoes">ConfiguracoesActivity</string>
     <string name="input_novo_anuncio_titulo">O que deseja anunciar?</string>
-    <string name="input_novo_anuncio_descricao">Descreva seu anúncio aqui</string>
+    <string name="input_novo_anuncio_descricao">Descreva seu anúncio</string>
     <string name="input_novo_anuncio_preco">Preço</string>
     <string name="text_view_categoria_label">Categoria</string>
 
