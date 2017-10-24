@@ -1,4 +1,4 @@
-package br.ufc.quixada.up;
+package br.ufc.quixada.up.Activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -18,9 +18,9 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
-import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.User;
+import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.Base64Custom;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
 

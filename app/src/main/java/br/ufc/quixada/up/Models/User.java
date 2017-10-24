@@ -19,8 +19,11 @@ public class User {
     private String senha;
     private String Id;
 
+    public User() {
+    }
+
     public void save() {
-        DatabaseReference databaseReference = FirebaseConfig.getFirebase();
+        DatabaseReference databaseReference = FirebaseConfig.getDatabase();
         databaseReference.child("user").child(String.valueOf(getId())).setValue(this);
     }
 
@@ -65,5 +68,15 @@ public class User {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", Id='" + Id + '\'' +
+                '}';
     }
 }

@@ -56,6 +56,24 @@ public class MainActivity extends BaseActivity{
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View nav_view =  navigationView.getHeaderView(0);
+
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        View hView =  navigationView.getHeaderView(0);
+//        TextView nav_user = (TextView)hView.findViewById(R.id.nav_name);
+//        nav_user.setText(user);
+
+        TextView textViewName = (TextView)nav_view.findViewById(R.id.textViewName);
+        TextView textViewEmail = (TextView)nav_view.findViewById(R.id.textViewEmail);
+
+        auth = FirebaseConfig.getAuth();
+        user = auth.getCurrentUser();
+
+        if(user != null){
+//            Toast.makeText(this, "teste" + user.getDisplayName() + " - " + user.getEmail(), Toast.LENGTH_LONG).show();
+            textViewName.setText(user.getDisplayName());
+            textViewEmail.setText(user.getEmail());
+        }
 
 
 //        for (int i = 0; i<5; i++){
