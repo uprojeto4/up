@@ -41,6 +41,10 @@
         <item name="colorControlHighlight">@color/colorAccent2</item>
     </style>
 
+    <style name="AppCompat.FullScreen" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <!--<style name="AppTheme.ActionBar" parent="AppTheme">-->
     <!--<item name="windowActionBarOverlay">false</item>-->
     <!--<item name="windowActionBar">true</item>-->

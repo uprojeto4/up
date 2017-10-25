@@ -7,7 +7,7 @@
     android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context="br.ufc.quixada.up.LoginActivity">
+    tools:context="br.ufc.quixada.up.Activities.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
