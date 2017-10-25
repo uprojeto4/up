@@ -24,7 +24,7 @@ public class User {
 
     public void save() {
         DatabaseReference databaseReference = FirebaseConfig.getDatabase();
-        databaseReference.child("user").child(String.valueOf(getId())).setValue(this);
+        databaseReference.child("users").child(String.valueOf(getId())).setValue(this);
     }
 
     @Exclude
@@ -33,7 +33,6 @@ public class User {
         userHashMap.put("id", getId());
         userHashMap.put("name", getNome());
         userHashMap.put("email", getEmail());
-        userHashMap.put("password", getSenha());
 
         return userHashMap;
     }
@@ -54,10 +53,6 @@ public class User {
         return email;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -66,16 +61,11 @@ public class User {
         this.email = email;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
-                ", senha='" + senha + '\'' +
                 ", Id='" + Id + '\'' +
                 '}';
     }

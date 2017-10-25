@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.R;
@@ -20,6 +21,7 @@ public class BaseActivity extends AppCompatActivity
 
     FirebaseAuth auth;
     FirebaseUser user;
+    DatabaseReference databaseReference;
 
 
     @Override

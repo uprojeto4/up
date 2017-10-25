@@ -15,7 +15,7 @@ public class FirebaseConfig {
 
     public static DatabaseReference getDatabase(){
         if(database == null){
-            database = FirebaseDatabase.getInstance().getReference("database conectado com sucesso!");
+            database = FirebaseDatabase.getInstance().getReference();
         }
 
         return database;
