@@ -6,13 +6,16 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.like.LikeButton;
@@ -26,6 +29,8 @@ import br.ufc.quixada.up.Adapters.TagAdapter;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Models.Tag;
 import br.ufc.quixada.up.R;
+
+import br.ufc.quixada.up.Activities.MainActivity;
 
 public class ListaDesejosActivity extends BaseActivity {
 
@@ -54,6 +59,8 @@ public class ListaDesejosActivity extends BaseActivity {
     ImageButton favorite;
 
     LikeButton likeButton;
+
+
 
 
     @Override
@@ -91,14 +98,27 @@ public class ListaDesejosActivity extends BaseActivity {
         postsList.setAdapter(listaDesejosPostsAdapter);
         postsList.setNestedScrollingEnabled(false);
 
+//        updateProfile();
+
+//        TextView nome = (TextView) findViewById(R.id.nome);
+
+//        nome.setText(MainActivity.localUser.getNome());
+
+//        Log.d("TESTE", "nome: "+ MainActivity.localUser.getNome());
+
         addPosts();
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.global_filters, menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.lista_desejos, menu);
+        View menuItemView = findViewById(R.id.action_filters); // SAME ID AS MENU ID
+        PopupMenu popupMenu = new PopupMenu(this, menuItemView);
+        popupMenu.inflate(R.menu.popup_filters_user);
+//        popupMenu.show();
         return true;
     }
 

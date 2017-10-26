@@ -40,7 +40,7 @@ public class MainActivity extends BaseActivity{
     Post post = new Post();
     Post post2 = new Post();
     Post post3 = new Post();
-    User localUser;
+    public static User localUser;
     TextView textViewEmail;
     TextView textViewName;
 
