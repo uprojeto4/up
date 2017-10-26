@@ -72,5 +72,7 @@
     <string name="input_edit_email_hint">Altere o seu email</string>
     <string name="input_edit_senha_hint">Altere a sua senha</string>
     <string name="input_edit_confirm_senha_hint">Confirme a sua nova senha</string>
+    <string name="title_activity_cadastro">CadastroActivity</string>
+    <string name="dafault_user_name">Visitante</string>
 
 </resources>
