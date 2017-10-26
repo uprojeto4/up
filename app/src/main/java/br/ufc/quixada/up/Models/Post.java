@@ -1,21 +1,28 @@
 package br.ufc.quixada.up.Models;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.bumptech.glide.load.engine.Resource;
+
+import java.lang.reflect.Array;
+import java.net.URL;
+import java.util.List;
 
 import br.ufc.quixada.up.R;
 
 /**
  * Created by Isaac Bruno on 09/10/2017.
- */
+            */
 
-public class Post {
+    public class Post {
 
     private String title;
     private String subtitle;
     private Double price;
     private int ups;
+//    private int imgRef;
+//    private List<Integer> imgReferences;
 
     public int getUps() {
         return ups;
@@ -49,6 +56,13 @@ public class Post {
         this.subtitle = subtitle;
     }
 
+//    public int setImgRef(int img){
+//        Log.d("IMAGEM!!!!!!!!!!!!!!!!!", "imagem"+img);
+//        this.imgRef = img;
+//        this.imgReferences.add(this.imgRef);
+//        return imgRef;
+//    }
+
     public int getImage(int i){
         switch (i){
             case 0:
@@ -63,5 +77,6 @@ public class Post {
             default:
                 return (R.drawable.default_img);
         }
+//        return this.imgReferences.get(i);
     }
 }

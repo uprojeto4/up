@@ -10,14 +10,21 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
 import br.ufc.quixada.up.R;
 
 import br.ufc.quixada.up.Adapters.PerfilFragmentPagerAdapter;
+
+import static br.ufc.quixada.up.R.id.nav_view;
 
 public class PerfilActivity extends BaseActivity {
 
     private TabLayout perfilTabLayout;
     private ViewPager perfilViewPager;
+
+//    TextView textViewEmail;
+//    TextView textViewName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +32,7 @@ public class PerfilActivity extends BaseActivity {
         setContentView(R.layout.activity_perfil);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         perfilTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         perfilViewPager = (ViewPager) findViewById(R.id.view_pager_perfil);
@@ -48,8 +56,15 @@ public class PerfilActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+//        textViewName = (TextView)findViewById(R.id.textViewName);
+//        textViewEmail = (TextView)findViewById(R.id.textViewEmail);
+//
+//        textViewName.setText(localUser.getNome());
+//        textViewEmail.setText(localUser.getEmail());
 
 //       ImageView imageview = (ImageView) findViewById(R.id.header_cover_image);
 //

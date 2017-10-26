@@ -17,8 +17,8 @@
     <string name="title_activity_novo_anuncio">Novo anúncio</string>
     <string name="title_activity_negociacoes">NegociacoesActivity</string>
     <string name="title_activity_base">BaseActivity</string>
-    <string name="title_activity_lista_desejos">ListaDesejosActivity</string>
     <string name="title_activity_categorias">Categorias</string>
+    <string name="title_activity_lista_desejos">Lista de desejos</string>
     <string name="title_activity_perfil">Meu perfil</string>
     <string name="title_activity_configuracoes">ConfiguracoesActivity</string>
     <string name="input_novo_anuncio_titulo">O que deseja anunciar?</string>
@@ -75,5 +75,8 @@
     <string name="input_edit_senha_hint">Altere a sua senha</string>
     <string name="input_edit_confirm_senha_hint">Confirme a sua nova senha</string>
     <string name="title_activity_cadastro">CadastroActivity</string>
+    <string name="dafault_user_name">Visitante</string>
+
+    <string name="lista_desejos_action_menu">Limpar lista</string>
 
 </resources>
