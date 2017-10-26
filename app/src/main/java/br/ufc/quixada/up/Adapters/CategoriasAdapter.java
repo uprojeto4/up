@@ -25,6 +25,7 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Ca
 
     @Override
     public CategoriasAdapter.CategoriaViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+
         View itemLayoutView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_categoria_icone, null);
         CategoriaViewHolder categoriaViewHolder = new CategoriaViewHolder(itemLayoutView);
         return categoriaViewHolder;
@@ -32,6 +33,7 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Ca
 
     @Override
     public void onBindViewHolder(CategoriasAdapter.CategoriaViewHolder categoriaViewHolder, int i) {
+
         Category cat = categorySet.get(i);
 
         categoriaViewHolder.icon.setImageResource(cat.getIcon());
@@ -50,13 +52,14 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Ca
         public ImageView icon;
         public TextView title;
 
-        public Category category;
+        private Category category;
 
-        public CategoriaViewHolder(View itemLayoutView) {
+        private CategoriaViewHolder(View itemLayoutView) {
 
             super(itemLayoutView);
-            icon = (ImageView) itemLayoutView.findViewById(R.id.iconeCategoria);
-            title = (TextView) itemLayoutView.findViewById(R.id.nomeCategoria);
+
+            icon = itemLayoutView.findViewById(R.id.iconeCategoria);
+            title = itemLayoutView.findViewById(R.id.nomeCategoria);
 
             itemLayoutView.setOnClickListener(new View.OnClickListener() {
 

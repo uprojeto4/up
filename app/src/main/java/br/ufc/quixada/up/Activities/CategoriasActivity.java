@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -50,12 +51,14 @@ public class CategoriasActivity extends BaseActivity {
         recyclerView = findViewById(R.id.recyclerViewCategorias);
         generateCategories();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         adapter = new CategoriasAdapter(arrayListCategorias);
+        adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
-
         recyclerView.setHasFixedSize(true);
-
     }
 
     private void generateCategories() {
@@ -75,6 +78,7 @@ public class CategoriasActivity extends BaseActivity {
 
         arrayListCategorias = new ArrayList<Category>();
         for (int i = 0; i < categorias.length; i++) {
+            Log.d("cat i", i + " " + categorias[i]);
             Category category = new Category();
             category.setIcon(icones[i]);
             category.setTitle(categorias[i]);

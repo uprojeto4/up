@@ -28,17 +28,17 @@
     <string name="spinner_categoria_selecione">Selecione&#8230;</string>
 
     <string-array name="categorias">
+        <item>Culinária</item>
+        <item>Educação</item>
         <item>Eletrônicos</item>
+        <item>Empregos/Serviços</item>
+        <item>Esportes</item>
         <item>Eletrodomésticos</item>
-        <item>Móveis/Decoração</item>
         <item>Imóveis</item>
+        <item>Móveis/Decoração</item>
+        <item>Pets</item>
         <item>Veículos</item>
         <item>Vestuário/Acessórios</item>
-        <item>Culinária</item>
-        <item>Pets</item>
-        <item>Empregos/Serviços</item>
-        <item>Educação</item>
-        <item>Esportes</item>
     </string-array>
 
     <string name="text_view_adicionar_imagens">Adicionar imagens</string>
