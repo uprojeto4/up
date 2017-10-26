@@ -56,7 +56,6 @@ public class CategoriasActivity extends BaseActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         adapter = new CategoriasAdapter(arrayListCategorias);
-        adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
     }

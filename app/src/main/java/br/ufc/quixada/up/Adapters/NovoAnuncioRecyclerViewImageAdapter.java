@@ -40,10 +40,7 @@ public class NovoAnuncioRecyclerViewImageAdapter extends RecyclerView.Adapter<No
 
         final Image image = images.get(position);
 
-        Glide.with(context)
-                .load(image.getPath())
-                .apply(options)
-                .into(holder.imageView);
+        Glide.with(context).load(image.getPath()).apply(options).into(holder.imageView);
 
 //        if (position == getItemCount() - 1){
 //            images.get(position - 1).
