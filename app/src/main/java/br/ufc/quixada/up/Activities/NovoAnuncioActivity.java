@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 
-import br.ufc.quixada.up.Adapters.RecyclerViewImageAdapter;
+import br.ufc.quixada.up.Adapters.NovoAnuncioRecyclerViewImageAdapter;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.InputMask;
 import br.ufc.quixada.up.Utils.RecyclerViewPhotoSeparator;
@@ -54,7 +54,7 @@ public class NovoAnuncioActivity extends BaseActivity implements View.OnClickLis
     Button buttonSalvarAnuncio;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.ItemDecoration itemDecoration;
-    private RecyclerViewImageAdapter imageAdapter;
+    private NovoAnuncioRecyclerViewImageAdapter imageAdapter;
     private ArrayList<Image> images = new ArrayList<>();
     Locale locale = new Locale("pt", "BR");
 
@@ -85,7 +85,7 @@ public class NovoAnuncioActivity extends BaseActivity implements View.OnClickLis
         mainConstraintLayout = findViewById(R.id.mainConstraintLayout);
 
         // imageAdapter e implementações de swipe para deletar
-        imageAdapter = new RecyclerViewImageAdapter(this);
+        imageAdapter = new NovoAnuncioRecyclerViewImageAdapter(this);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         itemDecoration = new RecyclerViewPhotoSeparator(4);
         recyclerView.setLayoutManager(layoutManager);
