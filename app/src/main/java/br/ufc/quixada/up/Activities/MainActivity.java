@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.like.LikeButton;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,9 +40,12 @@ public class MainActivity extends BaseActivity{
     Post post = new Post();
     Post post2 = new Post();
     Post post3 = new Post();
-    User localUser;
+    public static User localUser;
     TextView textViewEmail;
     TextView textViewName;
+
+
+    LikeButton likeButton;
 
 
     @Override
@@ -87,6 +91,9 @@ public class MainActivity extends BaseActivity{
         if(user != null){
             updateLocalUser();
         }
+
+
+        likeButton = (LikeButton) findViewById(R.id.heart_button);
 
 
 //        for (int i = 0; i<5; i++){
@@ -178,6 +185,13 @@ public class MainActivity extends BaseActivity{
         Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
     }
 
+
+    public void favorite(View view) {
+//        favorite = (ImageButton) findViewById(R.id.favorite);
+//        favorite.setColorFilter(Color.argb(255, 68, 68, 68));
+        likeButton.setLiked(true);
+//        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
+    }
     //Atualizar usuario local
     public void updateLocalUser(){
 

@@ -1,11 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="br.ufc.quixada.up.Activities.ListaDesejosActivity"
-    tools:showIn="@layout/activity_lista_desejos">
+<!--<LinearLayout>-->
 
-</android.support.constraint.ConstraintLayout>
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="br.ufc.quixada.up.Activities.ListaDesejosActivity"
+        tools:showIn="@layout/activity_lista_desejos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+
+
+            <!--<ListView-->
+                <!--android:id="@+id/tagListView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent" />-->
+
+            <!--&lt;!&ndash;<Button&ndash;&gt;-->
+                <!--&lt;!&ndash;android:id="@+id/button4"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_margin="16dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:background="@drawable/tag_shape"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:paddingLeft="20dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:paddingRight="20dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:text="Roupas"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:textColor="@color/primaryTextColor" />&ndash;&gt;-->
+
+
+        <!--</LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!--<TextView-->
+                <!--android:id="@+id/nome"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="teste"/>-->
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/my_recycler_view"
+                android:visibility="invisible"
+                android:layout_width="0dp"
+                android:layout_height="0dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/posts_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+<!--</LinearLayout>-->
