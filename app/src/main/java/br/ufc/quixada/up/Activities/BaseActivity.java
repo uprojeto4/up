@@ -2,17 +2,40 @@ package br.ufc.quixada.up.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    FirebaseAuth auth;
+    FirebaseUser user;
+    DatabaseReference databaseReference;
+
+//    User localUser;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +61,83 @@ public class BaseActivity extends AppCompatActivity
 //
 //        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 //        navigationView.setNavigationItemSelectedListener(this);
+
+//        auth = FirebaseConfig.getAuth();
+//        user = auth.getCurrentUser();
+//        databaseReference = FirebaseConfig.getDatabase();
+//        localUser = new User();
+//
+//        if(user != null){
+//            updateLocalUser();
+//        }
+
     }
+
+
+//    public void updateLocalUser(){
+//
+//        Query email = databaseReference.child("users").orderByChild("email").equalTo(user.getEmail());
+//        email.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                    localUser = singleSnapshot.getValue(User.class);
+////                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
+////                    textViewName.setText(localUser.getNome());
+////                    textViewEmail.setText(localUser.getEmail());
+//                    updateProfile();
+//                }
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+////                Log.e(TAG, "onCancelled", databaseError.toException());
+//                Toast.makeText(getBaseContext(), "Usuário não autorizado!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+////        ValueEventListener userListener = new ValueEventListener() {
+////            @Override
+////            public void onDataChange(DataSnapshot dataSnapshot) {
+////                // Get Post object and use the values to update the UI
+//////                String s = dataSnapshot.child("users").child("01").getValue(String.class);
+////                User user = dataSnapshot.child("user").child("aXNhYWMtcGpAaG90bWFpbC5jb20=").getValue(User.class);
+////                Toast.makeText(getBaseContext(), "Opa: " + user, Toast.LENGTH_LONG).show();
+////                // ...
+////            }
+////
+////            @Override
+////            public void onCancelled(DatabaseError databaseError) {
+////                // Getting Post failed, log a message
+////                Toast.makeText(getBaseContext(), "Opa, deu merda!", Toast.LENGTH_LONG).show();
+////                // ...
+////            }
+////        };
+//        //Executa sempre que os dados mudarem
+////        databaseReference.addValueEventListener(userListener);
+//
+//        //Executa apenas uma vez
+////        databaseReference.addListenerForSingleValueEvent(userListener);
+//
+//    }
+//
+//
+//    public void updateProfile(){
+//        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                .setDisplayName(localUser.getNome())
+//                .build();
+//
+//        user = auth.getCurrentUser();
+//
+//        if(user != null){
+//            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Void> task) {
+//                    Toast.makeText(getBaseContext(), "Olá "+ user.getDisplayName() +"! :)", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        }
+//    }
+
 
     @Override
     public void onBackPressed() {
@@ -106,11 +205,19 @@ public class BaseActivity extends AppCompatActivity
             Intent intent = new Intent(this, ConfiguracoesActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_sair) {
-
+            signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void signOut(){
+        auth = FirebaseConfig.getAuth();
+        auth.signOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

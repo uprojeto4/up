@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/horizontal_card_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_gravity="left"-->
+                <!--android:layout_weight="2"-->
+                <!--android:orientation="vertical"-->
+                <!--android:paddingBottom="16dp"-->
+                <!--android:paddingLeft="16dp"-->
+                <!--android:paddingRight="16dp"-->
+                <!--android:paddingTop="16dp">-->
+
+                <!--<TextView-->
+                <!--android:id="@+id/LD_textView_title"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Primeiro Anúncio do Up!"-->
+                <!--android:textColor="@color/secondaryTextColor"-->
+                <!--android:textSize="24sp"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                <!--app:layout_constraintRight_toRightOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+                <!--<TextView-->
+                <!--android:id="@+id/LD_textView_describ"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:maxHeight="28dp"-->
+                <!--android:paddingTop="8dp"-->
+                <!--android:text="Apenas uma breve desrição do produto nada que seja maior do que tres linhas" />-->
+
+                <!--<TextView-->
+                <!--android:id="@+id/LD_textView_price"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:paddingTop="8dp"-->
+                <!--android:text="R$ 10,45 KG"-->
+                <!--android:textColor="@color/colorAccent2"-->
+                <!--android:textSize="18sp"-->
+                <!--android:textStyle="bold" />-->
+
+                <!--</LinearLayout>-->
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:id="@+id/LD_textView_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="Primeiro Anúncio do Up!"
+                        android:textColor="@color/secondaryTextColor"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/LD_textView_describ"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:maxLines="2"
+                        android:text="Apenas uma breve desrição do produto nada que seja maior do que tres linhas" />
+
+                    <TextView
+                        android:id="@+id/LD_textView_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:maxLines="1"
+                        android:text="R$ 10,45 KG"
+                        android:textColor="@color/colorAccent2"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/LD_imageView_photo"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="right"
+                    android:layout_weight="0"
+                    android:adjustViewBounds="false"
+                    android:elevation="2dp"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/image_test_1" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/horizontal_card_controls"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:drawable/divider_horizontal_bright"
+                    android:orientation="horizontal"></LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <!--<ImageButton-->
+                        <!--android:id="@+id/favorite"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:backgroundTint="@color/cardview_light_background"-->
+                        <!--android:onClick="unfavorite"-->
+                        <!--android:tint="@color/imagepicker_colorAccent"-->
+                        <!--app:srcCompat="@drawable/ic_favorite_black_24dp" />-->
+
+                    <com.like.LikeButton
+                        app:icon_type="heart"
+                        app:icon_size="18dp"
+                        android:id="@+id/heart_button"
+                        app:liked="true"
+                        android:onClick="favorite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <ImageButton
+                        android:id="@+id/share"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="@color/cardview_light_background"
+                        android:onClick="share"
+                        android:tint="#444444"
+                        app:srcCompat="@drawable/ic_menu_share" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/button3"
+                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="right"
+                            android:layout_weight="1"
+                            android:elevation="0dp"
+                            android:onClick="negociar"
+                            android:text="@string/button_comprar" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>
