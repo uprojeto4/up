@@ -19,7 +19,7 @@ public class User {
     private String senha;
     private String Id;
 
-    public User() {
+    private User() {
     }
 
     public void save() {
@@ -59,6 +59,10 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public static User getInstance(){
+        return new User();
     }
 
     @Override

@@ -63,7 +63,7 @@ public class CadastroActivity extends AppCompatActivity {
                     !editTextPasswordConfirm.getText().toString().equals("")){
 
                     if (editTextPassword.getText().toString().equals(editTextPasswordConfirm.getText().toString())) {
-                        localUser = new User();
+                        localUser = User.getInstance();
                         localUser.setNome(editTextName.getText().toString());
                         localUser.setEmail(editTextEmail.getText().toString());
                     } else {

@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity{
         auth = FirebaseConfig.getAuth();
         user = auth.getCurrentUser();
         databaseReference = FirebaseConfig.getDatabase();
-        localUser = new User();
+        localUser = User.getInstance();
 
         if(user != null){
             updateLocalUser();

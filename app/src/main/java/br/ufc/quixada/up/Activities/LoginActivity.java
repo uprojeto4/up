@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
     //Metodo para fazer o login
     public void fazerLogin(View view){
         if(!email.getText().toString().equals("") && !senha.getText().toString().equals("")){
-            usuario = new User();
+            usuario = User.getInstance();
             usuario.setEmail(email.getText().toString());
             validarLogin();
         }else{

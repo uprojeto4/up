@@ -24,6 +24,7 @@ public class BaseActivity extends AppCompatActivity
     DatabaseReference databaseReference;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
