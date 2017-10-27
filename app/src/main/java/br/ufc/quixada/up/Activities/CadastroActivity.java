@@ -37,11 +37,11 @@ public class CadastroActivity extends AppCompatActivity {
     private EditText editTextPassword;
     private EditText editTextPasswordConfirm;
     private Button buttonSignup;
-    private User localUser;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
     private DatabaseReference databaseReference;
+    private User localUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

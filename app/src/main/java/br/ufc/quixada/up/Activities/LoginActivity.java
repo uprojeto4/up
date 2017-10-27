@@ -30,11 +30,11 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText email;
     EditText senha;
-    User usuario;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
     private DatabaseReference databaseReference;
+    private User usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){

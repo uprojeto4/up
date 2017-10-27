@@ -5,7 +5,9 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
+import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 
 public class CategoriasActivity extends BaseActivity {
@@ -35,6 +37,9 @@ public class CategoriasActivity extends BaseActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        if(user != null){
+            updateLocalUser();
+        }
     }
 
 }
