@@ -14,7 +14,6 @@ public class FirebaseConfig {
 
     public static DatabaseReference database;
     public static FirebaseAuth auth;
-//    public static User localUser;
 
     public static DatabaseReference getDatabase(){
         if(database == null){
@@ -31,12 +30,4 @@ public class FirebaseConfig {
 
         return auth;
     }
-
-//    public static User getLocalUser(){
-//        if(localUser == null){
-//            localUser = User.getInstance();
-//        }
-//
-//        return localUser;
-//    }
 }

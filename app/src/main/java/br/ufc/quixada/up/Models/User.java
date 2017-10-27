@@ -16,8 +16,9 @@ public class User {
 
     private String nome;
     private String email;
-    private String senha;
     private String Id;
+
+    private static User instance;
 
     private User() {
     }
@@ -62,7 +63,14 @@ public class User {
     }
 
     public static User getInstance(){
-        return new User();
+        if(instance == null){
+            synchronized (User.class){
+                if( instance == null ) {
+                    instance = new User();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

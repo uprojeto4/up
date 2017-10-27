@@ -27,6 +27,7 @@ public class AnuncioActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
 }
