@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.like.LikeButton;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,6 +40,13 @@ public class MainActivity extends BaseActivity{
     Post post = new Post();
     Post post2 = new Post();
     Post post3 = new Post();
+  
+    public static User localUser;
+    TextView textViewEmail;
+    TextView textViewName;
+
+    LikeButton likeButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -76,6 +84,9 @@ public class MainActivity extends BaseActivity{
         if(user != null){
             updateLocalUser();
         }
+
+
+        likeButton = (LikeButton) findViewById(R.id.heart_button);
 
 
 //        for (int i = 0; i<5; i++){
@@ -172,6 +183,36 @@ public class MainActivity extends BaseActivity{
 //
 //        Query email = databaseReference.child("users").orderByChild("email").equalTo(user.getEmail());
 //        email.addListenerForSingleValueEvent(new ValueEventListener() {
+
+    public void favorite(View view) {
+//        favorite = (ImageButton) findViewById(R.id.favorite);
+//        favorite.setColorFilter(Color.argb(255, 68, 68, 68));
+        likeButton.setLiked(true);
+//        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
+    }
+    //Atualizar usuario local
+    public void updateLocalUser(){
+
+        Query email = databaseReference.child("users").orderByChild("email").equalTo(user.getEmail());
+        email.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    localUser = singleSnapshot.getValue(User.class);
+//                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
+                    textViewName.setText(localUser.getNome());
+                    textViewEmail.setText(localUser.getEmail());
+                    updateProfile();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+//                Log.e(TAG, "onCancelled", databaseError.toException());
+                Toast.makeText(getBaseContext(), "Usuário não autorizado!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+//        ValueEventListener userListener = new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
 //                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){

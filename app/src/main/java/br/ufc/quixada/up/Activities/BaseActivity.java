@@ -38,6 +38,8 @@ public class BaseActivity extends AppCompatActivity
     TextView textViewEmail;
     User localUser;
 
+//    User localUser;
+
 
 
     @Override
@@ -70,7 +72,83 @@ public class BaseActivity extends AppCompatActivity
 //
 //        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 //        navigationView.setNavigationItemSelectedListener(this);
+
+//        auth = FirebaseConfig.getAuth();
+//        user = auth.getCurrentUser();
+//        databaseReference = FirebaseConfig.getDatabase();
+//        localUser = new User();
+//
+//        if(user != null){
+//            updateLocalUser();
+//        }
+
     }
+
+
+//    public void updateLocalUser(){
+//
+//        Query email = databaseReference.child("users").orderByChild("email").equalTo(user.getEmail());
+//        email.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                    localUser = singleSnapshot.getValue(User.class);
+////                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
+////                    textViewName.setText(localUser.getNome());
+////                    textViewEmail.setText(localUser.getEmail());
+//                    updateProfile();
+//                }
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+////                Log.e(TAG, "onCancelled", databaseError.toException());
+//                Toast.makeText(getBaseContext(), "Usuário não autorizado!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+////        ValueEventListener userListener = new ValueEventListener() {
+////            @Override
+////            public void onDataChange(DataSnapshot dataSnapshot) {
+////                // Get Post object and use the values to update the UI
+//////                String s = dataSnapshot.child("users").child("01").getValue(String.class);
+////                User user = dataSnapshot.child("user").child("aXNhYWMtcGpAaG90bWFpbC5jb20=").getValue(User.class);
+////                Toast.makeText(getBaseContext(), "Opa: " + user, Toast.LENGTH_LONG).show();
+////                // ...
+////            }
+////
+////            @Override
+////            public void onCancelled(DatabaseError databaseError) {
+////                // Getting Post failed, log a message
+////                Toast.makeText(getBaseContext(), "Opa, deu merda!", Toast.LENGTH_LONG).show();
+////                // ...
+////            }
+////        };
+//        //Executa sempre que os dados mudarem
+////        databaseReference.addValueEventListener(userListener);
+//
+//        //Executa apenas uma vez
+////        databaseReference.addListenerForSingleValueEvent(userListener);
+//
+//    }
+//
+//
+//    public void updateProfile(){
+//        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                .setDisplayName(localUser.getNome())
+//                .build();
+//
+//        user = auth.getCurrentUser();
+//
+//        if(user != null){
+//            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Void> task) {
+//                    Toast.makeText(getBaseContext(), "Olá "+ user.getDisplayName() +"! :)", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        }
+//    }
+
 
     @Override
     public void onBackPressed() {
