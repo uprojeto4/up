@@ -35,6 +35,16 @@
         <item name="colorPrimary">@android:color/transparent</item>
     </style>
 
+    <style name="EditTextTheme" parent="AppTheme">
+        <item name="colorControlNormal">@color/primaryTextColor</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent2</item>
+    </style>
+
+    <style name="AppCompat.FullScreen" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <!--<style name="AppTheme.ActionBar" parent="AppTheme">-->
     <!--<item name="windowActionBarOverlay">false</item>-->
     <!--<item name="windowActionBar">true</item>-->

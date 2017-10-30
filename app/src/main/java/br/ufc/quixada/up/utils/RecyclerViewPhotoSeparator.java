@@ -1,4 +1,4 @@
-package br.ufc.quixada.up.utils;
+package br.ufc.quixada.up.Utils;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

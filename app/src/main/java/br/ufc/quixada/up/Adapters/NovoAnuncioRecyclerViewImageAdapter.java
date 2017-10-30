@@ -1,4 +1,4 @@
-package br.ufc.quixada.up.adapters;
+package br.ufc.quixada.up.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -16,14 +16,14 @@ import java.util.List;
 
 import br.ufc.quixada.up.R;
 
-public class RecyclerViewImageAdapter extends RecyclerView.Adapter<RecyclerViewImageAdapter.ImageViewHolder> {
+public class NovoAnuncioRecyclerViewImageAdapter extends RecyclerView.Adapter<NovoAnuncioRecyclerViewImageAdapter.ImageViewHolder> {
 
     private Context context;
     private List<Image> images;
     private LayoutInflater inflater;
     private RequestOptions options;
 
-    public RecyclerViewImageAdapter(Context context) {
+    public NovoAnuncioRecyclerViewImageAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         images = new ArrayList<>();
@@ -40,10 +40,7 @@ public class RecyclerViewImageAdapter extends RecyclerView.Adapter<RecyclerViewI
 
         final Image image = images.get(position);
 
-        Glide.with(context)
-                .load(image.getPath())
-                .apply(options)
-                .into(holder.imageView);
+        Glide.with(context).load(image.getPath()).apply(options).into(holder.imageView);
 
 //        if (position == getItemCount() - 1){
 //            images.get(position - 1).

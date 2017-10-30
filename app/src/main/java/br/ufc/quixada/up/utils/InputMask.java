@@ -1,4 +1,4 @@
-package br.ufc.quixada.up.utils;
+package br.ufc.quixada.up.Utils;
 
 import android.text.Editable;
 import android.text.TextWatcher;

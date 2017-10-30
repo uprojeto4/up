@@ -1,8 +1,6 @@
-package br.ufc.quixada.up;
+package br.ufc.quixada.up.Activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -12,26 +10,21 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.MultiTransformation;
-import com.bumptech.glide.request.RequestOptions;
+import br.ufc.quixada.up.R;
 
-import java.util.zip.Inflater;
+import br.ufc.quixada.up.Adapters.PerfilFragmentPagerAdapter;
 
-import br.ufc.quixada.up.Adapters.perfilFragmentPagerAdapater;
-import jp.wasabeef.glide.transformations.BlurTransformation;
-import jp.wasabeef.glide.transformations.GrayscaleTransformation;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
-
-import static br.ufc.quixada.up.R.drawable.image_test_1;
+import static br.ufc.quixada.up.R.id.nav_view;
 
 public class PerfilActivity extends BaseActivity {
 
     private TabLayout perfilTabLayout;
     private ViewPager perfilViewPager;
+
+//    TextView textViewEmail;
+//    TextView textViewName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +33,11 @@ public class PerfilActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         perfilTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         perfilViewPager = (ViewPager) findViewById(R.id.view_pager_perfil);
 
-        perfilViewPager.setAdapter(new perfilFragmentPagerAdapater(getSupportFragmentManager(), getResources().getStringArray(R.array.tabs_perfil)));
+        perfilViewPager.setAdapter(new PerfilFragmentPagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.tabs_perfil)));
 
         perfilTabLayout.setupWithViewPager(perfilViewPager);
 
@@ -62,8 +56,15 @@ public class PerfilActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+//        textViewName = (TextView)findViewById(R.id.textViewName);
+//        textViewEmail = (TextView)findViewById(R.id.textViewEmail);
+//
+//        textViewName.setText(localUser.getNome());
+//        textViewEmail.setText(localUser.getEmail());
 
 //       ImageView imageview = (ImageView) findViewById(R.id.header_cover_image);
 //
