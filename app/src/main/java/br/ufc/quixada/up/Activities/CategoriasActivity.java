@@ -51,7 +51,7 @@ public class CategoriasActivity extends BaseActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(user != null){
+        if(user != null) {
             updateLocalUser();
             recyclerView = findViewById(R.id.recyclerViewCategorias);
             generateCategories();
@@ -63,6 +63,7 @@ public class CategoriasActivity extends BaseActivity {
             adapter = new CategoriasAdapter(arrayListCategorias);
             recyclerView.setAdapter(adapter);
             recyclerView.setHasFixedSize(true);
+        }
     }
 
     private void generateCategories() {
