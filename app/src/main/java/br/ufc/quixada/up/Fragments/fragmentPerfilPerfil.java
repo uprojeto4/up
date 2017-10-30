@@ -45,7 +45,7 @@ public class fragmentPerfilPerfil extends FragmentBase {
         auth = FirebaseConfig.getAuth();
         user = auth.getCurrentUser();
         databaseReference = FirebaseConfig.getDatabase();
-        localUser = new User();
+        localUser = User.getInstance();
 
         if(user != null){
             updateLocalUser();
