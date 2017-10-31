@@ -22,7 +22,7 @@
     <string name="title_activity_perfil">Meu perfil</string>
     <string name="title_activity_configuracoes">ConfiguracoesActivity</string>
     <string name="input_novo_anuncio_titulo">O que deseja anunciar?</string>
-    <string name="input_novo_anuncio_descricao">Descreva seu anúncio aqui</string>
+    <string name="input_novo_anuncio_descricao">Descreva seu anúncio</string>
     <string name="input_novo_anuncio_preco">Preço</string>
     <string name="text_view_categoria_label">Categoria</string>
 
@@ -43,12 +43,15 @@
 
     <string name="text_view_adicionar_imagens">Adicionar imagens</string>
     <string name="text_view_quantidade">Quantidade</string>
-    <string name="text_view_salvar_anuncio">Salvar anúncio</string>
 
     <string name="alert_sair_sem_salvar_title"></string>
     <string name="alert_sair_sem_salvar_message">Deseja sair sem salvar seu anúncio?</string>
+
+    <!--Ações comuns-->
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
+    <string name="salvar">Salvar</string>
+    <string name="cancelar">Cancelar</string>
 
     <string name="erro_novo_anuncio_titulo">Seu anúncio precisa de um título.</string>
     <string name="erro_novo_anuncio_descricao">Seu anúncio precisa de uma descrição.</string>
@@ -72,5 +75,6 @@
     <string name="input_edit_email_hint">Altere o seu email</string>
     <string name="input_edit_senha_hint">Altere a sua senha</string>
     <string name="input_edit_confirm_senha_hint">Confirme a sua nova senha</string>
+    <string name="title_activity_cadastro">CadastroActivity</string>
 
 </resources>

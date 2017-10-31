@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import br.ufc.quixada.up.R;
 
 public class CategoriasActivity extends BaseActivity {
+
+    RecyclerView recyclerView;
+    String[] categorias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,8 @@ public class CategoriasActivity extends BaseActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        recyclerView = findViewById(R.id.recyclerViewCategorias);
+        categorias = getResources().getStringArray(R.array.categorias);
     }
 
 }
