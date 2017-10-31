@@ -220,8 +220,7 @@
                         <Spinner
                             android:id="@+id/spinnerCategorias"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:entries="@array/categorias" />
+                            android:layout_height="wrap_content" />
 
                     </LinearLayout>
 

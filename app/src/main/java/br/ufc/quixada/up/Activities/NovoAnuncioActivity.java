@@ -1,6 +1,7 @@
 package br.ufc.quixada.up.Activities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -53,6 +55,7 @@ public class NovoAnuncioActivity extends BaseActivity {
     EditText descricaoAnuncio;
     EditText precoAnuncio;
     EditText qtdItensAnuncio;
+    TextView categoriaAnuncioTitle;
     ArrayList<String> categorias = new ArrayList<>();
     Spinner spinnerCategoriasAnuncio;
     String spinnerCategoriasItemSelecionado = null;
@@ -95,6 +98,7 @@ public class NovoAnuncioActivity extends BaseActivity {
         spinnerCategoriasAnuncio = findViewById(R.id.spinnerCategorias);
         buttonSalvarAnuncio = findViewById(R.id.buttonSalvarAnuncio);
         mainConstraintLayout = findViewById(R.id.mainConstraintLayout);
+        categoriaAnuncioTitle = findViewById(R.id.textViewCategoria);
 
         // imageAdapter e implementações de swipe para deletar
         imageAdapter = new NovoAnuncioRecyclerViewImageAdapter(this);
@@ -130,8 +134,7 @@ public class NovoAnuncioActivity extends BaseActivity {
         // máscara de preço
         TextWatcher quantidadeMask = InputMask.monetario(precoAnuncio);
         precoAnuncio.addTextChangedListener(quantidadeMask);
-
-        categorias.add("Selecione...");
+        categorias.add(getString(R.string.spinner_categoria_selecionar));
         categorias.addAll(Arrays.asList(getResources().getStringArray(R.array.categorias)));
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, categorias) {
 
@@ -273,8 +276,21 @@ public class NovoAnuncioActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        Log.d("sismac", "back pressed");
-        super.onBackPressed();
+        if (imageAdapter.getItemCount() > 0 || tituloAnuncio.getText().length() != 0 || descricaoAnuncio.getText().length() != 0 ||
+                precoAnuncio.getText().length() != 0 || qtdItensAnuncio.getText().length() != 0 || spinnerCategoriasItemSelecionado != null) {
+            new AlertDialog.Builder(this)
+                    .setMessage(NovoAnuncioActivity.this.getString(R.string.alert_sair_sem_salvar_message))
+                    .setPositiveButton(NovoAnuncioActivity.this.getString(R.string.sair), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    }).setNegativeButton(NovoAnuncioActivity.this.getString(R.string.cancelar), null)
+                    .show();
+        } else {
+            finish();
+        }
+//        super.onBackPressed();
     }
 
 //    @Override
@@ -294,17 +310,17 @@ public class NovoAnuncioActivity extends BaseActivity {
 //        }
 //        super.onRestoreInstanceState(savedInstanceState);
 //    }
-
-    @Override
-    public void onPause(){
-        Log.d("sismac", "pausing");
-        super.onPause();
-    }
-
-    @Override
-    public void onStop(){
-        Log.d("sismac", "stopping");
-        super.onStop();
-    }
+//
+//    @Override
+//    public void onPause(){
+//        Log.d("sismac", "pausing");
+//        super.onPause();
+//    }
+//
+//    @Override
+//    public void onStop(){
+//        Log.d("sismac", "stopping");
+//        super.onStop();
+//    }
 
 }
