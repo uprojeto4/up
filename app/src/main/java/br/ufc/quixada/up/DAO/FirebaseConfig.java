@@ -4,21 +4,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import br.ufc.quixada.up.Models.User;
+
 /**
  * Created by Isaac Bruno on 20/10/2017.
  */
 
 public class FirebaseConfig {
 
-    public static DatabaseReference firebase;
+    public static DatabaseReference database;
     public static FirebaseAuth auth;
 
-    public static DatabaseReference getFirebase(){
-        if(firebase == null){
-            firebase = FirebaseDatabase.getInstance().getReference();
+    public static DatabaseReference getDatabase(){
+        if(database == null){
+            database = FirebaseDatabase.getInstance().getReference();
         }
 
-        return firebase;
+        return database;
     }
 
     public static FirebaseAuth getAuth(){
@@ -28,5 +30,4 @@ public class FirebaseConfig {
 
         return auth;
     }
-
 }

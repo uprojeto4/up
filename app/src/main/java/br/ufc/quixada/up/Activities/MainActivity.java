@@ -2,6 +2,7 @@ package br.ufc.quixada.up.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
@@ -14,14 +15,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.like.LikeButton;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Adapters.PostAdapter;
+import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 
 public class MainActivity extends BaseActivity{
@@ -30,6 +40,11 @@ public class MainActivity extends BaseActivity{
     Post post = new Post();
     Post post2 = new Post();
     Post post3 = new Post();
+  
+    public static User localUser;
+
+    LikeButton likeButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,6 +71,20 @@ public class MainActivity extends BaseActivity{
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View nav_view =  navigationView.getHeaderView(0);
+
+//       #Essas variaveis foram inicializadas na BaseActivity
+//        auth = FirebaseConfig.getAuth();
+//        user = auth.getCurrentUser();
+//        databaseReference = FirebaseConfig.getDatabase();
+//        localUser = User.getInstance();
+
+        if(user != null){
+            updateLocalUser();
+        }
+
+
+        likeButton = (LikeButton) findViewById(R.id.heart_button);
 
 
 //        for (int i = 0; i<5; i++){
@@ -140,10 +169,17 @@ public class MainActivity extends BaseActivity{
     }
 
     public void up(View view){
-
+        Toast.makeText(getBaseContext(),"Dar um up maroto", Toast.LENGTH_SHORT).show();
     }
 
     public void negociar(View view){
         Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
+    }
+
+    public void favorite(View view) {
+//        favorite = (ImageButton) findViewById(R.id.favorite);
+//        favorite.setColorFilter(Color.argb(255, 68, 68, 68));
+        likeButton.setLiked(true);
+//        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
     }
 }

@@ -7,6 +7,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
+
+import br.ufc.quixada.up.Models.User;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -48,16 +51,19 @@ public class CategoriasActivity extends BaseActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        recyclerView = findViewById(R.id.recyclerViewCategorias);
-        generateCategories();
+        if(user != null) {
+            updateLocalUser();
+            recyclerView = findViewById(R.id.recyclerViewCategorias);
+            generateCategories();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new CategoriasAdapter(arrayListCategorias);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
+            adapter = new CategoriasAdapter(arrayListCategorias);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setHasFixedSize(true);
+        }
     }
 
     private void generateCategories() {

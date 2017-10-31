@@ -7,16 +7,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 
 /**
  * Created by Brendon on 09/10/2017.
  */
 
-public class fragmentPerfilAnuncios extends Fragment {
+public class fragmentPerfilAnuncios extends FragmentBase {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        auth = FirebaseConfig.getAuth();
+        user = auth.getCurrentUser();
+        databaseReference = FirebaseConfig.getDatabase();
+        localUser = User.getInstance();
+
+        if(user != null){
+            updateLocalUser();
+        }
+
         return inflater.inflate(R.layout.fragment_perfil_anuncios, container, false);
     }
 }
