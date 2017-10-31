@@ -25,7 +25,7 @@
     <string name="input_novo_anuncio_descricao">Descreva seu anúncio</string>
     <string name="input_novo_anuncio_preco">Preço</string>
     <string name="text_view_categoria_label">Categoria</string>
-    <string name="spinner_categoria_selecione">Selecione&#8230;</string>
+    <string name="spinner_categoria_selecionar">Selecione&#8230;</string>
 
     <string-array name="categorias">
         <item>Culinária</item>
@@ -44,13 +44,15 @@
     <string name="text_view_adicionar_imagens">Adicionar imagens</string>
     <string name="text_view_quantidade">Quantidade</string>
 
-    <string name="alert_sair_sem_salvar_message">Deseja sair sem salvar seu anúncio?</string>
+    <string name="alert_sair_sem_salvar_message">Se você sair, as informações que você inseriu serão perdidas.</string>
 
     <!--Ações comuns-->
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
     <string name="salvar">Salvar</string>
     <string name="cancelar">Cancelar</string>
+    <string name="sair">Sair</string>
+    <string name="continuar_editando">Continuar editando</string>
 
     <string name="erro_novo_anuncio_titulo">Seu anúncio precisa de um título.</string>
     <string name="erro_novo_anuncio_descricao">Seu anúncio precisa de uma descrição.</string>

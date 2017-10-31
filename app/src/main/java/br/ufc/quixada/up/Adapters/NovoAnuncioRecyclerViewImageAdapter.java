@@ -32,7 +32,7 @@ public class NovoAnuncioRecyclerViewImageAdapter extends RecyclerView.Adapter<No
 
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ImageViewHolder(inflater.inflate(R.layout.item_imagem_novo_anuncio, parent, false));
+        return new ImageViewHolder(inflater.inflate(R.layout.row_imagem_novo_anuncio, parent, false));
     }
 
     @Override
@@ -41,10 +41,6 @@ public class NovoAnuncioRecyclerViewImageAdapter extends RecyclerView.Adapter<No
         final Image image = images.get(position);
 
         Glide.with(context).load(image.getPath()).apply(options).into(holder.imageView);
-
-//        if (position == getItemCount() - 1){
-//            images.get(position - 1).
-//        }
     }
 
     @Override

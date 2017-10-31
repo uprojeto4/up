@@ -69,17 +69,17 @@ public class CategoriasActivity extends BaseActivity {
     private void generateCategories() {
 
         categorias = getResources().getStringArray(R.array.categorias);
-        icones = new int[]{R.drawable.ic_sync_black_24dp,
-                           R.drawable.ic_add_circle_black_24dp,
-                           R.drawable.ic_exit_to_app_black_24dp,
-                           R.drawable.ic_menu_share,
-                           R.drawable.ic_favorite_black_24dp,
-                           R.drawable.ic_menu_manage,
-                           R.drawable.ic_menu_send,
-                           R.drawable.ic_menu_slideshow,
-                           R.drawable.ic_format_list_bulleted_black_24dp,
-                           R.drawable.ic_photo_black_24dp,
-                           R.drawable.ic_star_black_24dp};
+        icones = new int[]{R.drawable.ic_restaurant_black_24dp,
+                           R.drawable.ic_school_black_24dp,
+                           R.drawable.ic_phone_android_black_24dp,
+                           R.drawable.ic_work_black_24dp,
+                           R.drawable.ic_directions_bike_black_24dp,
+                           R.drawable.ic_fridge_filled,
+                           R.drawable.ic_home_variant_black,
+                           R.drawable.ic_weekend_black_24dp,
+                           R.drawable.ic_pets_black_24dp,
+                           R.drawable.ic_directions_car_black_24dp,
+                           R.drawable.ic_t_shirt_silhouette};
 
         arrayListCategorias = new ArrayList<Category>();
         for (int i = 0; i < categorias.length; i++) {
