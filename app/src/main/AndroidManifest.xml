@@ -41,9 +41,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.NegociacoesActivity"
-            android:label="@string/title_activity_negociacoes"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+
+        </activity>
+        <!--android:label="@string/title_activity_negociacoes"-->
         <!-- <activity -->
         <!-- android:name=".BaseActivity" -->
         <!-- android:label="@string/title_activity_base" -->
