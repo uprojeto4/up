@@ -83,4 +83,18 @@
 
     <string name="lista_desejos_action_menu">Limpar lista</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="tabs_negociacoes">
+        <item>Compras</item>
+        <item>Vendas</item>
+    </string-array>
+
+    <string-array name="spinner_negociacoes">
+        <item>Abertas</item>
+        <item>Fechadas</item>
+        <item>Canceladas</item>
+    </string-array>
+
 </resources>
