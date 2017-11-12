@@ -1,10 +1,13 @@
 package br.ufc.quixada.up.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import br.ufc.quixada.up.R;
 
@@ -25,6 +28,15 @@ public class NegociacoesActivity extends BaseActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+
+        LinearLayout containerNegociacao = findViewById(R.id.container_negociacao);
+        containerNegociacao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                startActivity(intent);
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

@@ -52,6 +52,9 @@
     <string name="salvar">Salvar</string>
     <string name="cancelar">Cancelar</string>
     <string name="sair">Sair</string>
+    <string name="enviar">Enviar</string>
+
+    <string name="escreva_mensagem">Escreva uma mensagem</string>
     <string name="continuar_editando">Continuar editando</string>
 
     <string name="erro_novo_anuncio_titulo">Seu anúncio precisa de um título.</string>
