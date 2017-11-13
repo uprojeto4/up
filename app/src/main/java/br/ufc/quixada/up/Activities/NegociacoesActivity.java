@@ -29,14 +29,14 @@ public class NegociacoesActivity extends BaseActivity {
 //            }
 //        });
 
-        LinearLayout containerNegociacao = findViewById(R.id.container_negociacao);
-        containerNegociacao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), ChatActivity.class);
-                startActivity(intent);
-            }
-        });
+//        LinearLayout containerNegociacao = findViewById(R.id.container_negociacao);
+//        containerNegociacao.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(view.getContext(), ChatActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
