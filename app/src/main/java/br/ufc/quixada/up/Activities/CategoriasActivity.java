@@ -52,7 +52,6 @@ public class CategoriasActivity extends BaseActivity {
         navigationView.setNavigationItemSelectedListener(this);
 
         if(user != null) {
-            updateLocalUser();
             recyclerView = findViewById(R.id.recyclerViewCategorias);
             generateCategories();
 

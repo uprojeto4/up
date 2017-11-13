@@ -35,14 +35,11 @@ public class BaseActivity extends AppCompatActivity
 
     FirebaseAuth auth;
     FirebaseUser user;
+    FirebasePreferences firebasePreferences;
     DatabaseReference databaseReference;
     TextView textViewName;
     TextView textViewEmail;
     User localUser;
-
-//    User localUser;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +49,11 @@ public class BaseActivity extends AppCompatActivity
         user = auth.getCurrentUser();
         databaseReference = FirebaseConfig.getDatabase();
         localUser = User.getInstance();
+        firebasePreferences = new FirebasePreferences(BaseActivity.this);
+
+        localUser.setId(firebasePreferences.getId());
+        localUser.setNome(firebasePreferences.getUserName());
+        localUser.setEmail(firebasePreferences.getUserEmail());
 
 //        setContentView(R.layout.activity_main);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -226,73 +228,54 @@ public class BaseActivity extends AppCompatActivity
         return true;
     }
 
-    //Atualizar usuario local
-    public void updateLocalUser(){
-
-        Query email = databaseReference.child("users").orderByChild("email").equalTo(user.getEmail());
-        email.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    localUser = singleSnapshot.getValue(User.class);
-//                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
-                    updateProfile();
-                    updateUserInfo();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-//                Log.e(TAG, "onCancelled", databaseError.toException());
-                Toast.makeText(getBaseContext(), "Usuário não autorizado!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-//        ValueEventListener userListener = new ValueEventListener() {
+//    //Atualizar usuario local
+//    public void updateLocalUser(){
+//
+//        Query email = databaseReference.child("users").orderByChild("email").equalTo(user.getEmail());
+//        email.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // Get Post object and use the values to update the UI
-////                String s = dataSnapshot.child("users").child("01").getValue(String.class);
-//                User user = dataSnapshot.child("user").child("aXNhYWMtcGpAaG90bWFpbC5jb20=").getValue(User.class);
-//                Toast.makeText(getBaseContext(), "Opa: " + user, Toast.LENGTH_LONG).show();
-//                // ...
+//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                    localUser = singleSnapshot.getValue(User.class);
+////                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
+//                    updateProfile();
+//                    updateUserInfo();
+//                }
 //            }
-//
 //            @Override
 //            public void onCancelled(DatabaseError databaseError) {
-//                // Getting Post failed, log a message
-//                Toast.makeText(getBaseContext(), "Opa, deu merda!", Toast.LENGTH_LONG).show();
-//                // ...
+////                Log.e(TAG, "onCancelled", databaseError.toException());
+//                Toast.makeText(getBaseContext(), "Usuário não autorizado!", Toast.LENGTH_SHORT).show();
 //            }
-//        };
-        //Executa sempre que os dados mudarem
-//        databaseReference.addValueEventListener(userListener);
-
-        //Executa apenas uma vez
-//        databaseReference.addListenerForSingleValueEvent(userListener);
-
-    }
-
-    //Atualizar propriedades do objeto currentUser do firebase
-    public void updateProfile(){
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(localUser.getNome())
-                .build();
-
-        user = auth.getCurrentUser();
-
-        if(user != null){
-            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    Toast.makeText(getBaseContext(), "Olá "+ user.getDisplayName() +"! :)", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-    }
+//        });
+//
+////        ValueEventListener userListener = new ValueEventListener() {
+////            @Override
+////            public void onDataChange(DataSnapshot dataSnapshot) {
+////                // Get Post object and use the values to update the UI
+//////                String s = dataSnapshot.child("users").child("01").getValue(String.class);
+////                User user = dataSnapshot.child("user").child("aXNhYWMtcGpAaG90bWFpbC5jb20=").getValue(User.class);
+////                Toast.makeText(getBaseContext(), "Opa: " + user, Toast.LENGTH_LONG).show();
+////                // ...
+////            }
+////
+////            @Override
+////            public void onCancelled(DatabaseError databaseError) {
+////                // Getting Post failed, log a message
+////                Toast.makeText(getBaseContext(), "Opa, deu merda!", Toast.LENGTH_LONG).show();
+////                // ...
+////            }
+////        };
+//        //Executa sempre que os dados mudarem
+////        databaseReference.addValueEventListener(userListener);
+//
+//        //Executa apenas uma vez
+////        databaseReference.addListenerForSingleValueEvent(userListener);
+//
+//    }
 
     //Metodo pode ser chamado a partir de qualquer activity que extend de BaseAvtivity
     public void updateUserInfo(){
-//        localUser = User.getInstance();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -303,8 +286,6 @@ public class BaseActivity extends AppCompatActivity
 
         textViewName.setText(localUser.getNome());
         textViewEmail.setText(localUser.getEmail());
-
-//        Toast.makeText(this, "opa: "+ localUser, Toast.LENGTH_SHORT).show();
     }
 
     //Desloga o usuario da aplicação

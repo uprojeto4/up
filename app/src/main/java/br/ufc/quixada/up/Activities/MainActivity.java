@@ -44,7 +44,6 @@ public class MainActivity extends BaseActivity{
     Post post = new Post();
     Post post2 = new Post();
     Post post3 = new Post();
-    FirebasePreferences firebasePreferences;
 
     LikeButton likeButton;
 
@@ -76,12 +75,13 @@ public class MainActivity extends BaseActivity{
         navigationView.setNavigationItemSelectedListener(this);
         View nav_view =  navigationView.getHeaderView(0);
 
+
         if(user != null){
-            updateLocalUser();
+            updateUserInfo();
         }
 
-        firebasePreferences = new FirebasePreferences(this);
-        Toast.makeText(this, firebasePreferences.getId()+" - "+firebasePreferences.getUserName()+" - "+firebasePreferences.getUserEmail(), Toast.LENGTH_LONG).show();
+//        firebasePreferences = new FirebasePreferences(MainActivity.this);
+//        Toast.makeText(this, firebasePreferences.getId()+" - "+firebasePreferences.getUserName()+" - "+firebasePreferences.getUserEmail(), Toast.LENGTH_LONG).show();
 
         likeButton = (LikeButton) findViewById(R.id.heart_button);
 
