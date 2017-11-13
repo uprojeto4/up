@@ -5,12 +5,12 @@ import java.util.Date;
 public class Message {
 
     private String messageText;
-    private String messageUser;
+    private String messageUserId;
     private long messageTime;
 
-    public Message(String messageText, String messageUser) {
+    public Message(String messageText, String messageUserId) {
         this.messageText = messageText;
-        this.messageUser = messageUser;
+        this.messageUserId = messageUserId;
 
         // Initialize to current time
         messageTime = new Date().getTime();
@@ -28,12 +28,12 @@ public class Message {
         this.messageText = messageText;
     }
 
-    public String getMessageUser() {
-        return messageUser;
+    public String getMessageUserId() {
+        return messageUserId;
     }
 
-    public void setMessageUser(String messageUser) {
-        this.messageUser = messageUser;
+    public void setMessageUserId(String messageUser) {
+        this.messageUserId = messageUserId;
     }
 
     public long getMessageTime() {
