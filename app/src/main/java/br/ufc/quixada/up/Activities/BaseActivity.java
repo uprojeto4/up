@@ -7,6 +7,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.FirebasePreferences;
 
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -305,6 +307,7 @@ public class BaseActivity extends AppCompatActivity
 //        Toast.makeText(this, "opa: "+ localUser, Toast.LENGTH_SHORT).show();
     }
 
+    //Desloga o usuario da aplicação
     public void signOut(){
         auth = FirebaseConfig.getAuth();
         auth.signOut();

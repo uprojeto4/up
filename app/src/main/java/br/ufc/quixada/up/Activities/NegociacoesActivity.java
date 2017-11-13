@@ -62,14 +62,14 @@ public class NegociacoesActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        Button openNegociacao = (Button) findViewById(R.id.openNegociacaoButton);
-        openNegociacao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), NegociacaoActivity.class);
-                startActivity(intent);
-            }
-        });
+//        Button openNegociacao = (Button) findViewById(R.id.openNegociacaoButton);
+//        openNegociacao.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(view.getContext(), NegociacaoActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -93,6 +93,11 @@ public class NegociacoesActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), "Opçao Default ", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void openChat(View view){
+        Intent intent = new Intent(this, NegociacaoActivity.class);
+        startActivity(intent);
     }
 
 }

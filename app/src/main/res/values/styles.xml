@@ -41,7 +41,7 @@
         <item name="colorControlHighlight">@color/colorAccent2</item>
     </style>
 
-    <style name="AppCompat.FullScreen" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppCompat.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowFullscreen">true</item>
     </style>
 
