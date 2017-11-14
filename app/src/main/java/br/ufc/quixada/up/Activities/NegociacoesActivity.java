@@ -1,8 +1,6 @@
 package br.ufc.quixada.up.Activities;
 
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -15,7 +13,6 @@ import android.widget.Button;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TabHost;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -55,7 +52,7 @@ public class NegociacoesActivity extends BaseActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
-      
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

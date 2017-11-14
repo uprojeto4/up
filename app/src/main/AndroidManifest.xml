@@ -103,6 +103,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Activities.ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".Activities.NegociacoesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.ufc.quixada.up.Activities.NegociacoesActivity" />
+        </activity>
         <activity android:name=".Activities.NegociacaoActivity"></activity>
     </application>
 
