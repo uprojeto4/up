@@ -7,6 +7,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
+
+import br.ufc.quixada.up.Models.User;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -48,32 +51,34 @@ public class CategoriasActivity extends BaseActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        recyclerView = findViewById(R.id.recyclerViewCategorias);
-        generateCategories();
+        if(user != null) {
+            recyclerView = findViewById(R.id.recyclerViewCategorias);
+            generateCategories();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new CategoriasAdapter(arrayListCategorias);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
+            adapter = new CategoriasAdapter(arrayListCategorias);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setHasFixedSize(true);
+        }
     }
 
     private void generateCategories() {
 
         categorias = getResources().getStringArray(R.array.categorias);
-        icones = new int[]{R.drawable.ic_sync_black_24dp,
-                           R.drawable.ic_add_circle_black_24dp,
-                           R.drawable.ic_exit_to_app_black_24dp,
-                           R.drawable.ic_menu_share,
-                           R.drawable.ic_favorite_black_24dp,
-                           R.drawable.ic_menu_manage,
-                           R.drawable.ic_menu_send,
-                           R.drawable.ic_menu_slideshow,
-                           R.drawable.ic_format_list_bulleted_black_24dp,
-                           R.drawable.ic_photo_black_24dp,
-                           R.drawable.ic_star_black_24dp};
+        icones = new int[]{R.drawable.ic_restaurant_black_24dp,
+                           R.drawable.ic_school_black_24dp,
+                           R.drawable.ic_phone_android_black_24dp,
+                           R.drawable.ic_work_black_24dp,
+                           R.drawable.ic_directions_bike_black_24dp,
+                           R.drawable.ic_fridge_filled,
+                           R.drawable.ic_home_variant_black,
+                           R.drawable.ic_weekend_black_24dp,
+                           R.drawable.ic_pets_black_24dp,
+                           R.drawable.ic_directions_car_black_24dp,
+                           R.drawable.ic_t_shirt_silhouette};
 
         arrayListCategorias = new ArrayList<Category>();
         for (int i = 0; i < categorias.length; i++) {

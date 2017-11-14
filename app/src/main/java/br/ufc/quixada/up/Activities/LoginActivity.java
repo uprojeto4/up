@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,23 +17,25 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.FirebasePreferences;
 
 public class LoginActivity extends AppCompatActivity {
 
     EditText email;
     EditText senha;
-    User usuario;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
+    private FirebasePreferences firebasePreferences;
     private DatabaseReference databaseReference;
+    private User localUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -48,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
         //Inicializando variaveis
         databaseReference = FirebaseConfig.getDatabase();
         auth = FirebaseConfig.getAuth();
-        user = auth.getCurrentUser();
     }
 
     //Abrir tela de Cadastro
@@ -68,8 +68,6 @@ public class LoginActivity extends AppCompatActivity {
     //Metodo para fazer o login
     public void fazerLogin(View view){
         if(!email.getText().toString().equals("") && !senha.getText().toString().equals("")){
-            usuario = User.getInstance();
-            usuario.setEmail(email.getText().toString());
             validarLogin();
         }else{
             Toast.makeText(this, "Email ou Senha não preenchidos!", Toast.LENGTH_SHORT).show();
@@ -78,16 +76,60 @@ public class LoginActivity extends AppCompatActivity {
 
     //Metodo para autenticar ususario com email e senha
     private void validarLogin(){
-        auth.signInWithEmailAndPassword(usuario.getEmail(), senha.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        auth.signInWithEmailAndPassword(email.getText().toString(), senha.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    openHome();
+                    user = auth.getCurrentUser();
+                    getUserByEmail(task.getResult().getUser().getEmail());
                 }else{
                     Toast.makeText(getBaseContext(), "Sinto muito :( email ou senha incorretos!", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
+    }
+
+    //Atualizar usuario local
+    public void getUserByEmail(String e){
+
+        Query email = databaseReference.child("users").orderByChild("email").equalTo(e);
+        email.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    localUser = singleSnapshot.getValue(User.class);
+//                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
+                }
+                firebasePreferences = new FirebasePreferences(LoginActivity.this);
+                firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail());
+                openHome();
+                Toast.makeText(getBaseContext(), "Bem Vindo, "+ localUser.getNome() +"! :)", Toast.LENGTH_LONG).show();
+                updateProfile();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+//                Log.e(TAG, "onCancelled", databaseError.toException());
+                Toast.makeText(getBaseContext(), "Usuário não autorizado!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    //Atualizar propriedades do objeto currentUser do firebase
+    public void updateProfile(){
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(localUser.getNome())
+                .build();
+
+        user = auth.getCurrentUser();
+
+        if(user != null){
+            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+//              Toast.makeText(getBaseContext(), "Olá "+ user.getDisplayName() +"! :)", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 }

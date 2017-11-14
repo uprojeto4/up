@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -33,17 +35,15 @@ import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.FirebasePreferences;
 
 public class MainActivity extends BaseActivity{
 
     ArrayList<Post> posts = new ArrayList<Post>();
+    private RecyclerView recyclerView;
     Post post = new Post();
     Post post2 = new Post();
     Post post3 = new Post();
-    public static User localUser;
-    TextView textViewEmail;
-    TextView textViewName;
-
 
     LikeButton likeButton;
 
@@ -75,37 +75,35 @@ public class MainActivity extends BaseActivity{
         navigationView.setNavigationItemSelectedListener(this);
         View nav_view =  navigationView.getHeaderView(0);
 
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        View hView =  navigationView.getHeaderView(0);
-//        TextView nav_user = (TextView)hView.findViewById(R.id.nav_name);
-//        nav_user.setText(user);
-
-        textViewName = (TextView)nav_view.findViewById(R.id.textViewName);
-        textViewEmail = (TextView)nav_view.findViewById(R.id.textViewEmail);
-
-        auth = FirebaseConfig.getAuth();
-        user = auth.getCurrentUser();
-        databaseReference = FirebaseConfig.getDatabase();
-        localUser = User.getInstance();
 
         if(user != null){
-            updateLocalUser();
+            updateUserInfo();
         }
 
+//        firebasePreferences = new FirebasePreferences(MainActivity.this);
+//        Toast.makeText(this, firebasePreferences.getId()+" - "+firebasePreferences.getUserName()+" - "+firebasePreferences.getUserEmail(), Toast.LENGTH_LONG).show();
 
         likeButton = (LikeButton) findViewById(R.id.heart_button);
 
+        //RecycleView Implementation
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerViewPosts);
+        recyclerView.hasFixedSize();
 
-//        for (int i = 0; i<5; i++){
-//            Post post = new Post();
-//            post.setTitle("Meu Post de num "+(i + 1));
-//            post.setSubtitle("Esse post é massa d+ "+(i + 1));
-//            post.setPrice(12.00);
-//
-//            posts.add(post);
-//        }
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
 
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
 
         post.setTitle("Pão fresquinho");
@@ -127,10 +125,14 @@ public class MainActivity extends BaseActivity{
         posts.add(post3);
 
 
-        ListView listView = (ListView)findViewById(R.id.lv_cards);
-        listView.setAdapter(new PostAdapter(this, posts));
+        PostAdapter postAdapter = new PostAdapter(this, posts);
+        recyclerView.setAdapter(postAdapter);
 
-        listView.setOnItemClickListener(anuncioTela());
+
+//        ListView listView = (ListView)findViewById(R.id.lv_cards);
+//        listView.setAdapter(new PostAdapter(this, posts));
+
+//        listView.setOnItemClickListener(anuncioTela());
 
     }
 
@@ -178,82 +180,17 @@ public class MainActivity extends BaseActivity{
     }
 
     public void up(View view){
-
+        Toast.makeText(getBaseContext(),"Dar um up maroto", Toast.LENGTH_SHORT).show();
     }
 
     public void negociar(View view){
         Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
     }
 
-
     public void favorite(View view) {
 //        favorite = (ImageButton) findViewById(R.id.favorite);
 //        favorite.setColorFilter(Color.argb(255, 68, 68, 68));
         likeButton.setLiked(true);
 //        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
-    }
-    //Atualizar usuario local
-    public void updateLocalUser(){
-
-        Query email = databaseReference.child("users").orderByChild("email").equalTo(user.getEmail());
-        email.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    localUser = singleSnapshot.getValue(User.class);
-//                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
-                    textViewName.setText(localUser.getNome());
-                    textViewEmail.setText(localUser.getEmail());
-                    updateProfile();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-//                Log.e(TAG, "onCancelled", databaseError.toException());
-                Toast.makeText(getBaseContext(), "Usuário não autorizado!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-//        ValueEventListener userListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // Get Post object and use the values to update the UI
-////                String s = dataSnapshot.child("users").child("01").getValue(String.class);
-//                User user = dataSnapshot.child("user").child("aXNhYWMtcGpAaG90bWFpbC5jb20=").getValue(User.class);
-//                Toast.makeText(getBaseContext(), "Opa: " + user, Toast.LENGTH_LONG).show();
-//                // ...
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Getting Post failed, log a message
-//                Toast.makeText(getBaseContext(), "Opa, deu merda!", Toast.LENGTH_LONG).show();
-//                // ...
-//            }
-//        };
-        //Executa sempre que os dados mudarem
-//        databaseReference.addValueEventListener(userListener);
-
-        //Executa apenas uma vez
-//        databaseReference.addListenerForSingleValueEvent(userListener);
-
-    }
-
-    //Atualizar propriedades do objeto currentUser do firebase
-    public void updateProfile(){
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(localUser.getNome())
-                .build();
-
-        user = auth.getCurrentUser();
-
-        if(user != null){
-            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    Toast.makeText(getBaseContext(), "Olá "+ user.getDisplayName() +"! :)", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
     }
 }

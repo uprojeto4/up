@@ -33,7 +33,7 @@ import static br.ufc.quixada.up.R.drawable.image_test_1;
  * Created by Brendon on 09/10/2017.
  */
 
-public class fragmentPerfilPerfil extends FragmentBase {
+public class fragmentPerfilPerfil extends Fragment {
 
 //    User localUser;
 
@@ -42,14 +42,6 @@ public class fragmentPerfilPerfil extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        auth = FirebaseConfig.getAuth();
-        user = auth.getCurrentUser();
-        databaseReference = FirebaseConfig.getDatabase();
-        localUser = new User();
-
-        if(user != null){
-            updateLocalUser();
-        }
 
         return inflater.inflate(R.layout.fragment_perfil_perfil, container, false);
     }

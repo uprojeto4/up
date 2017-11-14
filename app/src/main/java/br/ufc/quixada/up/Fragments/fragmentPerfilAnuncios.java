@@ -15,19 +15,10 @@ import br.ufc.quixada.up.R;
  * Created by Brendon on 09/10/2017.
  */
 
-public class fragmentPerfilAnuncios extends FragmentBase {
+public class fragmentPerfilAnuncios extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        auth = FirebaseConfig.getAuth();
-        user = auth.getCurrentUser();
-        databaseReference = FirebaseConfig.getDatabase();
-        localUser = new User();
-
-        if(user != null){
-            updateLocalUser();
-        }
 
         return inflater.inflate(R.layout.fragment_perfil_anuncios, container, false);
     }
