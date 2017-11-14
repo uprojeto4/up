@@ -41,6 +41,21 @@
         <item>Vestuário/Acessórios</item>
     </string-array>
 
+    <string-array name="categorias_lista_desejos">
+        <item>Todos</item>
+        <item>Culinária</item>
+        <item>Educação</item>
+        <item>Eletrônicos</item>
+        <item>Empregos/Serviços</item>
+        <item>Esportes</item>
+        <item>Eletrodomésticos</item>
+        <item>Imóveis</item>
+        <item>Móveis/Decoração</item>
+        <item>Pets</item>
+        <item>Veículos</item>
+        <item>Vestuário/Acessórios</item>
+    </string-array>
+
     <string name="text_view_adicionar_imagens">Adicionar imagens</string>
     <string name="text_view_quantidade">Quantidade</string>
 
@@ -85,9 +100,6 @@
     <string name="escreva_mensagem">Escreva uma mensagem&#8230;</string>
 
     <string name="lista_desejos_action_menu">Limpar lista</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string-array name="tabs_negociacoes">
         <item>Compras</item>

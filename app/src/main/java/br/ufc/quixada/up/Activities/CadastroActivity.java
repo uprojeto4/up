@@ -67,7 +67,7 @@ public class CadastroActivity extends AppCompatActivity {
                         localUser.setNome(editTextName.getText().toString());
                         localUser.setEmail(editTextEmail.getText().toString());
                     } else {
-                        Toast.makeText(CadastroActivity.this, "As senhas não são correspondentes", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CadastroActivity.this, "As senhas não são correspondentes", Toast.LENGTH_SHORT).show();
                     }
                     cadastrarUsuario();
                 }else{
@@ -104,11 +104,12 @@ public class CadastroActivity extends AppCompatActivity {
                        localUser.save();
 
                        FirebasePreferences preferences = new FirebasePreferences(CadastroActivity.this);
-                       preferences.SaveUserPreferences(userId, localUser.getNome());
+                       preferences.SaveUserPreferences(userId, localUser.getNome(), localUser.getEmail());
 
                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                        startActivity(intent);
+                       Toast.makeText(getBaseContext(), "Bem Vindo, "+ localUser.getNome() +"! :)", Toast.LENGTH_LONG).show();
                    } else{
                        String erro = "";
 
@@ -124,7 +125,7 @@ public class CadastroActivity extends AppCompatActivity {
                            erro = "Falha ao cadastrar";
                            e.printStackTrace();
                        }
-                       Toast.makeText(CadastroActivity.this, "Erro: " + erro, Toast.LENGTH_LONG).show();
+                       Toast.makeText(CadastroActivity.this, "Erro: " + erro, Toast.LENGTH_SHORT).show();
                    }
                 }
             });
