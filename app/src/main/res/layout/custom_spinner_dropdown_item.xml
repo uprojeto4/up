@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:ellipsize="marquee"
+    android:gravity="left|center_vertical"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:singleLine="true"
+
+    ></CheckedTextView>
+<!--android:textColor="@color/primaryTextColor"-->
+<!--app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->

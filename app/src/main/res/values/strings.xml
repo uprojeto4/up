@@ -15,7 +15,7 @@
     <string name="navigation_drawer_configuracoes">Configurações</string>
     <string name="navigation_drawer_sair">Sair</string>
     <string name="title_activity_novo_anuncio">Novo anúncio</string>
-    <string name="title_activity_negociacoes">NegociacoesActivity</string>
+    <string name="title_activity_negociacoes">Negociações</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_categorias">Categorias</string>
     <string name="title_activity_lista_desejos">Lista de desejos</string>
@@ -82,6 +82,22 @@
     <string name="title_activity_cadastro">CadastroActivity</string>
     <string name="dafault_user_name">Visitante</string>
 
+    <string name="escreva_mensagem">Escreva uma mensagem&#8230;</string>
+
     <string name="lista_desejos_action_menu">Limpar lista</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="tabs_negociacoes">
+        <item>Compras</item>
+        <item>Vendas</item>
+    </string-array>
+
+    <string-array name="spinner_negociacoes">
+        <item>Abertas</item>
+        <item>Fechadas</item>
+        <item>Canceladas</item>
+    </string-array>
 
 </resources>
