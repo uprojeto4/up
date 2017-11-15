@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import br.ufc.quixada.up.Activities.NegociacaoActivity;
 import br.ufc.quixada.up.R;
 
 public class ComprasFragment extends Fragment {

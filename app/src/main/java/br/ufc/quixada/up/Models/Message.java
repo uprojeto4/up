@@ -32,7 +32,7 @@ public class Message {
         return messageUserId;
     }
 
-    public void setMessageUserId(String messageUser) {
+    public void setMessageUserId(String messageUserId) {
         this.messageUserId = messageUserId;
     }
 

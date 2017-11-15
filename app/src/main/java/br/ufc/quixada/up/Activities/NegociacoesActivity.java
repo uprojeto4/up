@@ -7,18 +7,30 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import br.ufc.quixada.up.Adapters.NegociacoesAdapter;
 import br.ufc.quixada.up.Adapters.NegociacoesFragmentPagerAdapter;
+import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.Message;
+import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
 
 public class NegociacoesActivity extends BaseActivity {
@@ -28,6 +40,10 @@ public class NegociacoesActivity extends BaseActivity {
     private Spinner spinner;
     String spinnerItem;
     ArrayList<String> filters = new ArrayList<>();
+    private RecyclerView recyclerViewChatList;
+    private DatabaseReference reference;
+    private String userId;
+    private NegociacoesAdapter negociacoesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +106,48 @@ public class NegociacoesActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), "Opçao Default ", Toast.LENGTH_SHORT).show();
             }
         });
+
+//        recyclerViewChatList = findViewById(R.id.recyclerViewChatList);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        recyclerViewChatList.setLayoutManager(linearLayoutManager);
+//
+//        recyclerViewChatList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//            }
+//        });
+//
+//        reference = FirebaseConfig.getDatabase();
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        if (user != null) {
+//            userId = user.getUid();
+//        }
+//
+//        reference.child("negotiations").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
+//                    Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
+//                    negociacoesAdapter.addNegociacao(negociacao);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
     public void openChat(View view){
-        Intent intent = new Intent(this, NegociacaoActivity.class);
+        Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
     }
 

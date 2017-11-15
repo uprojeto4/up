@@ -69,7 +69,7 @@
     <string name="sair">Sair</string>
     <string name="enviar">Enviar</string>
 
-    <string name="escreva_mensagem">Escreva uma mensagem</string>
+    <string name="escreva_mensagem">Escreva uma mensagem&#8230;</string>
     <string name="continuar_editando">Continuar editando</string>
 
     <string name="erro_novo_anuncio_titulo">Seu anúncio precisa de um título.</string>
@@ -96,8 +96,6 @@
     <string name="input_edit_confirm_senha_hint">Confirme a sua nova senha</string>
     <string name="title_activity_cadastro">CadastroActivity</string>
     <string name="dafault_user_name">Visitante</string>
-
-    <string name="escreva_mensagem">Escreva uma mensagem&#8230;</string>
 
     <string name="lista_desejos_action_menu">Limpar lista</string>
 

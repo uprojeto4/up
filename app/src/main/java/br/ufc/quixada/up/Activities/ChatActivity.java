@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +26,7 @@ import java.util.List;
 import br.ufc.quixada.up.Adapters.ChatAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Message;
+import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 
 public class ChatActivity extends BaseActivity {
@@ -34,7 +36,7 @@ public class ChatActivity extends BaseActivity {
     private EditText messageInput;
 //    private List messages = new ArrayList<Message>();
     private ChatAdapter chatAdapter;
-//    private String mId;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +57,18 @@ public class ChatActivity extends BaseActivity {
         chatAdapter = new ChatAdapter(new ArrayList<Message>());
         recyclerView.setAdapter(chatAdapter);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            userId = user.getUid();
+        }
+
         buttonSend.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 String message = messageInput.getText().toString();
                 if (!message.isEmpty()) {
-//                    mFirebaseRef.push().setValue(new Chat(message, mId));
-//                    Log.d("maxxis000", FirebaseAuth.getInstance().getCurrentUser().getUid());
-//                    reference.child("messages").push().setValue(new Message(message, FirebaseAuth.getInstance().getCurrentUser().getUid()));
+                    reference.child("negotiations").child(userId).push().setValue(new Message(message, userId));
                 }
                 messageInput.setText("");
             }
@@ -84,7 +89,22 @@ public class ChatActivity extends BaseActivity {
 //            }
 //        });
 
-        reference.child("messages").addChildEventListener(new ChildEventListener() {
+        reference.child("negotiations").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
+                    Message message = messageDataSnapshot.getValue(Message.class);
+                    chatAdapter.addMessage(message);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        reference.child("negotiations").child(userId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
