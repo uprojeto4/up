@@ -139,6 +139,10 @@ public class ListaDesejosActivity extends BaseActivity {
             }
         });
 
+        if(user != null){
+            updateUserInfo();
+        }
+
     }
 
 

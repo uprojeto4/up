@@ -18,6 +18,7 @@ public class FirebasePreferences {
     private final String CHAVE_ID = "userLoggedId";
     private final String CHAVE_NOME = "userLoggedName";
     private final String CHAVE_EMAIL = "userLoggedEmail";
+    private final String CHAVE_FOTO_PERFIL = "userLoggedProfilePicture";
 
     public FirebasePreferences(Context context){
         this.context = context;
@@ -26,24 +27,26 @@ public class FirebasePreferences {
         editor = preferences.edit();
     }
 
-    public void SaveUserPreferences(String userId, String userName, String userEmail){
+    public void SaveUserPreferences(String userId, String userName, String userEmail, String profilePicture){
         editor.putString(CHAVE_ID, userId);
         editor.putString(CHAVE_NOME, userName);
         editor.putString(CHAVE_EMAIL, userEmail);
+        editor.putString(CHAVE_FOTO_PERFIL, profilePicture);
         editor.commit();
     }
 
     public String getId () {
         return preferences.getString(CHAVE_ID, null);
     }
-
     public String getUserName(){
         return preferences.getString(CHAVE_NOME, null);
     }
     public String getUserEmail(){
         return preferences.getString(CHAVE_EMAIL, null);
     }
-
+    public String getProfilePicture(){
+        return preferences.getString(CHAVE_FOTO_PERFIL, null);
+    }
 
 
 

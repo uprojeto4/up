@@ -84,7 +84,7 @@
 
     <string-array name="tabs_perfil">
         <item>Perfil</item>
-        <item>Anúncios</item>
+        <item>Meus Anúncios</item>
     </string-array>
 
     <string name="title_activity_edit_perfil">Editar perfil</string>
@@ -97,7 +97,6 @@
     <string name="title_activity_cadastro">CadastroActivity</string>
     <string name="dafault_user_name">Visitante</string>
 
-    <string name="escreva_mensagem">Escreva uma mensagem&#8230;</string>
 
     <string name="lista_desejos_action_menu">Limpar lista</string>
 
