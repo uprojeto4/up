@@ -2,15 +2,23 @@ package br.ufc.quixada.up.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import br.ufc.quixada.up.R;
 
@@ -23,6 +31,17 @@ public class PerfilActivity extends BaseActivity {
     private TabLayout perfilTabLayout;
     private ViewPager perfilViewPager;
 
+    public String profilePictureName;
+
+//    FirebaseStorage storage = FirebaseStorage.getInstance();
+//    public StorageReference storageRef;
+//    public StorageReference pathReference;
+
+//    public static byte[] image;
+    public static String nome;
+    public static String id;
+    public static String email;
+    public static String fotoPerfil;
 //    TextView textViewEmail;
 //    TextView textViewName;
 
@@ -41,14 +60,6 @@ public class PerfilActivity extends BaseActivity {
 
         perfilTabLayout.setupWithViewPager(perfilViewPager);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,25 +71,40 @@ public class PerfilActivity extends BaseActivity {
         navigationView.setNavigationItemSelectedListener(this);
 
 
-//        textViewName = (TextView)findViewById(R.id.textViewName);
-//        textViewEmail = (TextView)findViewById(R.id.textViewEmail);
-//
-//        textViewName.setText(localUser.getNome());
-//        textViewEmail.setText(localUser.getEmail());
+        if(user != null){
+            updateUserInfo();
+        }
 
-//       ImageView imageview = (ImageView) findViewById(R.id.header_cover_image);
-//
-//        BitmapDrawable drawable = (BitmapDrawable) imageview.getDrawable();
-//        Bitmap bitmap = drawable.getBitmap();
-//        Bitmap blurred = blurRenderScript(this, image_test_1, radiusArr[position]);//second parametre is radius
-//        imageview.setImageBitmap(blurred);
+        nome = firebasePreferences.getUserName();
+        id = firebasePreferences.getId();
+        email = firebasePreferences.getUserEmail();
+        fotoPerfil = profilePictureName;
 
-//        MultiTransformation multi = new MultiTransformation(
-//                new BlurTransformation(25));
-//
-//        Glide.with(this).load(image_test_1)
-//                .apply(RequestOptions.bitmapTransform(multi))
-//                .into((ImageView) findViewById((R.id.header_cover_image)));
+//        Toast.makeText(this,"foto do local user ao criar ativity: "+fotoPerfil, Toast.LENGTH_LONG).show();
+
+
+//        Log.d("FOTO PERFIL TESTE", fotoPerfil);
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        fotoPerfil = localUser.getFotoPerfil();
+        localUser.setFotoPerfil(fotoPerfil);
+//        Toast.makeText(this,"foto do local user on resume activity "+fotoPerfil, Toast.LENGTH_LONG).show();
+
+//        Log.d("FOTO PERFIL", fotoPerfil);
+//        fotoPerfil = firebasePreferences.getProfilePicture();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        fotoPerfil = localUser.getFotoPerfil();
+        localUser.setFotoPerfil(fotoPerfil);
+//        Toast.makeText(this,"foto do local user on pause activity "+fotoPerfil, Toast.LENGTH_LONG).show();
+
     }
 
     @Override

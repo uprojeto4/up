@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
 //                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
                 }
                 firebasePreferences = new FirebasePreferences(LoginActivity.this);
-                firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail());
+                firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil());
                 openHome();
                 Toast.makeText(getBaseContext(), "Bem Vindo, "+ localUser.getNome() +"! :)", Toast.LENGTH_LONG).show();
                 updateProfile();

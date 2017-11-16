@@ -84,7 +84,7 @@
 
     <string-array name="tabs_perfil">
         <item>Perfil</item>
-        <item>Anúncios</item>
+        <item>Meus Anúncios</item>
     </string-array>
 
     <string name="title_activity_edit_perfil">Editar perfil</string>
