@@ -70,7 +70,7 @@
             <Button
                 android:id="@+id/buttonSignup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:backgroundTint="@color/colorAccent"
                 android:text="cadastrar"
                 android:textColor="@color/primaryTextColor" />

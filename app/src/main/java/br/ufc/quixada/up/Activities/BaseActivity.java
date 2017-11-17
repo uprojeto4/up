@@ -1,6 +1,8 @@
 package br.ufc.quixada.up.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,10 +13,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,11 +34,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,7 +57,17 @@ public class BaseActivity extends AppCompatActivity
     DatabaseReference databaseReference;
     TextView textViewName;
     TextView textViewEmail;
+    ImageView imageViewPhoto;
     User localUser;
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    StorageReference profilePictureRef;
+
+    public byte[] image;
+
+    Bitmap bitmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +82,7 @@ public class BaseActivity extends AppCompatActivity
         localUser.setId(firebasePreferences.getId());
         localUser.setNome(firebasePreferences.getUserName());
         localUser.setEmail(firebasePreferences.getUserEmail());
+        localUser.setFotoPerfil(firebasePreferences.getProfilePicture());
 
 //        setContentView(R.layout.activity_main);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -155,7 +184,11 @@ public class BaseActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        //Primeiro testa se o drawer existe, pois estava obtendo erro ao pressionar o back na editPerfilActivity, pois ela não possuía drawer
+        //e ainda assim precisava herdar dela para obter os dados do usuário
+        if(drawer == null){
+            super.onBackPressed();
+        }else if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -281,9 +314,78 @@ public class BaseActivity extends AppCompatActivity
 
         textViewName = (TextView)nav_view.findViewById(R.id.textViewName);
         textViewEmail = (TextView)nav_view.findViewById(R.id.textViewEmail);
+        imageViewPhoto = (ImageView)nav_view.findViewById(R.id.imageView);
+
+        profilePictureRef = storage.getReference().child("UsersProfilePictures/"+localUser.getId()+"/"+localUser.getFotoPerfil());
+//        Toast.makeText(getBaseContext(),profilePictureRef.getPath(), Toast.LENGTH_LONG).show();
+
+
+        downloadProfilePicture();
 
         textViewName.setText(localUser.getNome());
         textViewEmail.setText(localUser.getEmail());
+    }
+
+    public void downloadProfilePicture(){
+        //o download com o metodo getFile deve ser feito num try/catch
+        try{
+            //cria o arquivo temporário local onde a imagem será armazenada
+            final File localFile = File.createTempFile("jpg", "image");
+            profilePictureRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                //monitora o sucesso do download
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    //transforma a imagem baixada em um bitmap
+                    bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    //transforma o bitmap em stream
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    //transforma o stream em um array de bytes
+                    image = stream.toByteArray();
+                    //método que aplica a imagem nos lugares desejsdos
+                    applyImage(image);
+//                    Toast.makeText(getActivity(),profilePictureRef.getName(), Toast.LENGTH_LONG).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                //monitora a falha do downlaod
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getBaseContext(),"Foto não encontrada", Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e){
+            e.printStackTrace();
+            //manipular exceções
+            Log.e("Main", "IOE exception");
+        }
+
+    }
+
+    public void applyImage(byte[] bytes){
+        //efeito de blur para a imagem
+        MultiTransformation multi = new MultiTransformation(
+                new BlurTransformation(25));
+
+
+        //options para o glide
+        RequestOptions requestOptions = new RequestOptions();
+        //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+        requestOptions.skipMemoryCache(true);
+
+//        //carrega a imagem
+//        Glide.with(this).load(bytes)
+//                //aplica as options de cache
+//                .apply(requestOptions)
+//                //aplica as options de transformação
+//                .apply(RequestOptions.bitmapTransform(multi))
+//                //insere a imagem no imageView
+//                .into((ImageView) findViewById((R.id.header_cover_image)));
+
+        Glide.with(this).load(bytes)
+                .apply(requestOptions)
+                .apply(RequestOptions.bitmapTransform(new RoundedCorners(200)))
+                .into(imageViewPhoto);
     }
 
     //Desloga o usuario da aplicação
