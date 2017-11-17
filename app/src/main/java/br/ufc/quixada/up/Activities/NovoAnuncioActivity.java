@@ -4,8 +4,10 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -32,10 +34,17 @@ import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
@@ -67,6 +76,11 @@ public class NovoAnuncioActivity extends BaseActivity {
     private NovoAnuncioRecyclerViewImageAdapter imageAdapter;
     private ArrayList<Image> images = new ArrayList<>();
     Locale locale = new Locale("pt", "BR");
+
+    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    StorageReference storageReference;
+    StorageReference imageRef;
+    byte[] pictureCover;
 
 //    static final String SAVED_STATE_AD_TITLE = "";
 //    static final String SAVED_STATE_AD_DESCRIPTION = "";
@@ -102,6 +116,7 @@ public class NovoAnuncioActivity extends BaseActivity {
         mainConstraintLayout = findViewById(R.id.mainConstraintLayout);
         categoriaAnuncioTitle = findViewById(R.id.textViewCategoria);
         post = new Post();
+        storageReference = storage.getReference();
 
         // imageAdapter e implementações de swipe para deletar
         imageAdapter = new NovoAnuncioRecyclerViewImageAdapter(this);
@@ -185,7 +200,7 @@ public class NovoAnuncioActivity extends BaseActivity {
         fabAddFotos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                String[] permissionsToRequest = new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+                String[] permissionsToRequest = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
                 PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(NovoAnuncioActivity.this, permissionsToRequest, new PermissionsResultAction() {
 
                     @Override
@@ -204,30 +219,30 @@ public class NovoAnuncioActivity extends BaseActivity {
     }
 
     //configura e obtem imagens usando a library imagePicker
-    protected void getPictures(View view){
+    protected void getPictures(View view) {
         int maxSize = 10 - imageAdapter.getItemCount();
         if (maxSize == 0) {
             Snackbar.make(view, "Você só pode adicionar dez imagens", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         } else {
             ImagePicker.with(NovoAnuncioActivity.this)         //  Initialize ImagePicker with activity or fragment context
-                       .setToolbarColor("#5a185f")             //  Toolbar color
-                       .setStatusBarColor("#2e0035")           //  StatusBar color (works with SDK >= 21  )
-                       .setToolbarTextColor("#FFFFFF")         //  Toolbar text color (Title and Done button)
-                       .setToolbarIconColor("#FFFFFF")         //  Toolbar icon color (Back and Camera button)
-                       .setProgressBarColor("#4CAF50")         //  ProgressBar color
-                       .setBackgroundColor("#212121")          //  Background color
-                       .setCameraOnly(false)                   //  Camera mode
-                       .setMultipleMode(true)                  //  Select multiple images or single image
-                       .setFolderMode(true)                    //  Folder mode
-                       .setShowCamera(true)                    //  Show camera button
-                       .setFolderTitle("Álbuns")               //  Folder title (works with FolderMode = true)
-                       .setImageTitle("Galeria")               //  Image title (works with FolderMode = false)
-                       .setDoneTitle("Finalizar")              //  Done button title
-                       .setMaxSize(maxSize)                    //  Max images can be selected
-                       .setSavePath("Up - Compra e venda")     //  Image capture folder name
-                       .setSelectedImages(images)              //  Selected images
-                       .start();                               //  Start ImagePicker
+                    .setToolbarColor("#5a185f")             //  Toolbar color
+                    .setStatusBarColor("#2e0035")           //  StatusBar color (works with SDK >= 21  )
+                    .setToolbarTextColor("#FFFFFF")         //  Toolbar text color (Title and Done button)
+                    .setToolbarIconColor("#FFFFFF")         //  Toolbar icon color (Back and Camera button)
+                    .setProgressBarColor("#4CAF50")         //  ProgressBar color
+                    .setBackgroundColor("#212121")          //  Background color
+                    .setCameraOnly(false)                   //  Camera mode
+                    .setMultipleMode(true)                  //  Select multiple images or single image
+                    .setFolderMode(true)                    //  Folder mode
+                    .setShowCamera(true)                    //  Show camera button
+                    .setFolderTitle("Álbuns")               //  Folder title (works with FolderMode = true)
+                    .setImageTitle("Galeria")               //  Image title (works with FolderMode = false)
+                    .setDoneTitle("Finalizar")              //  Done button title
+                    .setMaxSize(maxSize)                    //  Max images can be selected
+                    .setSavePath("Up - Compra e venda")     //  Image capture folder name
+                    .setSelectedImages(images)              //  Selected images
+                    .start();                               //  Start ImagePicker
         }
     }
 
@@ -236,7 +251,7 @@ public class NovoAnuncioActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Config.RC_PICK_IMAGES && resultCode == RESULT_OK && data != null) {
 
-            ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+            images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
             imageAdapter.addData(images);
             imagePreviewController();
         }
@@ -247,7 +262,7 @@ public class NovoAnuncioActivity extends BaseActivity {
         //atualização do padding entre as imagens
         recyclerView.removeItemDecoration(itemDecoration);
         recyclerView.addItemDecoration(itemDecoration);
-        
+
         //verificação para decidir exibir ou não a informação de que não há imagens
         if (imageAdapter.getItemCount() == 0) {
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -296,7 +311,7 @@ public class NovoAnuncioActivity extends BaseActivity {
 //        super.onBackPressed();
     }
 
-    public void saveOnFirebase(View view){
+    public void saveOnFirebase(View view) {
 
         String price = precoAnuncio.getText().toString();
         String qtd = qtdItensAnuncio.getText().toString();
@@ -310,41 +325,138 @@ public class NovoAnuncioActivity extends BaseActivity {
 //        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
 
         post.save(getBaseContext());
+        uploadPictures();
         this.finish();
     }
 
-    public void cancel(View view){
+    public void cancel(View view) {
         this.finish();
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle saveInstanceState) {
-//        Log.i("sismac", "called");
-//        saveInstanceState.putString(SAVED_STATE_AD_TITLE, tituloAnuncio.getText().toString());
-//        saveInstanceState.putString(SAVED_STATE_AD_DESCRIPTION, descricaoAnuncio.getText().toString());
-//
-//        super.onSaveInstanceState(saveInstanceState);
-//    }
-//
-//    public void onRestoreInstanceState(Bundle savedInstanceState) {
-//        if (savedInstanceState != null) {
-//            tituloAnuncio.setText(savedInstanceState.getString(SAVED_STATE_AD_TITLE));
-//            descricaoAnuncio.setText(savedInstanceState.getString(SAVED_STATE_AD_DESCRIPTION));
-//            Log.d("sismac", savedInstanceState.getString(SAVED_STATE_AD_TITLE));
-//        }
-//        super.onRestoreInstanceState(savedInstanceState);
-//    }
-//
-//    @Override
-//    public void onPause(){
-//        Log.d("sismac", "pausing");
-//        super.onPause();
-//    }
-//
-//    @Override
-//    public void onStop(){
-//        Log.d("sismac", "stopping");
-//        super.onStop();
-//    }
+    public void uploadPictures() {
 
+            Toast.makeText(this, "entrei primeiro: "+images.size(), Toast.LENGTH_SHORT).show();
+        //pega o caminho do arquivo a ser enviado
+        for (Image image : images){
+            Toast.makeText(this, "entrei", Toast.LENGTH_SHORT).show();
+            Uri file = Uri.fromFile(new File(image.getPath()));
+            //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
+            //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
+            imageRef = storageReference.child("PostsPictures/" + post.getId() + "/" + file.getLastPathSegment());
+
+            //cria os metadados
+            StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
+
+            Log.d("TAG", imageRef.getName());
+
+            //faz upload do arquivo junto com os metadados
+            UploadTask uploadTask = imageRef.putFile(file, metadata);
+            //monitora o andamento do upload
+            uploadTask
+            //monitora caso de falha
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getBaseContext(), "Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
+                }
+            })
+            //monitora caso de sucesso
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                Toast.makeText(getBaseContext(), "Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
+//                    String picture = imageRef.getName();
+                post.addImageName(imageRef.getName());
+
+                //atualiza a foto do usuario local
+//                            localUser.setFotoPerfil(imageRef.getName());
+//                Toast.makeText(getBaseContext(),"foto do user local " + localUser.getFotoPerfil(), Toast.LENGTH_LONG).show();
+
+//                            firebasePreferences = new FirebasePreferences(getBaseContext());
+//                            firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil());
+
+                //atualiza a referencia a foto no banco
+                databaseReference.child("posts").child(post.getId()).child("pictures").setValue(post.getPictures());
+
+//                imageRef = storageReference.child("PostsPictures/" + post.getId() + "/" + post.getPictures().get(0));
+//
+//                try{
+//                    //cria o arquivo temporário local onde a imagem será armazenada
+//                    final File localFile = File.createTempFile("jpg", "image");
+//                    imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                        @Override
+//                        //monitora o sucesso do download
+//                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                            //transforma a imagem baixada em um bitmap
+//                            bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                            //transforma o bitmap em stream
+//                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                            //transforma o stream em um array de bytes
+//                            pictureCover = stream.toByteArray();
+//                            //método que aplica a imagem nos lugares desejsdos
+////                            post.setImage(pictureCover);
+////                            applyImage(pictureCover);
+//                            Toast.makeText(getBaseContext(),imageRef.getName(), Toast.LENGTH_LONG).show();
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        //monitora a falha do downlaod
+//                        public void onFailure(@NonNull Exception e) {
+//                            Toast.makeText(getBaseContext(),"Imagem não foi baixada", Toast.LENGTH_LONG).show();
+//                        }
+//                    });
+//                } catch (IOException e){
+//                    e.printStackTrace();
+//                    //manipular exceções
+//                    Log.e("Main", "IOE exception");
+//                }
+
+                }
+            });
+        }
+
+
+        //monitora o progresso
+//        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+//                if (progress < 100.0){
+//                    //deixa o loading visivel
+//                    loading.setVisibility(View.VISIBLE);
+//                }else{
+//                    //deixa o loading invisível
+//                    loading.setVisibility(View.GONE);
+//                }
+//            }
+//        });
+
+
+    }
+
+
+//    public void applyImage(byte[] bytes){
+//        //efeito de blur para a imagem
+////        MultiTransformation multi = new MultiTransformation(
+////                new BlurTransformation(25));
+//
+//
+//        //options para o glide
+//        RequestOptions requestOptions = new RequestOptions();
+//        //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
+//        requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+//        requestOptions.skipMemoryCache(true);
+//
+//        //carrega a imagem
+//        Glide.with(this).load(bytes)
+//                //aplica as options de cache
+//                .apply(requestOptions)
+//                //aplica as options de transformação
+////                .apply(RequestOptions.bitmapTransform(multi))
+//                //insere a imagem no imageView
+//                .into((ImageView) findViewById((R.id.imageViewIconeFoto)));
+//
+//    }
 }
