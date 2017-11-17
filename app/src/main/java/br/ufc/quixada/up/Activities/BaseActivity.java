@@ -117,7 +117,6 @@ public class BaseActivity extends AppCompatActivity
 
     }
 
-
 //    public void updateLocalUser(){
 //
 //        Query email = databaseReference.child("users").orderByChild("email").equalTo(user.getEmail());
@@ -181,7 +180,6 @@ public class BaseActivity extends AppCompatActivity
 //            });
 //        }
 //    }
-
 
     @Override
     public void onBackPressed() {

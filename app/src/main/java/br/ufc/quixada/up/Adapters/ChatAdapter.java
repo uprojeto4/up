@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
 import br.ufc.quixada.up.Models.Message;
 import br.ufc.quixada.up.R;
-import br.ufc.quixada.up.Utils.FirebasePreferences;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
@@ -25,7 +25,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public ChatAdapter(List<Message> dataSet) {
         mDataSet = dataSet;
-//        mId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            mId = user.getUid();
+        }
     }
 
     @Override
@@ -42,12 +45,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-//        Log.d("maxxis", mId);
-//        if (mDataSet.get(position).getMessageUserId().equals(mId)) {
+        if (mDataSet.get(position).getMessageUserId().equals(mId)) {
             return SENT_MESSAGE;
-//        } else {
-//            return RECEIVED_MESSAGE;
-//        }
+        } else {
+            return RECEIVED_MESSAGE;
+        }
     }
 
     @Override
