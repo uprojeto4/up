@@ -105,7 +105,7 @@ public class ListaDesejosPostsAdapter extends RecyclerView.Adapter<ListaDesejosP
 //        holder.image.setImageResource(currentPost.setImgRef(position));
 //        holder.image.setImageResource(currentPost.getImage(position));
 
-        Glide.with(context).load(currentPost.getImage(position)).into(holder.image);
+        Glide.with(context).load(currentPost.getDefaultImage()).into(holder.image);
 
     }
 

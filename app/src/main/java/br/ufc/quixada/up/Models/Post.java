@@ -1,22 +1,14 @@
 package br.ufc.quixada.up.Models;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.bumptech.glide.load.engine.Resource;
 import com.google.firebase.database.DatabaseReference;
 
-import java.lang.reflect.Array;
-import java.net.URL;
-import java.util.List;
+import java.util.ArrayList;
 
-import br.ufc.quixada.up.Activities.CadastroActivity;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.R;
-import br.ufc.quixada.up.Utils.Base64Custom;
-import br.ufc.quixada.up.Utils.FirebasePreferences;
 
 /**
  * Created by Isaac Bruno on 09/10/2017.
@@ -31,15 +23,19 @@ import br.ufc.quixada.up.Utils.FirebasePreferences;
     private String categoria;
     private int ups;
     private String userId;
-//    private int id;
+    private ArrayList<String> pictures;
+    private String id;
+//    byte[] image;
 
 //    private int imgRef;
 //    private List<Integer> imgReferences;
 
     public void save(Context context) {
+        pictures = new ArrayList<String>();
         DatabaseReference databaseReference = FirebaseConfig.getDatabase();
 
-        databaseReference.child("posts").push().setValue(this);
+        setId(databaseReference.child("posts").push().getKey());
+        databaseReference.child("posts").child(getId()).setValue(this);
         Toast.makeText(context, "Anuncio Inserido com Sucesso!", Toast.LENGTH_SHORT).show();
     }
 
@@ -99,13 +95,21 @@ import br.ufc.quixada.up.Utils.FirebasePreferences;
         this.userId = userId;
     }
 
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
+    public ArrayList<String> getPictures() {
+        return pictures;
+    }
+
+    public void addImageName(String imageNames) {
+        this.pictures.add(imageNames);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     //    public int setImgRef(int img){
 //        Log.d("IMAGEM!!!!!!!!!!!!!!!!!", "imagem"+img);
@@ -114,7 +118,7 @@ import br.ufc.quixada.up.Utils.FirebasePreferences;
 //        return imgRef;
 //    }
 
-    public int getImage(int i){
+    public int getDefaultImage(){
 //        switch (i){
 //            case 0:
 //                return (R.drawable.image_test_1);
@@ -130,6 +134,10 @@ import br.ufc.quixada.up.Utils.FirebasePreferences;
 //        }
         return R.drawable.default_img;
     }
+
+//    public void setImage(byte[] image) {
+//        this.image = image;
+//    }
 
     @Override
     public String toString() {

@@ -13,10 +13,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -109,33 +113,8 @@ public class MainActivity extends BaseActivity{
             }
         });
 
-
-//        post.setTitle("Pão fresquinho");
-//        post.setSubtitle("Pense num pão bom, mais é bom, é bom mesmo!");
-//        post.setPrice(12.99);
-//
-//
-//        post2.setTitle("Bicicleta Caloi 100");
-//        post2.setSubtitle("Bike semi nova, 3 meses de uso, perfeito estado, ótimo preço");
-//        post2.setPrice(469.99);
-//
-//
-//        post3.setTitle("Sapato salto Vizano");
-//        post3.setSubtitle("Sapato em ótimo estado, apenas uns 7 anos de uso, cor de carnaval, muito confortável, tipo uma pedra");
-//        post3.setPrice(59.99);
-//
-//        posts.add(post);
-//        posts.add(post2);
-//        posts.add(post3);
-
         postAdapter = new PostAdapter(this, posts);
         recyclerView.setAdapter(postAdapter);
-
-
-//        ListView listView = (ListView)findViewById(R.id.lv_cards);
-//        listView.setAdapter(new PostAdapter(this, posts));
-
-//        listView.setOnItemClickListener(anuncioTela());
 
     }
 
@@ -207,6 +186,8 @@ public class MainActivity extends BaseActivity{
                         Post post = dataSnapshot.getValue(Post.class);
                         posts.add(post);
                         postAdapter.notifyItemInserted(posts.size());
+                        postAdapter.downloadImageCover(post);
+                        postAdapter.notifyDataSetChanged();
 //                        recyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
                     } catch (Exception ex) {
                         Log.e("oops", ex.getMessage());
@@ -236,37 +217,5 @@ public class MainActivity extends BaseActivity{
             }
         });
 
-
-//        ValueEventListener postsListener = new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot){
-////                Post[] data = {};
-//                ArrayList<Post> data = new ArrayList<Post>();
-//                Post post = null;
-//
-//                post = dataSnapshot.getValue(Post.class);
-//                posts.add(post);
-//
-////                Log.d("TAG", ""+dataSnapshot.hasChildren());
-//
-////                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-////                    post = singleSnapshot.getValue(Post.class);
-//////                    Log.d("TAG", ""+posts.size());
-////                    posts.add(post);
-////                }
-////                for(int i = data.size() - posts.size(); i < data.size(); i++){
-////                    posts.add(data.get(i));
-////                }
-//                PostAdapter postAdapter = new PostAdapter(getBaseContext(), posts);
-//                recyclerView.setAdapter(postAdapter);
-//            }
-
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.w("TAG", "loadPosts:onCancelled", databaseError.toException());
-//            }
-//        };
-//        postsReference.addValueEventListener(postsListener);
     }
 }
