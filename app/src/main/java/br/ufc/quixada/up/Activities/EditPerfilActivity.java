@@ -311,7 +311,7 @@ public class EditPerfilActivity extends PerfilActivity {
                     loading.setVisibility(View.VISIBLE);
                  }else{
                      //deixa o loading invisível
-                     loading.setVisibility(View.INVISIBLE);
+                     loading.setVisibility(View.GONE);
                  }
             }
         });
