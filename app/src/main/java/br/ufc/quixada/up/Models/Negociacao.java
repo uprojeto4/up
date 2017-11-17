@@ -11,10 +11,10 @@ public class Negociacao {
     private String title;
     private int unreadMessagesCounter;
     private String vendor;
-    private Date startDate;
+    private String startDate;
 
 
-    public Negociacao(String title, int unreadMessagesCounter, String vendor, Date startDate) {
+    public Negociacao(String title, int unreadMessagesCounter, String vendor, String startDate) {
         this.title = title;
         this.unreadMessagesCounter = unreadMessagesCounter;
         this.vendor = vendor;
@@ -49,11 +49,11 @@ public class Negociacao {
         this.vendor = vendor;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 

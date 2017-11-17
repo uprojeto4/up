@@ -40,10 +40,6 @@ public class NegociacoesActivity extends BaseActivity {
     private Spinner spinner;
     String spinnerItem;
     ArrayList<String> filters = new ArrayList<>();
-    private RecyclerView recyclerViewChatList;
-    private DatabaseReference reference;
-    private String userId;
-    private NegociacoesAdapter negociacoesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,44 +102,6 @@ public class NegociacoesActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), "Opçao Default ", Toast.LENGTH_SHORT).show();
             }
         });
-
-//        recyclerViewChatList = findViewById(R.id.recyclerViewChatList);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        recyclerViewChatList.setLayoutManager(linearLayoutManager);
-//
-//        recyclerViewChatList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//            }
-//        });
-//
-//        reference = FirebaseConfig.getDatabase();
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        if (user != null) {
-//            userId = user.getUid();
-//        }
-//
-//        reference.child("negotiations").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
-//                    Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
-//                    negociacoesAdapter.addNegociacao(negociacao);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 
     public void openChat(View view){

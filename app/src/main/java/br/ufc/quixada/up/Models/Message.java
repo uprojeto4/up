@@ -2,18 +2,18 @@ package br.ufc.quixada.up.Models;
 
 import java.util.Date;
 
+import br.ufc.quixada.up.Utils.DateTimeControl;
+
 public class Message {
 
     private String messageText;
     private String messageUserId;
-    private long messageTime;
+    private String messageDateTime;
 
     public Message(String messageText, String messageUserId) {
         this.messageText = messageText;
         this.messageUserId = messageUserId;
-
-        // Initialize to current time
-        messageTime = new Date().getTime();
+        messageDateTime = DateTimeControl.getCurrentDateTime();
     }
 
     public Message(){
@@ -36,11 +36,11 @@ public class Message {
         this.messageUserId = messageUserId;
     }
 
-    public long getMessageTime() {
-        return messageTime;
+    public String getMessageTime() {
+        return messageDateTime;
     }
 
-    public void setMessageTime(long messageTime) {
-        this.messageTime = messageTime;
+    public void setMessageTime(String messageTime) {
+        this.messageDateTime = messageTime;
     }
 }

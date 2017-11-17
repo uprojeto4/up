@@ -15,7 +15,7 @@ import br.ufc.quixada.up.R;
 
 public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.NegociacaoViewHolder> {
 
-    private static ArrayList<Negociacao> negotiationSet;
+    private ArrayList<Negociacao> negotiationSet;
 
     public NegociacoesAdapter(ArrayList<Negociacao> negociacoes) {
         negotiationSet = negociacoes;
@@ -24,20 +24,19 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
     @Override
     public NegociacoesAdapter.NegociacaoViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
-        View itemLayoutView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_categoria_icone, null);
-        NegociacaoViewHolder negociacaoViewHolder = new NegociacaoViewHolder(itemLayoutView);
-        return negociacaoViewHolder;
+        View itemLayoutView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.negociacao, null);
+        return new NegociacaoViewHolder(itemLayoutView);
     }
 
     @Override
     public void onBindViewHolder(NegociacoesAdapter.NegociacaoViewHolder negociacaoViewHolder, int i) {
 
-        Negociacao negociacao = negotiationSet.get(i);
-
+//        Negociacao negociacao = negotiationSet.get(i);
 //        negociacaoViewHolder.icon.setImageResource(cat.getIcon());
 //        Glide.with(NegociacoesAdapter.this).load(cat.getIcon()).into(negociacaoViewHolder.icon);
 //        negociacaoViewHolder.title.setText(cat.getTitle());
-        negociacaoViewHolder.negociacao = negociacao;
+
+        negociacaoViewHolder.negociacao = negotiationSet.get(i);
     }
 
     @Override
@@ -62,16 +61,25 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
 
 //            icon = itemLayoutView.findViewById(R.id.iconeCategoria);
 //            title = itemLayoutView.findViewById(R.id.nomeCategoria);
+            final TextView textViewTituloNegociacao = itemLayoutView.findViewById(R.id.textViewTituloNegociacao);
+            final TextView textViewNomeVendedorNegociacao = itemLayoutView.findViewById(R.id.textViewNomeVendedorNegociacao);
+            final TextView textViewdataInicioNegociacao = itemLayoutView.findViewById(R.id.dataInicioNegociacao);
+            final TextView textViewMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.textViewMensagensNaoLidasNegociacao);
 
             itemLayoutView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
 
+//                    textViewTituloNegociacao.setText(negociacao.getTitle());
+//                    textViewNomeVendedorNegociacao.setText(negociacao.getVendor());
+//                    textViewdataInicioNegociacao.setText(negociacao.getStartDate());
+//                    textViewMensagensNaoLidasNegociacao.setText(negociacao.getUnreadMessagesCounter());
+
 //                    Intent intent = new Intent(v.getContext(), PaginaDeResultados.class);
 //                    v.getContext().startActivity(intent);
 
-                    Toast.makeText(v.getContext(), negociacao.getTitle(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(v.getContext(), negociacao.getTitle(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
