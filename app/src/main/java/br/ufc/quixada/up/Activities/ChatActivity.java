@@ -84,6 +84,7 @@ public class ChatActivity extends BaseActivity {
                     }
                 }
                 messageInput.setText("");
+                
             }
         });
 
@@ -102,20 +103,20 @@ public class ChatActivity extends BaseActivity {
 //            }
 //        });
 
-//        dbReference.child("messages").child(chatId).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
-//                    Message message = messageDataSnapshot.getValue(Message.class);
-//                    chatAdapter.addMessage(message);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+        dbReference.child("messages").child(chatId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
+                    Message message = messageDataSnapshot.getValue(Message.class);
+                    chatAdapter.addMessage(message);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 //
 //        dbReference.child("messages").child(chatId).addChildEventListener(new ChildEventListener() {
 //            @Override
