@@ -185,7 +185,7 @@ public class NovoAnuncioActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (position > 0) {
                     spinnerCategoriasItemSelecionado = (String) adapterView.getItemAtPosition(position);
-                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerCategoriasItemSelecionado, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerCategoriasItemSelecionado, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -316,6 +316,9 @@ public class NovoAnuncioActivity extends BaseActivity {
         String price = precoAnuncio.getText().toString();
         String qtd = qtdItensAnuncio.getText().toString();
 
+        price = price.replace(".", "");
+        price = price.replace(",", ".");
+
         post.setTitle(tituloAnuncio.getText().toString());
         post.setSubtitle(descricaoAnuncio.getText().toString());
         post.setPrice(Double.parseDouble(price));
@@ -335,10 +338,10 @@ public class NovoAnuncioActivity extends BaseActivity {
 
     public void uploadPictures() {
 
-            Toast.makeText(this, "entrei primeiro: "+images.size(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "entrei primeiro: "+images.size(), Toast.LENGTH_SHORT).show();
         //pega o caminho do arquivo a ser enviado
         for (Image image : images){
-            Toast.makeText(this, "entrei", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "entrei", Toast.LENGTH_SHORT).show();
             Uri file = Uri.fromFile(new File(image.getPath()));
             //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
             //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior

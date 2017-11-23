@@ -1,7 +1,6 @@
 package br.ufc.quixada.up.Activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,10 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +25,7 @@ import br.ufc.quixada.up.Adapters.ChatAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Message;
 
+import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.ChatControl;
 
@@ -39,6 +40,7 @@ public class ChatActivity extends BaseActivity {
     private String userId;
     private String remoteUserId;
     private String adId;
+    private TextView titleAnuncioChat;
 
 //    public static void startActivity(Context context, String)
 
@@ -55,6 +57,9 @@ public class ChatActivity extends BaseActivity {
         Intent intent = getIntent();
         adId = intent.getStringExtra("adId");
         remoteUserId = intent.getStringExtra("remoteUserId");
+
+        titleAnuncioChat = findViewById(R.id.titleAnuncioChat);
+        titleAnuncioChat.setText(intent.getStringExtra("adTitle"));
 
         messageInput = findViewById(R.id.editTextMessageInput);
         Button buttonSend = findViewById(R.id.buttonSend);
@@ -79,33 +84,44 @@ public class ChatActivity extends BaseActivity {
                     Message message = new Message(messageInput.getText().toString(), userId);
                     if (chatId != null) {
                         dbReference.child("messages").child(chatId).push().setValue(message);
+                        dbReference.child("negotiations").child(userId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
+                        dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
                     } else {
                         chatId = ChatControl.startConversation(userId, remoteUserId, adId, message);
                     }
+                    chatAdapter.addMessage(message);
+                    messageInput.setText("");
                 }
-                messageInput.setText("");
-                
             }
         });
 
-//        reference.child("messages").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
-//                    Message message = messageDataSnapshot.getValue(Message.class);
-//                    chatAdapter.addMessage(message);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+        dbReference.child("negotiations").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(adId)) {
+                    DataSnapshot negotiationSnapshot = dataSnapshot.child(adId);
+                    Log.d("maxxx", "onDataChange: " + negotiationSnapshot);
+                    Negociacao negociacao = negotiationSnapshot.getValue(Negociacao.class);
+                    chatId = negociacao.getMessagesId();
+                    getMessages();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Message node not exists", Toast.LENGTH_SHORT).show();
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void getMessages() {
         dbReference.child("messages").child(chatId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
                     Message message = messageDataSnapshot.getValue(Message.class);
                     chatAdapter.addMessage(message);
@@ -117,43 +133,6 @@ public class ChatActivity extends BaseActivity {
 
             }
         });
-//
-//        dbReference.child("messages").child(chatId).addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-//                    try {
-//                        Message message = dataSnapshot.getValue(Message.class);
-//                        chatAdapter.addMessage(message);
-////                        recyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
-//                    } catch (Exception ex) {
-//                        Log.e("oops", ex.getMessage());
-//                    }
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-
     }
 
 //    private class CreateMessageNode extends AsyncTask<String, String, String> {

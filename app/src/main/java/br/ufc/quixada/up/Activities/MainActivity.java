@@ -166,14 +166,14 @@ public class MainActivity extends BaseActivity{
         Toast.makeText(getBaseContext(),"Dar um up maroto", Toast.LENGTH_SHORT).show();
     }
 
-    public void negociar(View view){
+/*    public void negociar(View view){
 //        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("remoteUserId", "YnJlbmRvbkBnbWFpbC5jb20=");
         intent.putExtra("adId", "-Kz7OnP9IF00E0jPBxTh");
         startActivity(intent);
 //        ChatControl.startConversation("remoteUserId", "productId");
-    }
+    }*/
 
     public void favorite(View view) {
 //        favorite = (ImageButton) findViewById(R.id.favorite);

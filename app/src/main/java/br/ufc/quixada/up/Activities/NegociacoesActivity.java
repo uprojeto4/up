@@ -91,22 +91,22 @@ public class NegociacoesActivity extends BaseActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position > 0) {
+                if (position >= 0) {
                     spinnerItem = (String) adapterView.getItemAtPosition(position);
-                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerItem, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerItem, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                Toast.makeText(getApplicationContext(), "Opçao Default ", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Opçao Default ", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void openChat(View view){
-        Intent intent = new Intent(this, ChatActivity.class);
-        startActivity(intent);
-    }
+//    public void openChat(View view){
+//        Intent intent = new Intent(this, ChatActivity.class);
+//        startActivity(intent);
+//    }
 
 }

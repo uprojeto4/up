@@ -2,27 +2,35 @@ package br.ufc.quixada.up.Models;
 
 import java.util.Date;
 
+import br.ufc.quixada.up.Utils.DateTimeControl;
+
 /**
  * Created by Macelo on 14/11/2017.
  */
 
 public class Negociacao {
 
-    private String title;
     private int unreadMessagesCounter;
-    private String vendor;
+    private String title;
+    private String vendorId;
+    private String vendorName;
+    private String adId;
+    private String lastMessage;
+    private String lastMessageSenderId;
     private String startDate;
+    private String messagesId;
+    private String status;
 
+    public Negociacao() { }
 
-    public Negociacao(String title, int unreadMessagesCounter, String vendor, String startDate) {
-        this.title = title;
-        this.unreadMessagesCounter = unreadMessagesCounter;
-        this.vendor = vendor;
-        this.startDate = startDate;
-    }
-
-    public Negociacao() {
-
+    public Negociacao(String messagesId, String vendorId, String adId, String lastMessage, String lastMessageSenderId) {
+        this.messagesId = messagesId;
+        this.vendorId = vendorId;
+        this.adId = adId;
+        this.lastMessage = lastMessage;
+        this.lastMessageSenderId = lastMessageSenderId;
+        this.startDate = DateTimeControl.getCurrentDate();
+        this.status = "opened";
     }
 
     public String getTitle() {
@@ -41,12 +49,28 @@ public class Negociacao {
         this.unreadMessagesCounter = unreadMessagesCounter;
     }
 
-    public String getVendor() {
-        return vendor;
+    public String getVendorId() {
+        return vendorId;
     }
 
-    public void setVendor(String vendor) {
-        this.vendor = vendor;
+    public void setVendorId(String vendorId) {
+        this.vendorId = vendorId;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public String getLastMessageSenderId() {
+        return lastMessageSenderId;
+    }
+
+    public void setLastMessageSenderId(String lastMessageSenderId) {
+        this.lastMessageSenderId = lastMessageSenderId;
     }
 
     public String getStartDate() {
@@ -57,4 +81,35 @@ public class Negociacao {
         this.startDate = startDate;
     }
 
+    public String getMessagesId() {
+        return messagesId;
+    }
+
+    public void setMessagesId(String chatId) {
+        this.messagesId = chatId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAdId() {
+        return adId;
+    }
+
+    public void setAdId(String adId) {
+        this.adId = adId;
+    }
+
+    public String getVendorName() {
+        return vendorName;
+    }
+
+    public void setVendorName(String vendorName) {
+        this.vendorName = vendorName;
+    }
 }

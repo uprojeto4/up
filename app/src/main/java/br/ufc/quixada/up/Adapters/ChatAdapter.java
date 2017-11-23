@@ -45,7 +45,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (mDataSet.get(position).getMessageUserId().equals(mId)) {
+        if (mDataSet.get(position).getUserId().equals(mId)) {
             return SENT_MESSAGE;
         } else {
             return RECEIVED_MESSAGE;
@@ -55,7 +55,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Message message = mDataSet.get(position);
-        holder.mTextView.setText(message.getMessageText());
+        holder.mTextView.setText(message.getText());
     }
 
     @Override

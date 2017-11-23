@@ -6,8 +6,7 @@
     android:layout_weight="1.5"
     android:orientation="vertical"
     android:paddingTop="8dp"
-    android:weightSum="1"
-    android:onClick="openChat">
+    android:weightSum="1">
 
     <LinearLayout
         android:id="@+id/container_negociacao"
@@ -201,4 +200,5 @@
         </LinearLayout>
 
     </LinearLayout>
+
 </LinearLayout>
