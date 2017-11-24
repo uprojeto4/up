@@ -33,6 +33,7 @@ public class ChatActivity extends BaseActivity {
 
     private DatabaseReference dbReference;
     private RecyclerView recyclerView;
+    LinearLayoutManager linearLayoutManager;
     private EditText messageInput;
 //    private List messages = new ArrayList<Message>();
     private ChatAdapter chatAdapter;
@@ -67,7 +68,10 @@ public class ChatActivity extends BaseActivity {
 //        dbReference.keepSynced(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewConversation);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        linearLayoutManager = new LinearLayoutManager(this);
+//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(new ArrayList<Message>());
         recyclerView.setAdapter(chatAdapter);
 
@@ -91,6 +95,7 @@ public class ChatActivity extends BaseActivity {
                     }
                     chatAdapter.addMessage(message);
                     messageInput.setText("");
+                    linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
                 }
             }
         });
@@ -100,7 +105,7 @@ public class ChatActivity extends BaseActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(adId)) {
                     DataSnapshot negotiationSnapshot = dataSnapshot.child(adId);
-                    Log.d("maxxx", "onDataChange: " + negotiationSnapshot);
+//                    Log.d("maxxx", "ChatonDataChange: " + negotiationSnapshot);
                     Negociacao negociacao = negotiationSnapshot.getValue(Negociacao.class);
                     chatId = negociacao.getMessagesId();
                     getMessages();
@@ -126,6 +131,7 @@ public class ChatActivity extends BaseActivity {
                     Message message = messageDataSnapshot.getValue(Message.class);
                     chatAdapter.addMessage(message);
                 }
+                linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
             }
 
             @Override

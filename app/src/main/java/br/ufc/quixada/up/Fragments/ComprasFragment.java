@@ -60,35 +60,6 @@ public class ComprasFragment extends Fragment {
 
         getNegotiations();
 
-        dbReference.child("negotiations").child(userId).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
-                    System.out.println("maxxx " + messageDataSnapshot);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
         return rootView;
 
 //        recyclerViewChatList = getView().findViewById(R.id.recyclerViewChatList);
@@ -112,23 +83,29 @@ public class ComprasFragment extends Fragment {
 
     public void getNegotiations() {
 
-        dbReference.child("negotiations").child(userId).addValueEventListener(new ValueEventListener() {
+        dbReference.child("negotiations").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
                     final Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
-                    String adId = negociacao.getAdId();
+                    final String adId = negociacao.getAdId();
+
                     dbReference.child("posts").child(adId).addListenerForSingleValueEvent(new ValueEventListener() {
+
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Post post = dataSnapshot.getValue(Post.class);
                             negociacao.setTitle(post.getTitle());
+
                             dbReference.child("users").child(post.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     User user = dataSnapshot.getValue(User.class);
                                     negociacao.setVendorName(user.getNome());
                                     negociacoesAdapter.addNegociacao(negociacao);
+                                    updateNegotiationsMetadata(adId);
                                 }
 
                                 @Override
@@ -145,6 +122,43 @@ public class ComprasFragment extends Fragment {
                         }
                     });
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void updateNegotiationsMetadata(String adId) {
+        dbReference.child("negotiations").child(userId).child(adId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
+                    final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
+                    final String adId = negociacao.getAdId();
+                    final String lastMessage = negociacao.getLastMessage();
+                    System.out.println("maxxx " + adId);
+                    System.out.println("maxxx " + lastMessage);
+//                    criar método no adapter que busca pelo id e atualiza
+//                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
