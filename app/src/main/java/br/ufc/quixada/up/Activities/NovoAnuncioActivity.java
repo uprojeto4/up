@@ -42,12 +42,14 @@ import java.util.Locale;
 
 
 import br.ufc.quixada.up.Adapters.NovoAnuncioRecyclerViewImageAdapter;
+import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.InputMask;
 import br.ufc.quixada.up.Utils.RecyclerViewPhotoSeparator;
 
 public class NovoAnuncioActivity extends BaseActivity {
 
+    Post post;
     ConstraintLayout mainConstraintLayout;
     RecyclerView recyclerView;
     LinearLayout linearLayoutNoImage;
@@ -99,6 +101,7 @@ public class NovoAnuncioActivity extends BaseActivity {
         buttonSalvarAnuncio = findViewById(R.id.buttonSalvarAnuncio);
         mainConstraintLayout = findViewById(R.id.mainConstraintLayout);
         categoriaAnuncioTitle = findViewById(R.id.textViewCategoria);
+        post = new Post();
 
         // imageAdapter e implementações de swipe para deletar
         imageAdapter = new NovoAnuncioRecyclerViewImageAdapter(this);
@@ -291,6 +294,27 @@ public class NovoAnuncioActivity extends BaseActivity {
             finish();
         }
 //        super.onBackPressed();
+    }
+
+    public void saveOnFirebase(View view){
+
+        String price = precoAnuncio.getText().toString();
+        String qtd = qtdItensAnuncio.getText().toString();
+
+        post.setTitle(tituloAnuncio.getText().toString());
+        post.setSubtitle(descricaoAnuncio.getText().toString());
+        post.setPrice(Double.parseDouble(price));
+        post.setQtd(Integer.parseInt(qtd));
+        post.setCategoria(spinnerCategoriasAnuncio.getSelectedItem().toString());
+        post.setUserId(localUser.getId());
+//        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
+
+        post.save(getBaseContext());
+        this.finish();
+    }
+
+    public void cancel(View view){
+        this.finish();
     }
 
 //    @Override
