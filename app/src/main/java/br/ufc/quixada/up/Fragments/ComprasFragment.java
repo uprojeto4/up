@@ -29,7 +29,7 @@ import br.ufc.quixada.up.R;
 
 public class ComprasFragment extends Fragment {
 
-    RecyclerView recyclerViewChatList;
+    RecyclerView recyclerViewBuyChatList;
     LinearLayoutManager linearLayoutManager;
     private DatabaseReference dbReference;
     private String userId;
@@ -44,19 +44,19 @@ public class ComprasFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_compras, container, false);
 
-        recyclerViewChatList = (RecyclerView) rootView.findViewById(R.id.recyclerViewChatList);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerViewChatList.setLayoutManager(linearLayoutManager);
-
-        negociacoesAdapter = new NegociacoesAdapter(this.getContext(), new ArrayList<Negociacao>());
-        recyclerViewChatList.setAdapter(negociacoesAdapter);
-
         dbReference = FirebaseConfig.getDatabase();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userId = user.getUid();
         }
+
+        recyclerViewBuyChatList = (RecyclerView) rootView.findViewById(R.id.recyclerViewBuyChatList);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerViewBuyChatList.setLayoutManager(linearLayoutManager);
+
+        negociacoesAdapter = new NegociacoesAdapter(this.getContext(), new ArrayList<Negociacao>(), userId);
+        recyclerViewBuyChatList.setAdapter(negociacoesAdapter);
 
         getNegotiations();
 
@@ -136,19 +136,19 @@ public class ComprasFragment extends Fragment {
         dbReference.child("negotiations").child(userId).child(adId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
+//                System.out.println("added");
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
-                    final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
+                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
+                    final Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
                     final String adId = negociacao.getAdId();
                     final String lastMessage = negociacao.getLastMessage();
                     System.out.println("maxxx " + adId);
                     System.out.println("maxxx " + lastMessage);
 //                    criar método no adapter que busca pelo id e atualiza
-//                }
+                }
             }
 
             @Override

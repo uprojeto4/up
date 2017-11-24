@@ -152,7 +152,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 @Override
                 //monitora a falha do downlaod
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(context,"Imagem não foi baixada", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Imagem não foi baixada", Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IOException e){

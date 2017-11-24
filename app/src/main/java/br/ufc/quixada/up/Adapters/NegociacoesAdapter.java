@@ -28,13 +28,10 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
     private String userId;
     Context context;
 
-    public NegociacoesAdapter(Context c, ArrayList<Negociacao> negociacoes) {
+    public NegociacoesAdapter(Context c, ArrayList<Negociacao> negociacoes, String userId) {
         this.negotiationSet = negociacoes;
         this.context = c;
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            this.userId = user.getUid();
-        }
+        this.userId = userId;
     }
 
     @Override
@@ -49,7 +46,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
 
 //        Glide.with(NegociacoesAdapter.this).load(cat.getIcon()).into(negociacaoViewHolder.icon);
 
-        Date date;
+//        Date date;
 
         negociacaoViewHolder.negociacao = negotiationSet.get(position);
         negociacaoViewHolder.textViewTituloNegociacao.setText(negociacaoViewHolder.negociacao.getTitle());

@@ -26,6 +26,7 @@ import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Message;
 
 import br.ufc.quixada.up.Models.Negociacao;
+import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.ChatControl;
 
@@ -35,15 +36,13 @@ public class ChatActivity extends BaseActivity {
     private RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     private EditText messageInput;
-//    private List messages = new ArrayList<Message>();
     private ChatAdapter chatAdapter;
     private String chatId;
     private String userId;
     private String remoteUserId;
     private String adId;
     private TextView titleAnuncioChat;
-
-//    public static void startActivity(Context context, String)
+    private TextView vendedorAnuncioChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +60,7 @@ public class ChatActivity extends BaseActivity {
 
         titleAnuncioChat = findViewById(R.id.titleAnuncioChat);
         titleAnuncioChat.setText(intent.getStringExtra("adTitle"));
+        vendedorAnuncioChat = findViewById(R.id.vendedorAnuncioChat);
 
         messageInput = findViewById(R.id.editTextMessageInput);
         Button buttonSend = findViewById(R.id.buttonSend);
@@ -80,6 +80,8 @@ public class ChatActivity extends BaseActivity {
             userId = user.getUid();
         }
 
+        resolveVendorName();
+
         buttonSend.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -91,6 +93,7 @@ public class ChatActivity extends BaseActivity {
                         dbReference.child("negotiations").child(userId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
                         dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
                     } else {
+                        System.out.println("userId " + userId);
                         chatId = ChatControl.startConversation(userId, remoteUserId, adId, message);
                     }
                     chatAdapter.addMessage(message);
@@ -132,6 +135,24 @@ public class ChatActivity extends BaseActivity {
                     chatAdapter.addMessage(message);
                 }
                 linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void resolveVendorName() {
+        dbReference.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot userDataSnapshot : dataSnapshot.getChildren()) {
+                    User user = userDataSnapshot.getValue(User.class);
+                    vendedorAnuncioChat.setText(user.getNome());
+                }
             }
 
             @Override
