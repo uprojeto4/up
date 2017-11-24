@@ -3,6 +3,7 @@ package br.ufc.quixada.up.Fragments;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import br.ufc.quixada.up.Activities.PerfilActivity;
@@ -60,7 +63,7 @@ public class fragmentPerfilPerfil extends Fragment {
     public byte[] image;
     Bitmap bitmap;
     public boolean test;
-
+    public File localFile;
 
     @Nullable
     @Override
@@ -73,8 +76,30 @@ public class fragmentPerfilPerfil extends Fragment {
 
         test = profilePictureRef.getName().equals(PerfilActivity.fotoPerfil);
 
+        Log.d("getName", profilePictureRef.getName());
+        // 1509810338632_1.jpg
+        Log.d("perfilActivity", PerfilActivity.fotoPerfil);
+        //1509810338632_1.jpg
+
         if (test){
+            Log.d("getName do if", profilePictureRef.getName());
+            // 1509810338632_1.jpg
+            Log.d("perfilActivity do if", PerfilActivity.fotoPerfil);
+            //1509810338632_1.jpg
+
+//            Log.d("Caminho", localFile.getName());
+
+
+//            bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//            //transforma o stream em um array de bytes
+//            image = stream.toByteArray();
+//            //método que aplica a imagem nos lugares desejsdos
+//            applyImage(image);
+
             downloadProfilePicture();
+
         }else{
             //nada
         }
@@ -99,36 +124,108 @@ public class fragmentPerfilPerfil extends Fragment {
 
     public void downloadProfilePicture(){
         //o download com o metodo getFile deve ser feito num try/catch
-        try{
-            //cria o arquivo temporário local onde a imagem será armazenada
-            final File localFile = File.createTempFile("jpg", "image");
-            profilePictureRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                //monitora o sucesso do download
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    //transforma a imagem baixada em um bitmap
-                    bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    //transforma o bitmap em stream
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    //transforma o stream em um array de bytes
-                    image = stream.toByteArray();
-                    //método que aplica a imagem nos lugares desejsdos
-                    applyImage(image);
-//                    Toast.makeText(getActivity(),profilePictureRef.getName(), Toast.LENGTH_LONG).show();
+//        try{
+//            //cria o arquivo temporário local onde a imagem será armazenada
+//            localFile = File.createTempFile("jpg", "image");
+//            profilePictureRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                @Override
+//                //monitora o sucesso do download
+//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                    //transforma a imagem baixada em um bitmap
+//                    bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+////                    Toast.makeText(getActivity(),localFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+//
+//                    Log.d("Caminho", localFile.getPath());
+//
+//                    //transforma o bitmap em stream
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                    //transforma o stream em um array de bytes
+//                    image = stream.toByteArray();
+//                    //método que aplica a imagem nos lugares desejsdos
+//                    applyImage(image);
+////                    Toast.makeText(getActivity(),profilePictureRef.getName(), Toast.LENGTH_LONG).show();
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                //monitora a falha do downlaod
+//                public void onFailure(@NonNull Exception e) {
+//                    Toast.makeText(getActivity(),"Foto não encontrada", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        } catch (IOException e){
+//            e.printStackTrace();
+//            //manipular exceções
+//            Log.e("Main", "IOE exception");
+//        }
+
+        FirebaseStorage storage=FirebaseStorage.getInstance();
+
+        // Create a storage reference from our app
+
+        final StorageReference storageRef = storage.getReferenceFromUrl("gs://up-compra-venda.appspot.com/UsersProfilePictures/"+PerfilActivity.id);
+
+//        gs://up-compra-venda.appspot.com/UsersProfilePictures/YnJlbmRvbmdpcmFvQGdtYWlsLmNvbQ==/1509810338632_1.jpg
+
+
+        storageRef.child(PerfilActivity.fotoPerfil).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+
+            @Override
+
+            public void onSuccess(byte[] bytes) {
+
+                // Use the bytes to display the image
+
+                String path= "/data/data/br.ufc.quixada.up/cache/"+storageRef.child(PerfilActivity.fotoPerfil).getName();
+
+                try {
+
+                    FileOutputStream fos = new FileOutputStream(path);
+
+                    fos.write(bytes);
+
+                    applyImage(bytes);
+
+                    fos.close();
+
+                    Toast.makeText(getActivity(), "Success!!!", Toast.LENGTH_SHORT).show();
+
+
+
+                } catch (FileNotFoundException e) {
+
+                    e.printStackTrace();
+
+                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+
+                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                //monitora a falha do downlaod
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(),"Foto não encontrada", Toast.LENGTH_LONG).show();
-                }
-            });
-        } catch (IOException e){
-            e.printStackTrace();
-            //manipular exceções
-            Log.e("Main", "IOE exception");
-        }
+
+//                pd.dismiss();
+
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+
+            @Override
+
+            public void onFailure(@NonNull Exception exception) {
+
+                // Handle any errors
+
+//                pd.dismiss();
+
+                Toast.makeText(getActivity(), exception.toString()+"!!!", Toast.LENGTH_SHORT).show();
+
+            }
+
+        });
+
 
     }
 
