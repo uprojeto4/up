@@ -62,7 +62,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView11"
+                    android:id="@+id/textViewTituloNegociacao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="2"
@@ -72,7 +72,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView13"
+                    android:id="@+id/textViewNomeVendedorNegociacao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -102,7 +102,7 @@
                         android:textSize="10sp" />
 
                     <TextView
-                        android:id="@+id/textView16"
+                        android:id="@+id/dataInicioNegociacao"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="23 de dezembro de 2017"
@@ -148,7 +148,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView14"
+                        android:id="@+id/textViewMensagensNaoLidasNegociacao"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -200,4 +200,5 @@
         </LinearLayout>
 
     </LinearLayout>
+
 </LinearLayout>

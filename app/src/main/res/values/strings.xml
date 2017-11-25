@@ -69,7 +69,7 @@
     <string name="sair">Sair</string>
     <string name="enviar">Enviar</string>
 
-    <string name="escreva_mensagem">Escreva uma mensagem</string>
+    <string name="escreva_mensagem">Escreva uma mensagem&#8230;</string>
     <string name="continuar_editando">Continuar editando</string>
 
     <string name="erro_novo_anuncio_titulo">Seu anúncio precisa de um título.</string>
@@ -84,7 +84,7 @@
 
     <string-array name="tabs_perfil">
         <item>Perfil</item>
-        <item>Anúncios</item>
+        <item>Meus Anúncios</item>
     </string-array>
 
     <string name="title_activity_edit_perfil">Editar perfil</string>
@@ -96,8 +96,9 @@
     <string name="input_edit_confirm_senha_hint">Confirme a sua nova senha</string>
     <string name="title_activity_cadastro">CadastroActivity</string>
     <string name="dafault_user_name">Visitante</string>
+    <string name="dafault_exit_confirmation">Deseja realmente Sair?</string>
 
-    <string name="escreva_mensagem">Escreva uma mensagem&#8230;</string>
+    <string name="iniciada_em">Iniciada em:</string>
 
     <string name="lista_desejos_action_menu">Limpar lista</string>
 
@@ -111,5 +112,6 @@
         <item>Fechadas</item>
         <item>Canceladas</item>
     </string-array>
+
 
 </resources>

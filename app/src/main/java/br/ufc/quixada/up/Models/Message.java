@@ -2,45 +2,53 @@ package br.ufc.quixada.up.Models;
 
 import java.util.Date;
 
+import br.ufc.quixada.up.Utils.DateTimeControl;
+
 public class Message {
 
-    private String messageText;
-    private String messageUserId;
-    private long messageTime;
+    private String text;
+    private String userId;
+    private String dateTime;
+    private String status;
 
-    public Message(String messageText, String messageUserId) {
-        this.messageText = messageText;
-        this.messageUserId = messageUserId;
+    public Message() { }
 
-        // Initialize to current time
-        messageTime = new Date().getTime();
+    public Message(String text, String messageUserId) {
+        this.text = text;
+        this.userId = messageUserId;
+        this.dateTime = DateTimeControl.getCurrentDateTime();
+        this.status="unread";
     }
 
-    public Message(){
-
+    public String getText() {
+        return text;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public void setText(String messageText) {
+        this.text = messageText;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getMessageUserId() {
-        return messageUserId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public void setMessageUserId(String messageUser) {
-        this.messageUserId = messageUserId;
+    public String getDateTime() {
+        return dateTime;
     }
 
-    public long getMessageTime() {
-        return messageTime;
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
-    public void setMessageTime(long messageTime) {
-        this.messageTime = messageTime;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

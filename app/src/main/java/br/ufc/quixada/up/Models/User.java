@@ -17,6 +17,7 @@ public class User {
     private String nome;
     private String email;
     private String Id;
+    private String fotoPerfil;
 
     private static User instance;
 
@@ -34,6 +35,7 @@ public class User {
         userHashMap.put("id", getId());
         userHashMap.put("name", getNome());
         userHashMap.put("email", getEmail());
+        userHashMap.put("fotoPerfil", getFotoPerfil());
 
         return userHashMap;
     }
@@ -62,6 +64,14 @@ public class User {
         this.email = email;
     }
 
+    public String getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
+    }
+
     public static User getInstance(){
         if(instance == null){
             synchronized (User.class){
@@ -79,6 +89,7 @@ public class User {
                 "nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
                 ", Id='" + Id + '\'' +
+                ", fotoPerfil='" + fotoPerfil + '\'' +
                 '}';
     }
 }

@@ -66,6 +66,7 @@ public class CadastroActivity extends AppCompatActivity {
                         localUser = User.getInstance();
                         localUser.setNome(editTextName.getText().toString());
                         localUser.setEmail(editTextEmail.getText().toString());
+                        localUser.setFotoPerfil("profile_picture_default.jpg");
                     } else {
                         Toast.makeText(CadastroActivity.this, "As senhas não são correspondentes", Toast.LENGTH_SHORT).show();
                     }
@@ -104,7 +105,7 @@ public class CadastroActivity extends AppCompatActivity {
                        localUser.save();
 
                        FirebasePreferences preferences = new FirebasePreferences(CadastroActivity.this);
-                       preferences.SaveUserPreferences(userId, localUser.getNome(), localUser.getEmail());
+                       preferences.SaveUserPreferences(userId, localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil());
 
                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
