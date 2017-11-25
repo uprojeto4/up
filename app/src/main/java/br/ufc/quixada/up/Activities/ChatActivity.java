@@ -157,7 +157,7 @@ public class ChatActivity extends BaseActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+              
             }
         });
     }

@@ -297,13 +297,14 @@ public class NovoAnuncioActivity extends BaseActivity {
         if (imageAdapter.getItemCount() > 0 || tituloAnuncio.getText().length() != 0 || descricaoAnuncio.getText().length() != 0 ||
                 precoAnuncio.getText().length() != 0 || qtdItensAnuncio.getText().length() != 0 || spinnerCategoriasItemSelecionado != null) {
             new AlertDialog.Builder(this)
+                    .setTitle(R.string.dafault_exit_confirmation)
                     .setMessage(NovoAnuncioActivity.this.getString(R.string.alert_sair_sem_salvar_message))
-                    .setPositiveButton(NovoAnuncioActivity.this.getString(R.string.sair), new DialogInterface.OnClickListener() {
+                    .setPositiveButton(NovoAnuncioActivity.this.getString(R.string.nao), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             finish();
                         }
-                    }).setNegativeButton(NovoAnuncioActivity.this.getString(R.string.cancelar), null)
+                    }).setNegativeButton(NovoAnuncioActivity.this.getString(R.string.sim), null)
                     .show();
         } else {
             finish();
@@ -326,140 +327,33 @@ public class NovoAnuncioActivity extends BaseActivity {
         post.setCategoria(spinnerCategoriasAnuncio.getSelectedItem().toString());
         post.setUserId(localUser.getId());
 //        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
+      
+        if( tituloAnuncio.getText() != null &&
+            descricaoAnuncio.getText() != null &&
+            precoAnuncio.getText() != null &&
+            qtdItensAnuncio.getText() != null &&
+            spinnerCategoriasAnuncio.getSelectedItem() != null &&
+            localUser.getId() != null &&
+            images.size() > 0){
+                String price = precoAnuncio.getText().toString();
+                String qtd = qtdItensAnuncio.getText().toString();
 
-        post.save(getBaseContext());
-        uploadPictures();
-        this.finish();
+                post.setTitle(tituloAnuncio.getText().toString());
+                post.setSubtitle(descricaoAnuncio.getText().toString());
+                post.setPrice(Double.parseDouble(price));
+                post.setQtd(Integer.parseInt(qtd));
+                post.setCategoria(spinnerCategoriasAnuncio.getSelectedItem().toString());
+                post.setUserId(localUser.getId());
+        //        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
+
+                post.upload(images);
+                this.finish();
+        }else{
+            Toast.makeText(this, "Porfavor, preencha todos os campos!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void cancel(View view) {
         this.finish();
     }
-
-    public void uploadPictures() {
-
-//            Toast.makeText(this, "entrei primeiro: "+images.size(), Toast.LENGTH_SHORT).show();
-        //pega o caminho do arquivo a ser enviado
-        for (Image image : images){
-//            Toast.makeText(this, "entrei", Toast.LENGTH_SHORT).show();
-            Uri file = Uri.fromFile(new File(image.getPath()));
-            //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
-            //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
-            imageRef = storageReference.child("PostsPictures/" + post.getId() + "/" + file.getLastPathSegment());
-
-            //cria os metadados
-            StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
-
-            Log.d("TAG", imageRef.getName());
-
-            //faz upload do arquivo junto com os metadados
-            UploadTask uploadTask = imageRef.putFile(file, metadata);
-            //monitora o andamento do upload
-            uploadTask
-            //monitora caso de falha
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getBaseContext(), "Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
-                }
-            })
-            //monitora caso de sucesso
-            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                Toast.makeText(getBaseContext(), "Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
-//                    String picture = imageRef.getName();
-                post.addImageName(imageRef.getName());
-
-                //atualiza a foto do usuario local
-//                            localUser.setFotoPerfil(imageRef.getName());
-//                Toast.makeText(getBaseContext(),"foto do user local " + localUser.getFotoPerfil(), Toast.LENGTH_LONG).show();
-
-//                            firebasePreferences = new FirebasePreferences(getBaseContext());
-//                            firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil());
-
-                //atualiza a referencia a foto no banco
-                databaseReference.child("posts").child(post.getId()).child("pictures").setValue(post.getPictures());
-
-//                imageRef = storageReference.child("PostsPictures/" + post.getId() + "/" + post.getPictures().get(0));
-//
-//                try{
-//                    //cria o arquivo temporário local onde a imagem será armazenada
-//                    final File localFile = File.createTempFile("jpg", "image");
-//                    imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                        @Override
-//                        //monitora o sucesso do download
-//                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                            //transforma a imagem baixada em um bitmap
-//                            bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-//                            //transforma o bitmap em stream
-//                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                            //transforma o stream em um array de bytes
-//                            pictureCover = stream.toByteArray();
-//                            //método que aplica a imagem nos lugares desejsdos
-////                            post.setImage(pictureCover);
-////                            applyImage(pictureCover);
-//                            Toast.makeText(getBaseContext(),imageRef.getName(), Toast.LENGTH_LONG).show();
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        //monitora a falha do downlaod
-//                        public void onFailure(@NonNull Exception e) {
-//                            Toast.makeText(getBaseContext(),"Imagem não foi baixada", Toast.LENGTH_LONG).show();
-//                        }
-//                    });
-//                } catch (IOException e){
-//                    e.printStackTrace();
-//                    //manipular exceções
-//                    Log.e("Main", "IOE exception");
-//                }
-
-                }
-            });
-        }
-
-
-        //monitora o progresso
-//        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-//                if (progress < 100.0){
-//                    //deixa o loading visivel
-//                    loading.setVisibility(View.VISIBLE);
-//                }else{
-//                    //deixa o loading invisível
-//                    loading.setVisibility(View.GONE);
-//                }
-//            }
-//        });
-
-
-    }
-
-
-//    public void applyImage(byte[] bytes){
-//        //efeito de blur para a imagem
-////        MultiTransformation multi = new MultiTransformation(
-////                new BlurTransformation(25));
-//
-//
-//        //options para o glide
-//        RequestOptions requestOptions = new RequestOptions();
-//        //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
-//        requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
-//        requestOptions.skipMemoryCache(true);
-//
-//        //carrega a imagem
-//        Glide.with(this).load(bytes)
-//                //aplica as options de cache
-//                .apply(requestOptions)
-//                //aplica as options de transformação
-////                .apply(RequestOptions.bitmapTransform(multi))
-//                //insere a imagem no imageView
-//                .into((ImageView) findViewById((R.id.imageViewIconeFoto)));
-//
-//    }
 }

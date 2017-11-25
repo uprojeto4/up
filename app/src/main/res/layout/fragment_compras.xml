@@ -6,10 +6,10 @@
     android:orientation="vertical"
     tools:context="br.ufc.quixada.up.Fragments.ComprasFragment">
 
-    <!--<include-->
-        <!--layout="@layout/negociacao"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content" />-->
+    <include
+        layout="@layout/negociacao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewBuyChatList"
