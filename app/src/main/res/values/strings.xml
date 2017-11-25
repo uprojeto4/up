@@ -96,6 +96,7 @@
     <string name="input_edit_confirm_senha_hint">Confirme a sua nova senha</string>
     <string name="title_activity_cadastro">CadastroActivity</string>
     <string name="dafault_user_name">Visitante</string>
+    <string name="dafault_exit_confirmation">Deseja realmente Sair?</string>
 
     <string name="lista_desejos_action_menu">Limpar lista</string>
 
@@ -109,5 +110,6 @@
         <item>Fechadas</item>
         <item>Canceladas</item>
     </string-array>
+
 
 </resources>

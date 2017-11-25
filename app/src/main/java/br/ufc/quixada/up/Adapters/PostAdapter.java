@@ -94,48 +94,63 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
     }
 
-    public void downloadImageCover(Post post){
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
-        Toast.makeText(context,"entrei: "+post.getPictures(), Toast.LENGTH_LONG).show();
-        imageRef = storageReference.child("PostsPictures/" + post.getId() + "/" + post.getPictures().get(0));
+//    public void downloadImageCover(final Post post){
+//        firebaseStorage = FirebaseStorage.getInstance();
+//        storageReference = firebaseStorage.getReference();
+//
+//        //recupera apenas a primeira imagem
+//        imageRef = storageReference.child("PostsPictures/" + post.getId() + "/" + post.getPictures().get(0));
+//
+//        try{
+//            //cria o arquivo temporário local onde a imagem será armazenada
+//            final File localFile = File.createTempFile("jpg", "image");
+//            imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                @Override
+//                //monitora o sucesso do download
+//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                    //transforma a imagem baixada em um bitmap
+//                    bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                    Log.d("TAG", ""+localFile);
+//                    //transforma o bitmap em stream
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                    //transforma o stream em um array de bytes
+//                    pictureCover = stream.toByteArray();
+//                    //método que aplica a imagem nos lugares desejsdos
+//                    applyImage(pictureCover);
+//                    Log.d("TAG","Imagem baixada com sucesso!");
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                //monitora a falha do downlaod
+//                public void onFailure(@NonNull Exception e) {
+////                    Toast.makeText(context,"Imagem não foi baixada", Toast.LENGTH_SHORT).show();
+//                    Log.d("TAG","Imagem não foi baixada");
+//                }
+//            });
+//        } catch (IOException e){
+//            e.printStackTrace();
+//            //manipular exceções
+//            Log.e("Main", "IOE exception");
+//        }
+//    }
 
-        try{
-            //cria o arquivo temporário local onde a imagem será armazenada
-            final File localFile = File.createTempFile("jpg", "image");
-            imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                //monitora o sucesso do download
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    //transforma a imagem baixada em um bitmap
-                    bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    //transforma o bitmap em stream
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    //transforma o stream em um array de bytes
-                    pictureCover = stream.toByteArray();
-                    //método que aplica a imagem nos lugares desejsdos
-//                            post.setImage(pictureCover);
+    public void addBottomListItem(Post post){
+        posts.add(post);
+        notifyItemInserted(posts.size());
+    }
 
-                    applyImage(pictureCover);
-                    Toast.makeText(context,imageRef.getName(), Toast.LENGTH_LONG).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                //monitora a falha do downlaod
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(context,"Imagem não foi baixada", Toast.LENGTH_LONG).show();
-                }
-            });
-        } catch (IOException e){
-            e.printStackTrace();
-            //manipular exceções
-            Log.e("Main", "IOE exception");
-        }
+    public void addTopListItem(Post post){
+        posts.add(0, post);
+        notifyItemInserted(0);
+    }
+
+    public void addListItem(Post post, int position){
+        posts.add(position, post);
+        notifyItemInserted(position);
     }
 
     public void applyImage(byte[] bytes){
-
         //options para o glide
         RequestOptions requestOptions = new RequestOptions();
         //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
@@ -146,54 +161,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         Glide.with(context).load(bytes)
                 //aplica as options de cache
                 .apply(requestOptions)
-                //aplica as options de transformação
-//                .apply(RequestOptions.bitmapTransform(multi))
                 //insere a imagem no imageView
                 .into(imageView);
     }
-
-//
-//    public PostAdapter(Context context, ArrayList<Post> posts){
-//        this.context = context;
-//        this.posts = posts;
-//    }
-//
-//    @Override
-//    public int getCount() {
-//        return posts.size();
-//    }
-//
-//    @Override
-//    public Object getItem(int i) {
-//        return posts.get(i);
-//    }
-//
-//    @Override
-//    public long getItemId(int i) {
-//        return i;
-//    }
-//
-//    @Override
-//    public View getView(int i, View view, ViewGroup viewGroup) {
-//
-//        Post post = posts.get(i);
-//
-//        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View layout = layoutInflater.inflate(R.layout.post, null);
-//
-//        TextView title = (TextView) layout.findViewById(R.id.textView_title);
-//        title.setText(post.getTitle());
-//
-//        TextView subtitle = (TextView) layout.findViewById(R.id.textView_describ);
-//        subtitle.setText(post.getSubtitle());
-//
-//        TextView price = (TextView) layout.findViewById(R.id.textView_price);
-//        price.setText("R$ " + post.getPrice());
-//
-//        ImageView image = (ImageView) layout.findViewById(R.id.imageView3);
-//        image.setImageResource(post.getImage(i));
-//
-//        return layout;
-//    }
-
 }

@@ -1,14 +1,34 @@
 package br.ufc.quixada.up.Models;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.nguyenhoanglam.imagepicker.model.Image;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.R;
+
+import static br.ufc.quixada.up.R.layout.post;
 
 /**
  * Created by Isaac Bruno on 09/10/2017.
@@ -25,18 +45,83 @@ import br.ufc.quixada.up.R;
     private String userId;
     private ArrayList<String> pictures;
     private String id;
-//    byte[] image;
+    int i = 1;
 
-//    private int imgRef;
-//    private List<Integer> imgReferences;
-
-    public void save(Context context) {
-        pictures = new ArrayList<String>();
+    public void upload(final ArrayList<Image> images) {
         DatabaseReference databaseReference = FirebaseConfig.getDatabase();
+        StorageReference storageReference = FirebaseConfig.getStorage();
+        StorageReference imageRef;
+        pictures = new ArrayList<String>();
 
         setId(databaseReference.child("posts").push().getKey());
+
+        //Faz upload das novas imagens para o servidor.
+        //pega o caminho do arquivo a ser enviado
+        for (Image image : images){
+            Uri file = Uri.fromFile(new File(image.getPath()));
+            //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
+            //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
+            imageRef = storageReference.child("PostsPictures/" + getId() + "/" + file.getLastPathSegment());
+            final String imageName = imageRef.getName();
+            //cria os metadados
+            StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
+            //faz upload do arquivo junto com os metadados
+            final UploadTask uploadTask = imageRef.putFile(file, metadata);
+            //monitora o andamento do upload
+            uploadTask
+            //monitora caso de falha
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+//                            Toast.makeText(context, "Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
+                    Log.d("TAG", "Erro ao enviar a imagem");
+                }
+            })
+            //monitora caso de sucesso
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//                    Toast.makeText(context, "Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
+                    addPictureName(imageName);
+                    Log.d("TAG", "Imagem enviada com sucesso "+downloadUrl);
+
+                }
+            }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if(i == images.size()){
+                        downloadImages("PostsPictures/" + getId() + "/" +getPictures().get(0));
+                        Log.d("TAG", "Anuncio Inserido com Sucesso!");
+                        save();
+
+                    }else{
+                        i++;
+                    }
+                }
+            });
+
+            //         #monitora o progresso
+            //        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            //            @Override
+            //            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+            //                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+            //                if (progress < 100.0){
+            //                    //deixa o loading visivel
+            //                    loading.setVisibility(View.VISIBLE);
+            //                }else{
+            //                    //deixa o loading invisível
+            //                    loading.setVisibility(View.GONE);
+            //                }
+            //            }
+            //        });
+
+        }
+    }
+
+    public void save(){
+        DatabaseReference databaseReference = FirebaseConfig.getDatabase();
         databaseReference.child("posts").child(getId()).setValue(this);
-        Toast.makeText(context, "Anuncio Inserido com Sucesso!", Toast.LENGTH_SHORT).show();
     }
 
     public int getUps() {
@@ -96,11 +181,14 @@ import br.ufc.quixada.up.R;
     }
 
     public ArrayList<String> getPictures() {
-        return pictures;
+        if(pictures != null){
+            return pictures;
+        }
+        return null;
     }
 
-    public void addImageName(String imageNames) {
-        this.pictures.add(imageNames);
+    public void addPictureName(String imageName) {
+        this.pictures.add(imageName);
     }
 
     public String getId() {
@@ -111,33 +199,59 @@ import br.ufc.quixada.up.R;
         this.id = id;
     }
 
-    //    public int setImgRef(int img){
-//        Log.d("IMAGEM!!!!!!!!!!!!!!!!!", "imagem"+img);
-//        this.imgRef = img;
-//        this.imgReferences.add(this.imgRef);
-//        return imgRef;
-//    }
-
-    public int getDefaultImage(){
-//        switch (i){
-//            case 0:
-//                return (R.drawable.image_test_1);
-//
-//            case 1:
-//                return (R.drawable.image_test_2);
-//
-//            case 2:
-//                return (R.drawable.image_test_3);
-//
-//            default:
-//                return (R.drawable.default_img);
-//        }
-        return R.drawable.default_img;
-    }
-
 //    public void setImage(byte[] image) {
 //        this.image = image;
 //    }
+
+    public int getDefaultImage(){
+        return R.drawable.default_img;
+    }
+
+    public static void downloadImages(String path){
+        StorageReference storageReference = FirebaseConfig.getStorage();
+        StorageReference imageRef;
+
+        //recupera apenas a primeira imagem
+        imageRef = storageReference.child(path);
+
+        try{
+            //cria o arquivo temporário local onde a imagem será armazenada
+            final File localFile = File.createTempFile("jpg", "image");
+             imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                //monitora o sucesso do download
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    //transforma a imagem baixada em um bitmap
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    Log.d("TAG", ""+localFile);
+                    //transforma o bitmap em stream
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    //transforma o stream em um array de bytes
+                    byte[] picture = stream.toByteArray();
+                    //método que aplica a imagem nos lugares desejsdos
+//                    applyImage(pictureCover);
+                    Log.d("TAG","Imagem baixada com sucesso! "+picture);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                //monitora a falha do downlaod
+                public void onFailure(@NonNull Exception e) {
+//                    Toast.makeText(context,"Imagem não foi baixada", Toast.LENGTH_SHORT).show();
+                    Log.d("TAG","Imagem não foi baixada! "+e);
+                }
+            }).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                    Log.d("TAG", " "+task.getResult().getTotalByteCount());
+                }
+            });
+        } catch (IOException e){
+            e.printStackTrace();
+            //manipular exceções
+            Log.e("Main", "IOE exception");
+        }
+    }
 
     @Override
     public String toString() {
