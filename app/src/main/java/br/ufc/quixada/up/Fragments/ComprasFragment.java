@@ -1,10 +1,8 @@
 package br.ufc.quixada.up.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,14 +23,17 @@ import java.util.ArrayList;
 import br.ufc.quixada.up.Adapters.NegociacoesAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Negociacao;
+import br.ufc.quixada.up.Models.Post;
+import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 
 public class ComprasFragment extends Fragment {
 
-    RecyclerView recyclerViewChatList;
+    RecyclerView recyclerViewBuyChatList;
     LinearLayoutManager linearLayoutManager;
     private DatabaseReference dbReference;
     private String userId;
+    private Negociacao negociacao;
     private NegociacoesAdapter negociacoesAdapter;
 
     @Nullable
@@ -42,34 +44,21 @@ public class ComprasFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_compras, container, false);
 
-        negociacoesAdapter = new NegociacoesAdapter(new ArrayList<Negociacao>());
-
-        recyclerViewChatList = (RecyclerView) rootView.findViewById(R.id.recyclerViewChatList);
-        RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerViewChatList.setLayoutManager(linearLayoutManager);
-        recyclerViewChatList.setAdapter(negociacoesAdapter);
-
         dbReference = FirebaseConfig.getDatabase();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userId = user.getUid();
         }
 
-        dbReference.child("messages-metadata").child(userId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
-                    Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
-                    Log.d("maxxx ", "" + messageDataSnapshot.getValue(Negociacao.class));
-                    negociacoesAdapter.addNegociacao(negociacao);
-                }
-            }
+        recyclerViewBuyChatList = (RecyclerView) rootView.findViewById(R.id.recyclerViewBuyChatList);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerViewBuyChatList.setLayoutManager(linearLayoutManager);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        negociacoesAdapter = new NegociacoesAdapter(this.getContext(), new ArrayList<Negociacao>(), userId);
+        recyclerViewBuyChatList.setAdapter(negociacoesAdapter);
 
-            }
-        });
+        getNegotiations();
 
         return rootView;
 
@@ -90,6 +79,93 @@ public class ComprasFragment extends Fragment {
 //            }
 //        });
 
+    }
+
+    public void getNegotiations() {
+
+        dbReference.child("negotiations").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
+                    final Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
+                    final String adId = negociacao.getAdId();
+
+                    dbReference.child("posts").child(adId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Post post = dataSnapshot.getValue(Post.class);
+                            negociacao.setTitle(post.getTitle());
+
+                            dbReference.child("users").child(post.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    User user = dataSnapshot.getValue(User.class);
+                                    negociacao.setVendorName(user.getNome());
+                                    negociacoesAdapter.addNegociacao(negociacao);
+                                    updateNegotiationsMetadata(adId);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void updateNegotiationsMetadata(String adId) {
+        dbReference.child("negotiations").child(userId).child(adId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                System.out.println("added");
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
+                    final Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
+                    final String adId = negociacao.getAdId();
+                    final String lastMessage = negociacao.getLastMessage();
+                    System.out.println("maxxx " + adId);
+                    System.out.println("maxxx " + lastMessage);
+//                    criar método no adapter que busca pelo id e atualiza
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

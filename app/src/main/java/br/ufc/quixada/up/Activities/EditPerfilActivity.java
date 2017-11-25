@@ -193,7 +193,7 @@ public class EditPerfilActivity extends PerfilActivity {
                     image = stream.toByteArray();
                     //método que aplica a imagem nos lugares desejsdos
                     applyImage(image);
-                    Toast.makeText(getBaseContext(),profilePictureRef.getName(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getBaseContext(),profilePictureRef.getName(), Toast.LENGTH_LONG).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

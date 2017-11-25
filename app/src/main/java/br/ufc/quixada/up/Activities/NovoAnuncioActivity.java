@@ -185,7 +185,7 @@ public class NovoAnuncioActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (position > 0) {
                     spinnerCategoriasItemSelecionado = (String) adapterView.getItemAtPosition(position);
-                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerCategoriasItemSelecionado, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerCategoriasItemSelecionado, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -314,6 +314,20 @@ public class NovoAnuncioActivity extends BaseActivity {
 
     public void saveOnFirebase(View view) {
 
+        String price = precoAnuncio.getText().toString();
+        String qtd = qtdItensAnuncio.getText().toString();
+
+        price = price.replace(".", "");
+        price = price.replace(",", ".");
+
+        post.setTitle(tituloAnuncio.getText().toString());
+        post.setSubtitle(descricaoAnuncio.getText().toString());
+        post.setPrice(Double.parseDouble(price));
+        post.setQtd(Integer.parseInt(qtd));
+        post.setCategoria(spinnerCategoriasAnuncio.getSelectedItem().toString());
+        post.setUserId(localUser.getId());
+//        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
+      
         if( tituloAnuncio.getText() != null &&
             descricaoAnuncio.getText() != null &&
             precoAnuncio.getText() != null &&
@@ -337,66 +351,9 @@ public class NovoAnuncioActivity extends BaseActivity {
         }else{
             Toast.makeText(this, "Porfavor, preencha todos os campos!", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void cancel(View view) {
         this.finish();
     }
-
-//    //Faz upload das novas imagens para o servidor.
-//    public void uploadPictures() {
-//
-//        //pega o caminho do arquivo a ser enviado
-//        for (Image image : images){
-//            Uri file = Uri.fromFile(new File(image.getPath()));
-//            //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
-//            //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
-//            imageRef = storageReference.child("PostsPictures/" + post.getId() + "/" + file.getLastPathSegment());
-//
-//            //cria os metadados
-//            StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
-//
-//            //faz upload do arquivo junto com os metadados
-//            UploadTask uploadTask = imageRef.putFile(file, metadata);
-//            //monitora o andamento do upload
-//            uploadTask
-//            //monitora caso de falha
-//            .addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Toast.makeText(getBaseContext(), "Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
-//                }
-//            })
-//            //monitora caso de sucesso
-//            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-//                Toast.makeText(getBaseContext(), "Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
-//                post.addImageName(imageRef.getName());
-//
-//
-//                //atualiza a referencia a foto no banco
-//                databaseReference.child("posts").child(post.getId()).child("pictures").setValue(post.getPictures());
-//
-//                }
-//            });
-//
-//    //         #monitora o progresso
-//    //        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//    //            @Override
-//    //            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//    //                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-//    //                if (progress < 100.0){
-//    //                    //deixa o loading visivel
-//    //                    loading.setVisibility(View.VISIBLE);
-//    //                }else{
-//    //                    //deixa o loading invisível
-//    //                    loading.setVisibility(View.GONE);
-//    //                }
-//    //            }
-//    //        });
-//        }
-//    }
 }

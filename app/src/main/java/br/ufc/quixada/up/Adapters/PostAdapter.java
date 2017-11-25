@@ -1,6 +1,7 @@
 package br.ufc.quixada.up.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +27,12 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 
+import br.ufc.quixada.up.Activities.ChatActivity;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
 
@@ -67,11 +73,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         Post post = posts.get(position);
 
+        DecimalFormat formatoMoeda = new DecimalFormat("##,###,###,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
+        formatoMoeda.setMinimumFractionDigits(2);
+        formatoMoeda.setParseBigDecimal (true);
+        String price = formatoMoeda.format(post.getPrice());
+
         holder.image.setImageResource(post.getDefaultImage());
         imageView = holder.image;
         holder.title.setText(post.getTitle());
         holder.subtitle.setText(post.getSubtitle());
-        holder.price.setText("R$ " + post.getPrice());
+        holder.price.setText("R$ " + price);
+        holder.post = post;
     }
 
     @Override
@@ -84,6 +96,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView subtitle;
         TextView price;
         ImageView image;
+        private Button openChatButton;
+        private Post post;
 
         public PostViewHolder(View itemView) {
             super(itemView);
@@ -91,49 +105,22 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             subtitle = (TextView) itemView.findViewById(R.id.textView_describ);
             price = (TextView) itemView.findViewById(R.id.textView_price);
             image = (ImageView) itemView.findViewById(R.id.imageView3);
+
+            openChatButton = (Button) itemView.findViewById(R.id.buttonAnuncioNegociar);
+
+            openChatButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                    intent.putExtra("remoteUserId", post.getUserId());
+                    intent.putExtra("adId", post.getId());
+                    intent.putExtra("adTitle", post.getTitle());
+                    context.startActivity(intent);
+                }
+            });
         }
     }
-
-//    public void downloadImageCover(final Post post){
-//        firebaseStorage = FirebaseStorage.getInstance();
-//        storageReference = firebaseStorage.getReference();
-//
-//        //recupera apenas a primeira imagem
-//        imageRef = storageReference.child("PostsPictures/" + post.getId() + "/" + post.getPictures().get(0));
-//
-//        try{
-//            //cria o arquivo temporário local onde a imagem será armazenada
-//            final File localFile = File.createTempFile("jpg", "image");
-//            imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                @Override
-//                //monitora o sucesso do download
-//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                    //transforma a imagem baixada em um bitmap
-//                    bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-//                    Log.d("TAG", ""+localFile);
-//                    //transforma o bitmap em stream
-//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                    //transforma o stream em um array de bytes
-//                    pictureCover = stream.toByteArray();
-//                    //método que aplica a imagem nos lugares desejsdos
-//                    applyImage(pictureCover);
-//                    Log.d("TAG","Imagem baixada com sucesso!");
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                //monitora a falha do downlaod
-//                public void onFailure(@NonNull Exception e) {
-////                    Toast.makeText(context,"Imagem não foi baixada", Toast.LENGTH_SHORT).show();
-//                    Log.d("TAG","Imagem não foi baixada");
-//                }
-//            });
-//        } catch (IOException e){
-//            e.printStackTrace();
-//            //manipular exceções
-//            Log.e("Main", "IOE exception");
-//        }
-//    }
 
     public void addBottomListItem(Post post){
         posts.add(post);

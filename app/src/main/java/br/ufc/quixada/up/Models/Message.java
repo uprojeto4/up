@@ -6,41 +6,49 @@ import br.ufc.quixada.up.Utils.DateTimeControl;
 
 public class Message {
 
-    private String messageText;
-    private String messageUserId;
-    private String messageDateTime;
+    private String text;
+    private String userId;
+    private String dateTime;
+    private String status;
 
-    public Message(String messageText, String messageUserId) {
-        this.messageText = messageText;
-        this.messageUserId = messageUserId;
-        messageDateTime = DateTimeControl.getCurrentDateTime();
+    public Message() { }
+
+    public Message(String text, String messageUserId) {
+        this.text = text;
+        this.userId = messageUserId;
+        this.dateTime = DateTimeControl.getCurrentDateTime();
+        this.status="unread";
     }
 
-    public Message(){
-
+    public String getText() {
+        return text;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public void setText(String messageText) {
+        this.text = messageText;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getMessageUserId() {
-        return messageUserId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public void setMessageUserId(String messageUserId) {
-        this.messageUserId = messageUserId;
+    public String getDateTime() {
+        return dateTime;
     }
 
-    public String getMessageTime() {
-        return messageDateTime;
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
-    public void setMessageTime(String messageTime) {
-        this.messageDateTime = messageTime;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

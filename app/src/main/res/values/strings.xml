@@ -98,6 +98,8 @@
     <string name="dafault_user_name">Visitante</string>
     <string name="dafault_exit_confirmation">Deseja realmente Sair?</string>
 
+    <string name="iniciada_em">Iniciada em:</string>
+
     <string name="lista_desejos_action_menu">Limpar lista</string>
 
     <string-array name="tabs_negociacoes">
