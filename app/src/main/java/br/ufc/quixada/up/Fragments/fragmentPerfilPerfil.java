@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 import br.ufc.quixada.up.Activities.PerfilActivity;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
@@ -57,13 +58,23 @@ import static br.ufc.quixada.up.R.drawable.image_test_1;
 
 public class fragmentPerfilPerfil extends Fragment {
 
-    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storage = FirebaseConfig.getStorage();
     StorageReference profilePictureRef;
     TextView nome;
+    TextView endereco;
     public byte[] image;
     Bitmap bitmap;
     public boolean test;
     public File localFile;
+
+    public String logradouro;
+    public String numero;
+    public String complemento;
+    public String bairro;
+    public String cidade;
+    public String estado;
+
+
 
     @Nullable
     @Override
@@ -71,7 +82,7 @@ public class fragmentPerfilPerfil extends Fragment {
 
 
         //cria a referencia para a imagem a ser baixada
-        profilePictureRef = storage.getReference().child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
+        profilePictureRef = storage.child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
 //        Toast.makeText(getActivity(),"caminho da imagem que vai ser baixada "+profilePictureRef.getPath(), Toast.LENGTH_LONG).show();
 
         test = profilePictureRef.getName().equals(PerfilActivity.fotoPerfil);
@@ -116,6 +127,36 @@ public class fragmentPerfilPerfil extends Fragment {
 
         nome = (TextView) getView().findViewById(R.id.user_profile_name);
         nome.setText(PerfilActivity.nome);
+
+        endereco = (TextView) getView().findViewById(R.id.user_profile_adress);
+
+//        for (PerfilActivity.endereco.values() : PerfilActivity.endereco.entrySet()){
+//
+//        }
+
+        Log.d("mapa endereço", " "+ PerfilActivity.enderecoMap);
+        Log.d("nome", " "+ PerfilActivity.nome);
+
+        for (Map.Entry<String, String> entry : PerfilActivity.enderecoMap.entrySet()){
+            String key = entry.getKey();
+            Log.d("key", " "+ key);
+            if (key.equals("logradouro")){
+                logradouro = entry.getValue();
+            }else if(key.equals("numero")){
+                numero = entry.getValue();
+            }else if(key.equals("complemento")){
+                complemento = entry.getValue();
+            }else if(key.equals("bairro")){
+                bairro = entry.getValue();
+            }else if(key.equals("cidade")){
+                cidade = entry.getValue();
+            }else if(key.equals("estado")){
+                estado = entry.getValue();
+            }
+//            String value = entry.getValue();
+        }
+        Log.d("endereco", logradouro + ", " + numero + ", " + complemento + ", " + bairro + ", " + cidade + " - " + estado);
+        endereco.setText(logradouro + ", " + numero + ", " + complemento + ", " + bairro + ", " + cidade + " - " + estado);
 
         //apos a view ser criada chama o metodo de download das imagens
 //        downloadProfilePicture();
@@ -263,7 +304,7 @@ public class fragmentPerfilPerfil extends Fragment {
 
         test = profilePictureRef.getName().equals(PerfilActivity.fotoPerfil);
 
-        profilePictureRef = storage.getReference().child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
+        profilePictureRef = storage.child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
         if (!test){
             downloadProfilePicture();
         }else{

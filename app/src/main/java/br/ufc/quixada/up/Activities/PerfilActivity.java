@@ -20,6 +20,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import br.ufc.quixada.up.R;
 
 import br.ufc.quixada.up.Adapters.PerfilFragmentPagerAdapter;
@@ -39,6 +42,9 @@ public class PerfilActivity extends BaseActivity {
 
 //    public static byte[] image;
     public static String nome;
+    public static String endereco;
+    public static Map<String, String> enderecoMap = new HashMap<String, String>();
+    String[] keyValuePairs;
     public static String id;
     public static String email;
     public static String fotoPerfil;
@@ -76,6 +82,15 @@ public class PerfilActivity extends BaseActivity {
         }
 
         nome = firebasePreferences.getUserName();
+        endereco = firebasePreferences.getAdress();
+
+        endereco = endereco.substring(1, endereco.length()-1);
+        keyValuePairs = endereco.split(",");
+        for (String pair : keyValuePairs){
+            String[] entry = pair.split("=");
+            enderecoMap.put(entry[0].trim(), entry[1].trim());
+        }
+
         id = firebasePreferences.getId();
         email = firebasePreferences.getUserEmail();
         fotoPerfil = profilePictureName;
