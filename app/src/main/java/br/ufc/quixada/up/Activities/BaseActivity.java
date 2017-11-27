@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Fragments.fragmentPerfilAnuncios;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
@@ -214,6 +216,10 @@ public class BaseActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
+//        Fragment fragment = null;
+//        Class fragmentClass = null;
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -238,15 +244,30 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_categorias) {
             Intent intent = new Intent(this, CategoriasActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_meus_anuncios) {
+//            fragmentClass = fragmentPerfilAnuncios.class;
+            Intent intent = new Intent(this, PerfilActivity.class);
+            intent.putExtra("fragment",1);
+            startActivity(intent);
+//            PerfilActivity.perfilViewPager.setCurrentItem(1);
         } else if (id == R.id.nav_perfil) {
             Intent intent = new Intent(this, PerfilActivity.class);
+            intent.putExtra("fragment",0);
             startActivity(intent);
+//            PerfilActivity.perfilViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_configuracoes) {
             Intent intent = new Intent(this, ConfiguracoesActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_sair) {
             signOut();
         }
+
+//        try {
+//            fragment = (Fragment) fragmentClass.newInstance();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -344,7 +365,7 @@ public class BaseActivity extends AppCompatActivity
                 @Override
                 //monitora a falha do downlaod
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getBaseContext(),"Foto não encontrada", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getBaseContext(),"Foto não encontrada", Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IOException e){

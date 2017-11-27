@@ -19,6 +19,16 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="6"
+                android:text="Informações pessoais"
+                android:textSize="24sp" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nome" />
@@ -27,8 +37,21 @@
                 android:id="@+id/nameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Digite seu nome"
+                android:hint="Informe seu nome"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:inputType="text" />
+
+
+            <TextView
+                android:id="@+id/addressInfosCad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="6"
+                android:text="Informações de endereço"
+                android:textSize="24sp" />
 
 
             <TextView
@@ -41,6 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Informe sua rua"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:inputType="text" />
 
 
@@ -54,6 +79,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Informe o número da sua residência"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:inputType="number" />
 
             <TextView
@@ -66,6 +93,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Informe algum complemento"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:inputType="text" />
 
 
@@ -79,6 +108,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Informe seu bairro"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:inputType="text" />
 
 
@@ -92,6 +123,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Informe sua cidade"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:inputType="text" />
 
             <TextView
@@ -104,7 +137,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Informe seu extado"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:inputType="text" />
+
+
+            <TextView
+                android:id="@+id/accountInfos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="6"
+                android:text="Informações da conta"
+                android:textSize="24sp" />
 
 
             <TextView
@@ -117,6 +163,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="joao@email.com"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:inputType="textEmailAddress" />
 
             <TextView
@@ -129,6 +177,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mínimo 8 caracteres"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:inputType="textPassword" />
 
             <TextView
@@ -141,6 +191,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Digite novamente sua senha"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:inputType="textPassword" />
 
             <LinearLayout

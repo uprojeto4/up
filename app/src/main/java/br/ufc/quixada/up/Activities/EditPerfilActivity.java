@@ -76,7 +76,12 @@ public class EditPerfilActivity extends PerfilActivity {
     LinearLayout loading;
 
     EditText nome;
-    EditText endereco;
+    EditText logradouroEt;
+    EditText numeroEt;
+    EditText complementoEt;
+    EditText bairroEt;
+    EditText cidadeEt;
+    EditText estadoEt;
     EditText telefone;
     EditText email;
     EditText senha;
@@ -160,7 +165,15 @@ public class EditPerfilActivity extends PerfilActivity {
 
 
         nome = (EditText) findViewById(R.id.edit_nome);
-        endereco = (EditText) findViewById(R.id.edit_endereco);
+
+        logradouroEt = (EditText) findViewById(R.id.edit_logradouro);
+        numeroEt = (EditText) findViewById(R.id.edit_numero);
+        complementoEt = (EditText) findViewById(R.id.edit_complemento);
+        bairroEt = (EditText) findViewById(R.id.edit_bairro);
+        cidadeEt = (EditText) findViewById(R.id.edit_cidade);
+        estadoEt = (EditText) findViewById(R.id.edit_estado);
+
+//        endereco = (EditText) findViewById(R.id.edit_endereco);
         telefone = (EditText) findViewById(R.id.edit_telefone);
         email = (EditText) findViewById(R.id.edit_email);
         senha = (EditText) findViewById(R.id.edit_senha);
@@ -171,6 +184,13 @@ public class EditPerfilActivity extends PerfilActivity {
 
         nome.setText(PerfilActivity.nome);
         email.setText(PerfilActivity.email);
+
+        logradouroEt.setText(localUser.getLogradouro());
+        numeroEt.setText(localUser.getNumero());
+        complementoEt.setText(localUser.getComplemento());
+        bairroEt.setText(localUser.getBairro());
+        cidadeEt.setText(localUser.getCidade());
+        estadoEt.setText(localUser.getEstado());
 
         profilePictureRef = storage.getReference().child("UsersProfilePictures/"+PerfilActivity.id+"/"+localUser.getFotoPerfil());
 //        Toast.makeText(getBaseContext(),profilePictureRef.getPath(), Toast.LENGTH_LONG).show();

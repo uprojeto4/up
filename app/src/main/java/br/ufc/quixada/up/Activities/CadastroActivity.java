@@ -88,7 +88,7 @@ public class CadastroActivity extends AppCompatActivity {
 //                        localUser.setBairro(editTextBairro.getText().toString());
 //                        localUser.setCidade(editTextCidade.getText().toString());
 //                        localUser.setEstado(editTextEstado.getText().toString());
-                        Toast.makeText(CadastroActivity.this, editTextLogradouro.getText().toString(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(CadastroActivity.this, editTextLogradouro.getText().toString(), Toast.LENGTH_SHORT).show();
 
                         adressToMap(editTextLogradouro.getText().toString(),
                                 editTextNumero.getText().toString(),
@@ -120,7 +120,7 @@ public class CadastroActivity extends AppCompatActivity {
         this.endereco.put("logradouro", new String(logradouro));
         this.endereco.put("numero", new String(numero));
         this.endereco.put("complemento", new String(complemento));
-        this.endereco.put("bairro", new String(logradouro));
+        this.endereco.put("bairro", new String(bairro));
         this.endereco.put("cidade", new String(cidade));
         this.endereco.put("estado", new String(estado));
         localUser.setEndereco(endereco);

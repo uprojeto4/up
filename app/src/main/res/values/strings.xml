@@ -12,6 +12,7 @@
     <string name="navigation_drawer_lista_desejos">Lista de desejos</string>
     <string name="navigation_drawer_categorias">Categorias</string>
     <string name="navigation_drawer_perfil">Meu perfil</string>
+    <string name="navigation_drawer_meus_anuncios">Meus anúncios</string>
     <string name="navigation_drawer_configuracoes">Configurações</string>
     <string name="navigation_drawer_sair">Sair</string>
     <string name="title_activity_novo_anuncio">Novo anúncio</string>
@@ -89,8 +90,13 @@
 
     <string name="title_activity_edit_perfil">Editar perfil</string>
     <string name="input_edit_nome_hint">Altere o seu nome</string>
-    <string name="input_edit_endereco_hint">Altere o seu endereço</string>
-    <string name="input_edit_telefone_hint">Altere o seu telefone</string>
+    <string name="input_edit_logradouro_hint">Informe a sua rua</string>
+    <string name="input_edit_bairro_hint">Informe o seu bairro</string>
+    <string name="input_edit_complemento_hint">Informe um complemento</string>
+    <string name="input_edit_numero_hint">Informe o número da sua residência</string>
+    <string name="input_edit_cidade_hint">Informe a sua cidade</string>
+    <string name="input_edit_estado_hint">Informe o seu estado</string>
+    <string name="input_edit_telefone_hint">Informe o seu telefone</string>
     <string name="input_edit_email_hint">Altere o seu email</string>
     <string name="input_edit_senha_hint">Altere a sua senha</string>
     <string name="input_edit_confirm_senha_hint">Confirme a sua nova senha</string>
@@ -112,6 +118,11 @@
         <item>Fechadas</item>
         <item>Canceladas</item>
     </string-array>
+    <string name="title_activity_maps_perfil">Map</string>
+
+    <!--<string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">-->
+        <!--AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4-->
+    <!--</string>-->
 
 
 </resources>

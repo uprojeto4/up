@@ -20,13 +20,13 @@ public class User {
     private String Id;
     private String fotoPerfil;
 
-    private Map<String, String> endereco = new HashMap<String, String>();
-//    private String logradouro;
-//    private String numero;
-//    private String complemento;
-//    private String bairro;
-//    private String cidade;
-//    private String estado;
+    private Map endereco = new HashMap();
+    private String logradouro;
+    private String numero;
+    private String complemento;
+    private String bairro;
+    private String cidade;
+    private String estado;
 
     private static User instance;
 
@@ -38,17 +38,17 @@ public class User {
         databaseReference.child("users").child(String.valueOf(getId())).setValue(this);
     }
 
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> userHashMap = new HashMap<>();
-        userHashMap.put("id", getId());
-        userHashMap.put("name", getNome());
-        userHashMap.put("email", getEmail());
-        userHashMap.put("fotoPerfil", getFotoPerfil());
-        userHashMap.put("endereco", getEndereco());
-
-        return userHashMap;
-    }
+//    @Exclude
+//    public Map<String, Object> toMap() {
+//        HashMap<String, Object> userHashMap = new HashMap<>();
+//        userHashMap.put("id", getId());
+//        userHashMap.put("name", getNome());
+//        userHashMap.put("email", getEmail());
+//        userHashMap.put("fotoPerfil", getFotoPerfil());
+//        userHashMap.put("endereco", getEndereco());
+//
+//        return userHashMap;
+//    }
 
     public String getId() {
         return Id;
@@ -100,53 +100,53 @@ public class User {
         this.endereco = endereco;
     }
 
-//    public String getLogradouro() {
-//        return logradouro;
-//    }
-//
-//    public void setLogradouro(String logradouro) {
-//        this.logradouro = logradouro;
-//    }
-//
-//    public String getNumero() {
-//        return numero;
-//    }
-//
-//    public void setNumero(String numero) {
-//        this.numero = numero;
-//    }
-//
-//    public String getComplemento() {
-//        return complemento;
-//    }
-//
-//    public void setComplemento(String complemento) {
-//        this.complemento = complemento;
-//    }
-//
-//    public String getBairro() {
-//        return bairro;
-//    }
-//
-//    public void setBairro(String bairro) {
-//        this.bairro = bairro;
-//    }
-//
-//    public String getCidade() {
-//        return cidade;
-//    }
-//
-//    public void setCidade(String cidade) {
-//        this.cidade = cidade;
-//    }
-//
-//    public String getEstado() {
-//        return estado;
-//    }
-//
-//    public void setEstado(String estado) {
-//        this.estado = estado;
-//    }
+    public String getLogradouro() {
+        return logradouro;
+    }
+
+    public void setLogradouro(String logradouro) {
+        this.logradouro = logradouro;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
     public static User getInstance(){
         if(instance == null){

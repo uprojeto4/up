@@ -32,7 +32,7 @@ import static br.ufc.quixada.up.R.id.nav_view;
 public class PerfilActivity extends BaseActivity {
 
     private TabLayout perfilTabLayout;
-    private ViewPager perfilViewPager;
+    public static ViewPager perfilViewPager;
 
     public String profilePictureName;
 
@@ -48,6 +48,15 @@ public class PerfilActivity extends BaseActivity {
     public static String id;
     public static String email;
     public static String fotoPerfil;
+    public int fragmentASerAberta;
+
+    public static String logradouro;
+    public static String numero;
+    public static String complemento;
+    public static String bairro;
+    public static String cidade;
+    public static String estado;
+
 //    TextView textViewEmail;
 //    TextView textViewName;
 
@@ -58,11 +67,16 @@ public class PerfilActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = getIntent();
+        fragmentASerAberta = intent.getIntExtra("fragment", 0);
+
+        Log.d("extra", " "+fragmentASerAberta);
 
         perfilTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         perfilViewPager = (ViewPager) findViewById(R.id.view_pager_perfil);
 
         perfilViewPager.setAdapter(new PerfilFragmentPagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.tabs_perfil)));
+        perfilViewPager.setCurrentItem(fragmentASerAberta);
 
         perfilTabLayout.setupWithViewPager(perfilViewPager);
 
@@ -100,11 +114,40 @@ public class PerfilActivity extends BaseActivity {
 
 //        Log.d("FOTO PERFIL TESTE", fotoPerfil);
 
+
+        for (Map.Entry<String, String> entry : PerfilActivity.enderecoMap.entrySet()){
+            String key = entry.getKey();
+            Log.d("key", " "+ key);
+            if (key.equals("logradouro")){
+                logradouro = entry.getValue();
+                localUser.setLogradouro(logradouro);
+            }else if(key.equals("numero")){
+                numero = entry.getValue();
+                localUser.setNumero(numero);
+            }else if(key.equals("complemento")){
+                complemento = entry.getValue();
+                localUser.setComplemento(complemento);
+            }else if(key.equals("bairro")){
+                bairro = entry.getValue();
+                localUser.setBairro(bairro);
+            }else if(key.equals("cidade")){
+                cidade = entry.getValue();
+                localUser.setCidade(cidade);
+            }else if(key.equals("estado")){
+                estado = entry.getValue();
+                localUser.setEstado(estado);
+            }
+        }
+
     }
 
     @Override
     public void onResume(){
         super.onResume();
+//        Intent intent = getIntent();
+//        fragmentASerAberta = intent.getIntExtra("fragment", 0);
+//        perfilTabLayout.setupWithViewPager(perfilViewPager);
+
         fotoPerfil = localUser.getFotoPerfil();
         localUser.setFotoPerfil(fotoPerfil);
 //        Toast.makeText(this,"foto do local user on resume activity "+fotoPerfil, Toast.LENGTH_LONG).show();
