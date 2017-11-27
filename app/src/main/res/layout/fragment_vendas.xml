@@ -2,10 +2,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="br.ufc.quixada.up.Fragments.VendasFragment">
 
+    <!--<include-->
+    <!--layout="@layout/negociacao"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content" />-->
+
+    <LinearLayout
+        android:id="@+id/noSell"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/labelNoSell"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_no_sell"
+            android:textAlignment="center"
+            android:visibility="visible" />
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewSellChatList"
+        android:id="@+id/recyclerViewBuyChatList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>

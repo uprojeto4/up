@@ -36,7 +36,9 @@
         <item>Eletrodomésticos</item>
         <item>Imóveis</item>
         <item>Móveis/Decoração</item>
+        <item>Outros</item>
         <item>Pets</item>
+        <item>Utensílios</item>
         <item>Veículos</item>
         <item>Vestuário/Acessórios</item>
     </string-array>
@@ -113,5 +115,7 @@
         <item>Canceladas</item>
     </string-array>
 
+    <string name="label_no_buy">Você ainda não iniciou nenhuma negociação.</string>
+    <string name="label_no_sell">Ninguém iniciou uma negociação com você, ainda.</string>
 
 </resources>

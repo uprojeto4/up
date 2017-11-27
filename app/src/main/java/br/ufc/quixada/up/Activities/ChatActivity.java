@@ -41,8 +41,8 @@ public class ChatActivity extends BaseActivity {
     private String userId;
     private String remoteUserId;
     private String adId;
-    private TextView titleAnuncioChat;
-    private TextView vendedorAnuncioChat;
+    private TextView textViewTitleAnuncioChat;
+    private TextView textViewVendedorAnuncioChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +58,14 @@ public class ChatActivity extends BaseActivity {
         adId = intent.getStringExtra("adId");
         remoteUserId = intent.getStringExtra("remoteUserId");
 
-        titleAnuncioChat = findViewById(R.id.titleAnuncioChat);
-        titleAnuncioChat.setText(intent.getStringExtra("adTitle"));
-        vendedorAnuncioChat = findViewById(R.id.vendedorAnuncioChat);
+        textViewTitleAnuncioChat = findViewById(R.id.titleAnuncioChat);
+        textViewTitleAnuncioChat.setText(intent.getStringExtra("adTitle"));
+        textViewVendedorAnuncioChat = findViewById(R.id.vendedorAnuncioChat);
 
         messageInput = findViewById(R.id.editTextMessageInput);
         Button buttonSend = findViewById(R.id.buttonSend);
         dbReference = FirebaseConfig.getDatabase();
+        resolveRemoteUserName();
 //        dbReference.keepSynced(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewConversation);
@@ -79,8 +80,6 @@ public class ChatActivity extends BaseActivity {
         if (user != null) {
             userId = user.getUid();
         }
-
-        resolveVendorName();
 
         buttonSend.setOnClickListener(new View.OnClickListener() {
 
@@ -144,14 +143,17 @@ public class ChatActivity extends BaseActivity {
         });
     }
 
-    private void resolveVendorName() {
-        dbReference.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void resolveRemoteUserName() {
+        dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot userDataSnapshot : dataSnapshot.getChildren()) {
+                    System.out.println("maxxx " + userDataSnapshot);
                     User user = userDataSnapshot.getValue(User.class);
-                    vendedorAnuncioChat.setText(user.getNome());
+                    System.out.println("maxxx " + user);
+                    System.out.println("maxxx " + user.getNome());
+                    textViewVendedorAnuncioChat.setText(user.getNome());
                 }
             }
 

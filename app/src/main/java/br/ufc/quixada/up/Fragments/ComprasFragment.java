@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +37,7 @@ public class ComprasFragment extends Fragment {
     private String userId;
     private Negociacao negociacao;
     private NegociacoesAdapter negociacoesAdapter;
+    LinearLayout noBuy;
 
     @Nullable
     @Override
@@ -57,6 +60,8 @@ public class ComprasFragment extends Fragment {
 
         negociacoesAdapter = new NegociacoesAdapter(this.getContext(), new ArrayList<Negociacao>(), userId);
         recyclerViewBuyChatList.setAdapter(negociacoesAdapter);
+
+        noBuy = rootView.findViewById(R.id.noBuy);
 
         getNegotiations();
 
@@ -97,6 +102,7 @@ public class ComprasFragment extends Fragment {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Post post = dataSnapshot.getValue(Post.class);
                             negociacao.setTitle(post.getTitle());
+                            System.out.println("post: " + post);
 
                             dbReference.child("users").child(post.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -129,6 +135,12 @@ public class ComprasFragment extends Fragment {
 
             }
         });
+
+        if (negociacoesAdapter.getItemCount() == 0) {
+            noBuy.setVisibility(View.VISIBLE);
+        } else {
+            noBuy.setVisibility(View.GONE);
+        }
 
     }
 

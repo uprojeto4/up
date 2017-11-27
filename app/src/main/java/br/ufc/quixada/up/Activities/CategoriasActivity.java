@@ -68,7 +68,7 @@ public class CategoriasActivity extends BaseActivity {
     private void generateCategories() {
 
         categorias = getResources().getStringArray(R.array.categorias);
-        icones = new int[]{R.drawable.ic_restaurant_black_24dp,
+        icones = new int[]{R.drawable.ic_silverware,
                            R.drawable.ic_school_black_24dp,
                            R.drawable.ic_phone_android_black_24dp,
                            R.drawable.ic_work_black_24dp,
@@ -76,7 +76,9 @@ public class CategoriasActivity extends BaseActivity {
                            R.drawable.ic_fridge_filled,
                            R.drawable.ic_home_variant_black,
                            R.drawable.ic_weekend_black_24dp,
+                           R.drawable.ic_guitar_acoustic,
                            R.drawable.ic_pets_black_24dp,
+                           R.drawable.ic_soy_sauce,
                            R.drawable.ic_directions_car_black_24dp,
                            R.drawable.ic_t_shirt_silhouette};
 
