@@ -117,5 +117,7 @@
 
     <string name="label_no_buy">Você ainda não iniciou nenhuma negociação.</string>
     <string name="label_no_sell">Ninguém iniciou uma negociação com você, ainda.</string>
+    
+    <string name="label_no_messages">Ainda não há mensagens. Comece dizendo alguma coisa!</string>
 
 </resources>

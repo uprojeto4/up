@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class ChatActivity extends BaseActivity {
     private String adId;
     private TextView textViewTitleAnuncioChat;
     private TextView textViewVendedorAnuncioChat;
+    private LinearLayout noMessagesLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class ChatActivity extends BaseActivity {
         textViewTitleAnuncioChat.setText(intent.getStringExtra("adTitle"));
         textViewVendedorAnuncioChat = findViewById(R.id.vendedorAnuncioChat);
 
+        noMessagesLayout = findViewById(R.id.noMessagesLayout);
         messageInput = findViewById(R.id.editTextMessageInput);
         Button buttonSend = findViewById(R.id.buttonSend);
         dbReference = FirebaseConfig.getDatabase();
@@ -75,11 +78,6 @@ public class ChatActivity extends BaseActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(new ArrayList<Message>());
         recyclerView.setAdapter(chatAdapter);
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            userId = user.getUid();
-        }
 
         buttonSend.setOnClickListener(new View.OnClickListener() {
 
@@ -112,7 +110,8 @@ public class ChatActivity extends BaseActivity {
                     chatId = negociacao.getMessagesId();
                     getMessages();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Message node not exists", Toast.LENGTH_SHORT).show();
+                    recyclerView.setVisibility(View.GONE);
+                    noMessagesLayout.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -134,6 +133,10 @@ public class ChatActivity extends BaseActivity {
                     chatAdapter.addMessage(message);
                 }
                 linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
+                if (chatAdapter.getItemCount() > 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    noMessagesLayout.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -144,22 +147,19 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void resolveRemoteUserName() {
+        System.out.println(remoteUserId);
         dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userDataSnapshot : dataSnapshot.getChildren()) {
-                    System.out.println("maxxx " + userDataSnapshot);
-                    User user = userDataSnapshot.getValue(User.class);
-                    System.out.println("maxxx " + user);
-                    System.out.println("maxxx " + user.getNome());
-                    textViewVendedorAnuncioChat.setText(user.getNome());
-                }
+                System.out.println(dataSnapshot);
+                User user = dataSnapshot.getValue(User.class);
+                textViewVendedorAnuncioChat.setText(user.getNome());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-              
+
             }
         });
     }

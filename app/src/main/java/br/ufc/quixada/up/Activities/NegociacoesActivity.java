@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +38,10 @@ public class NegociacoesActivity extends BaseActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    public String userId;
+    public NegociacoesAdapter negociacoesAdapter;
     private Spinner spinner;
+    private DatabaseReference dbReference;
     String spinnerItem;
     ArrayList<String> filters = new ArrayList<>();
 
@@ -83,6 +87,11 @@ public class NegociacoesActivity extends BaseActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        dbReference = FirebaseConfig.getDatabase();
+        userId = localUser.getId();
+        negociacoesAdapter = new NegociacoesAdapter(this, new ArrayList<Negociacao>(), userId);
+        getNegotiations();
+
         filters.addAll(Arrays.asList(getResources().getStringArray(R.array.spinner_negociacoes)));
         spinner = (Spinner) findViewById(R.id.spinnerFilter);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner_dropdown_item, filters);
@@ -100,6 +109,98 @@ public class NegociacoesActivity extends BaseActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 //                Toast.makeText(getApplicationContext(), "Opçao Default ", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void getNegotiations() {
+        System.out.println("comprasFragment userId: " + userId);
+        dbReference.child("negotiations").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println("comprasFragment dataSnapshot: " + dataSnapshot);
+                System.out.println("comprasFragment dataSnapshotChildrenCount: " + dataSnapshot.getChildrenCount());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
+                        final Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
+
+                        if (negociacao.getType().equals("buy")) {
+
+                            final String adId = negociacao.getAdId();
+
+                            dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
+                                    String remoteUserId = dataSnapshot.child("userId").getValue(String.class);
+
+                                    dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
+                                            negociacoesAdapter.addNegociacao(negociacao);
+                                            updateNegotiationsMetadata(adId);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void updateNegotiationsMetadata(String adId) {
+        dbReference.child("negotiations").child(userId).child(adId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                System.out.println("added");
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
+                    final Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
+                    final String adId = negociacao.getAdId();
+                    final String lastMessage = negociacao.getLastMessage();
+                    System.out.println("maxxx " + adId);
+                    System.out.println("maxxx " + lastMessage);
+//                    criar método no adapter que busca pelo id e atualiza
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
