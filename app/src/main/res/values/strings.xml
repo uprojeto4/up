@@ -37,7 +37,9 @@
         <item>Eletrodomésticos</item>
         <item>Imóveis</item>
         <item>Móveis/Decoração</item>
+        <item>Outros</item>
         <item>Pets</item>
+        <item>Utensílios</item>
         <item>Veículos</item>
         <item>Vestuário/Acessórios</item>
     </string-array>
@@ -83,6 +85,7 @@
     <string name="perfil_botao_salvar_edicao">Salvar edição</string>
     <string name="button_marcar_vendido">marcar como vendido</string>
 
+
     <string-array name="tabs_perfil">
         <item>Perfil</item>
         <item>Meus Anúncios</item>
@@ -104,11 +107,10 @@
     <string name="dafault_user_name">Visitante</string>
     <string name="dafault_exit_confirmation">Deseja realmente Sair?</string>
 
+    <string name="iniciada_em">Negociação iniciada em</string>
     <string name="no_address_dialog_title">Ops... </string>
     <string name="insert_address_message">Parece que você não forneceu suas informações de endereço, informá-las ajuda a aumentar
         as chances de negociações. Gostaria de adicioná-las agora?</string>
-
-    <string name="iniciada_em">Iniciada em:</string>
 
     <string name="lista_desejos_action_menu">Limpar lista</string>
 
@@ -128,5 +130,11 @@
         <!--AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4-->
     <!--</string>-->
 
+    <string name="label_no_buy">Você ainda não iniciou nenhuma negociação.</string>
+    <string name="label_no_sell">Ninguém iniciou uma negociação com você, ainda.</string>
+    
+    <string name="label_no_messages">Ainda não há mensagens. Comece dizendo alguma coisa!</string>
+
+    <string name="anunciado_por">Anunciado por</string>
 
 </resources>

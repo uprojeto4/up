@@ -1,7 +1,11 @@
 package br.ufc.quixada.up.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -18,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +34,7 @@ import java.util.Arrays;
 import br.ufc.quixada.up.Adapters.NegociacoesAdapter;
 import br.ufc.quixada.up.Adapters.NegociacoesFragmentPagerAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Fragments.ComprasFragment;
 import br.ufc.quixada.up.Models.Message;
 import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
@@ -37,7 +43,11 @@ public class NegociacoesActivity extends BaseActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    public String userId;
+    public NegociacoesAdapter buyAdapter;
+    public NegociacoesAdapter sellAdapter;
     private Spinner spinner;
+    private DatabaseReference dbReference;
     String spinnerItem;
     ArrayList<String> filters = new ArrayList<>();
 
@@ -53,6 +63,29 @@ public class NegociacoesActivity extends BaseActivity {
 
         viewPager.setAdapter(new NegociacoesFragmentPagerAdapter(getSupportFragmentManager(),
                 getResources().getStringArray(R.array.tabs_negociacoes)));
+
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                // Here's your instance
+////                ComprasFragment fragment =(ComprasFragment) negociacoesP.getRegisteredFragment(lastSelectedPosition);
+////                // Here're your details. You can update.
+////                YourDetails details = yourFragment.getDetils();
+////                lastSelectedPosition = position;
+//
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
 
         tabLayout.setupWithViewPager(viewPager);
 
@@ -71,17 +104,14 @@ public class NegociacoesActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-//        Button openNegociacao = (Button) findViewById(R.id.openNegociacaoButton);
-//        openNegociacao.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(view.getContext(), NegociacaoActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        dbReference = FirebaseConfig.getDatabase();
+        userId = localUser.getId();
+        buyAdapter = new NegociacoesAdapter(this, userId);
+        sellAdapter = new NegociacoesAdapter(this, userId);
+        manageNegotiations();
 
         filters.addAll(Arrays.asList(getResources().getStringArray(R.array.spinner_negociacoes)));
         spinner = (Spinner) findViewById(R.id.spinnerFilter);
@@ -104,9 +134,112 @@ public class NegociacoesActivity extends BaseActivity {
         });
     }
 
-//    public void openChat(View view){
-//        Intent intent = new Intent(this, ChatActivity.class);
-//        startActivity(intent);
-//    }
+    public void manageNegotiations() {
+        dbReference.child("negotiations").child(userId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.getChildrenCount() == 0) {
 
+                } else {
+//                    noBuy.setVisibility(View.GONE);
+                    final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
+                    final String negotiationKey = dataSnapshot.getKey();
+
+                    dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
+                            String remoteUserId = dataSnapshot.child("userId").getValue(String.class);
+
+                            dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
+                                    System.out.println(negociacao.getUnreadMessagesCounter());
+                                    if (negociacao.getVendorId().equals(userId)) {
+                                        sellAdapter.addNegociacao(negotiationKey, negociacao);
+                                    } else {
+                                        buyAdapter.addNegociacao(negotiationKey, negociacao);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onChildChanged(final DataSnapshot dataSnapshot, String s) {
+                final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
+
+                dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot postDataSnapshot) {
+                        negociacao.setTitle(postDataSnapshot.child("title").getValue(String.class));
+                        String remoteUserId = postDataSnapshot.child("userId").getValue(String.class);
+
+                        dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(DataSnapshot userDataSnapshot) {
+                                negociacao.setVendorName(userDataSnapshot.child("nome").getValue(String.class));
+                                final int index;
+                                if (negociacao.getVendorId().equals(userId)) {
+                                    index = sellAdapter.getIndexOfKey(dataSnapshot.getKey());
+                                    sellAdapter.updateNegociacao(index, negociacao);
+                                } else {
+                                    index = buyAdapter.getIndexOfKey(dataSnapshot.getKey());
+                                    buyAdapter.updateNegociacao(index, negociacao);
+                                }
+                                if (Build.VERSION.SDK_INT >= 26) {
+                                    ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150,10));
+                                } else {
+                                    ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(150);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

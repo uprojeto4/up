@@ -9,7 +9,6 @@ public class Message {
     private String text;
     private String userId;
     private String dateTime;
-    private String status;
 
     public Message() { }
 
@@ -17,7 +16,6 @@ public class Message {
         this.text = text;
         this.userId = messageUserId;
         this.dateTime = DateTimeControl.getCurrentDateTime();
-        this.status="unread";
     }
 
     public String getText() {
@@ -44,11 +42,4 @@ public class Message {
         this.dateTime = dateTime;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }
