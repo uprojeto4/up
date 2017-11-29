@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,9 +21,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.nguyenhoanglam.imagepicker.model.Image;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,6 +56,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     byte[] pictureCover;
     ImageView imageView;
     FirebaseStorage firebaseStorage;
+    FirebaseAuth user = FirebaseAuth.getInstance();
 
 
     public PostAdapter(Context c, ArrayList<Post> p){
@@ -97,6 +101,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView price;
         ImageView image;
         private Button openChatButton;
+        private ImageButton upButton;
         private Post post;
 
         public PostViewHolder(View itemView) {
@@ -117,6 +122,22 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     intent.putExtra("adId", post.getId());
                     intent.putExtra("adTitle", post.getTitle());
                     context.startActivity(intent);
+                }
+            });
+
+            upButton = (ImageButton) itemView.findViewById(R.id.buttonUpCard);
+
+            upButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+//                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
+//                    intent.putExtra("remoteUserId", post.getUserId());
+//                    intent.putExtra("adId", post.getId());
+//                    intent.putExtra("adTitle", post.getTitle());
+//                    context.startActivity(intent);
+
+                    post.up(user.getCurrentUser().getUid(), post.getId());
                 }
             });
         }
