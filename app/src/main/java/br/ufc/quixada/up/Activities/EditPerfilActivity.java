@@ -35,6 +35,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -53,6 +58,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -71,12 +77,17 @@ public class EditPerfilActivity extends PerfilActivity {
 
     StorageReference profilePictureRef;
 
-    ArrayList<Image> images;
+    ArrayList<Image> images = new ArrayList<>();
 
     LinearLayout loading;
 
     EditText nome;
-    EditText endereco;
+    EditText logradouroEt;
+    EditText numeroEt;
+    EditText complementoEt;
+    EditText bairroEt;
+    EditText cidadeEt;
+    EditText estadoEt;
     EditText telefone;
     EditText email;
     EditText senha;
@@ -160,7 +171,15 @@ public class EditPerfilActivity extends PerfilActivity {
 
 
         nome = (EditText) findViewById(R.id.edit_nome);
-        endereco = (EditText) findViewById(R.id.edit_endereco);
+
+        logradouroEt = (EditText) findViewById(R.id.edit_logradouro);
+        numeroEt = (EditText) findViewById(R.id.edit_numero);
+        complementoEt = (EditText) findViewById(R.id.edit_complemento);
+        bairroEt = (EditText) findViewById(R.id.edit_bairro);
+        cidadeEt = (EditText) findViewById(R.id.edit_cidade);
+        estadoEt = (EditText) findViewById(R.id.edit_estado);
+
+//        endereco = (EditText) findViewById(R.id.edit_endereco);
         telefone = (EditText) findViewById(R.id.edit_telefone);
         email = (EditText) findViewById(R.id.edit_email);
         senha = (EditText) findViewById(R.id.edit_senha);
@@ -171,6 +190,13 @@ public class EditPerfilActivity extends PerfilActivity {
 
         nome.setText(PerfilActivity.nome);
         email.setText(PerfilActivity.email);
+
+        logradouroEt.setText(localUser.getAddress().getLogradouro());
+        numeroEt.setText(localUser.getAddress().getNumero());
+        complementoEt.setText(localUser.getAddress().getComplemento());
+        bairroEt.setText(localUser.getAddress().getBairro());
+        cidadeEt.setText(localUser.getAddress().getCidade());
+        estadoEt.setText(localUser.getAddress().getEstado());
 
         profilePictureRef = storage.getReference().child("UsersProfilePictures/"+PerfilActivity.id+"/"+localUser.getFotoPerfil());
 //        Toast.makeText(getBaseContext(),profilePictureRef.getPath(), Toast.LENGTH_LONG).show();
@@ -259,64 +285,122 @@ public class EditPerfilActivity extends PerfilActivity {
 
     public void uploadProfilePicture(){
 
-        //pega o caminho do arquivo a ser enviado
-        Uri file = Uri.fromFile(new File(images.get(0).getPath()));
+        //testa se o array de imagens contem alguma imagem para o caso de o usuario querer alter so as outras informações e não a foto
+        if (images.size() >= 1){
+            //pega o caminho do arquivo a ser enviado
+            Uri file = Uri.fromFile(new File(images.get(0).getPath()));
+            //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
+            //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
+            final StorageReference imageProfileRef = storageRef.child("UsersProfilePictures/"+firebasePreferences.getId()+"/"+file.getLastPathSegment());
 
-        //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
-        //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
-        final StorageReference imageProfileRef = storageRef.child("UsersProfilePictures/"+firebasePreferences.getId()+"/"+file.getLastPathSegment());
+            //cria os metadados
+            StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
 
-        //cria os metadados
-        StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
+            //faz upload do arquivo junto com os metadados
+            UploadTask uploadTask = imageProfileRef.putFile(file, metadata);
 
-        //faz upload do arquivo junto com os metadados
-        UploadTask uploadTask = imageProfileRef.putFile(file, metadata);
 
-        //monitora o andamento do upload
-        uploadTask
-                //monitora caso de falha
-                .addOnFailureListener(new OnFailureListener() {
+            //monitora o andamento do upload
+            uploadTask
+                    //monitora caso de falha
+                    .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getBaseContext(),"Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
+                }
+            })
+                    //monitora caso de sucesso
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Toast.makeText(getBaseContext(),"Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
+                    profilePictureName = imageProfileRef.getName();
+
+                    //atualiza a foto do usuario local
+                    localUser.setFotoPerfil(imageProfileRef.getName());
+    //                Toast.makeText(getBaseContext(),"foto do user local " + localUser.getFotoPerfil(), Toast.LENGTH_LONG).show();
+
+                    firebasePreferences = new FirebasePreferences(EditPerfilActivity.this);
+                    firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
+                            localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
+
+                    //atualiza a referencia a foto no banco
+                    databaseReference.child("users").child(PerfilActivity.id).child("fotoPerfil").setValue(localUser.getFotoPerfil());
+                    PerfilActivity.fotoPerfil = localUser.getFotoPerfil();
+
+                    //chama metodo para atualizar outras informações apenas quando a foto for enviada
+                    updateInfos();
+                }
+            })
+                    //monitora o progresso
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                 @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                     if (progress < 100.0){
+                         //deixa o loading visivel
+                        loading.setVisibility(View.VISIBLE);
+                     }else{
+                         //deixa o loading invisível
+                         loading.setVisibility(View.GONE);
+                     }
+                }
+            });
+        } else{
+            updateInfos();
+        }
+
+    }
+
+    public void updateInfos(){
+        databaseReference.child("users").child(localUser.getId()).child("nome").setValue(nome.getText().toString());
+
+        databaseReference.child("users").child(localUser.getId()).child("address").child("logradouro").setValue(logradouroEt.getText().toString());
+//        localUser.getAddress().setLogradouro(logradouroEt.getText().toString());
+
+        databaseReference.child("users").child(localUser.getId()).child("address").child("numero").setValue(numeroEt.getText().toString());
+//        localUser.getAddress().setNumero(numeroEt.getText().toString());
+
+        databaseReference.child("users").child(localUser.getId()).child("address").child("complemento").setValue(complementoEt.getText().toString());
+//        localUser.getAddress().setComplemento(complementoEt.getText().toString());
+
+        databaseReference.child("users").child(localUser.getId()).child("address").child("bairro").setValue(bairroEt.getText().toString());
+//        localUser.getAddress().setBairro(bairroEt.getText().toString());
+
+        databaseReference.child("users").child(localUser.getId()).child("address").child("cidade").setValue(cidadeEt.getText().toString());
+//        localUser.getAddress().setCidade(cidadeEt.getText().toString());
+
+        databaseReference.child("users").child(localUser.getId()).child("address").child("estado").setValue(estadoEt.getText().toString());
+//        localUser.getAddress().setEstado(estadoEt.getText().toString());
+
+        Query email = databaseReference.child("users").orderByChild("email").equalTo(localUser.getEmail());
+        email.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getBaseContext(),"Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
-            }
-        })
-                //monitora caso de sucesso
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                Toast.makeText(getBaseContext(),"Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
-                profilePictureName = imageProfileRef.getName();
-
-                //atualiza a foto do usuario local
-                localUser.setFotoPerfil(imageProfileRef.getName());
-//                Toast.makeText(getBaseContext(),"foto do user local " + localUser.getFotoPerfil(), Toast.LENGTH_LONG).show();
-
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+//                    GenericTypeIndicator<User> usuarios = new GenericTypeIndicator<User>() {
+//                    };
+                    localUser = singleSnapshot.getValue(User.class);
+//                    Address localAddress = singleSnapshot.child("address").getValue(Address.class);
+//                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
+//                    Log.d("testeAddress", " " + localAddress);
+                }
+//                Log.d("testeAddress", " " + localUser.getAddress());
                 firebasePreferences = new FirebasePreferences(EditPerfilActivity.this);
-                firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil());
-
-                //atualiza a referencia a foto no banco
-                databaseReference.child("users").child(PerfilActivity.id).child("fotoPerfil").setValue(localUser.getFotoPerfil());
-                PerfilActivity.fotoPerfil = localUser.getFotoPerfil();
+                firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
+                        localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
+//                openHome();
+//                Toast.makeText(getBaseContext(), "Bem Vindo, "+ localUser.getNome() +"! :)", Toast.LENGTH_LONG).show();
+//                updateProfile();
             }
-        })
-                //monitora o progresso
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-             @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                 if (progress < 100.0){
-                     //deixa o loading visivel
-                    loading.setVisibility(View.VISIBLE);
-                 }else{
-                     //deixa o loading invisível
-                     loading.setVisibility(View.GONE);
-                 }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+//                Log.e(TAG, "onCancelled", databaseError.toException());
+                Toast.makeText(getBaseContext(), "As alterações não puderam ser feitas", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     @Override

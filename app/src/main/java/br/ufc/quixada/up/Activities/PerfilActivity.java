@@ -20,6 +20,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import br.ufc.quixada.up.Models.Address;
 import br.ufc.quixada.up.R;
 
 import br.ufc.quixada.up.Adapters.PerfilFragmentPagerAdapter;
@@ -29,7 +33,7 @@ import static br.ufc.quixada.up.R.id.nav_view;
 public class PerfilActivity extends BaseActivity {
 
     private TabLayout perfilTabLayout;
-    private ViewPager perfilViewPager;
+    public static ViewPager perfilViewPager;
 
     public String profilePictureName;
 
@@ -39,9 +43,28 @@ public class PerfilActivity extends BaseActivity {
 
 //    public static byte[] image;
     public static String nome;
+    public static Address endereco;
+//    public static Map<String, String> enderecoMap = new HashMap<String, String>();
+    String[] keyValuePairs;
     public static String id;
     public static String email;
     public static String fotoPerfil;
+
+    public static float avComprador;
+    public static int numCompras;
+
+    public static float avVendedor;
+    public static int numVendas;
+
+    public int fragmentASerAberta;
+
+//    public static String logradouro;
+//    public static String numero;
+//    public static String complemento;
+//    public static String bairro;
+//    public static String cidade;
+//    public static String estado;
+
 //    TextView textViewEmail;
 //    TextView textViewName;
 
@@ -52,11 +75,16 @@ public class PerfilActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = getIntent();
+        fragmentASerAberta = intent.getIntExtra("fragment", 0);
+
+        Log.d("extra", " "+fragmentASerAberta);
 
         perfilTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         perfilViewPager = (ViewPager) findViewById(R.id.view_pager_perfil);
 
         perfilViewPager.setAdapter(new PerfilFragmentPagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.tabs_perfil)));
+        perfilViewPager.setCurrentItem(fragmentASerAberta);
 
         perfilTabLayout.setupWithViewPager(perfilViewPager);
 
@@ -75,23 +103,69 @@ public class PerfilActivity extends BaseActivity {
             updateUserInfo();
         }
 
-        nome = firebasePreferences.getUserName();
-        id = firebasePreferences.getId();
-        email = firebasePreferences.getUserEmail();
+        nome = localUser.getNome();
+        endereco = localUser.getAddress();
+
+//        Log.d("endereco_Local+USeer", " "+endereco.getLogradouro());
+//        endereco = endereco.substring(1, endereco.length()-1);
+//        keyValuePairs = endereco.split(",");
+//        for (String pair : keyValuePairs){
+//            String[] entry = pair.split("=");
+////            enderecoMap.put(entry[0].trim(), entry[1].trim());
+//        }
+
+        id = localUser.getId();
+        email = localUser.getEmail();
         fotoPerfil = profilePictureName;
+
+        avVendedor = localUser.getAvVendedor();
+        numVendas = localUser.getNumVendas();
+
+        avComprador = localUser.getAvComprador();
+        numCompras = localUser.getNumCompras();
 
 //        Toast.makeText(this,"foto do local user ao criar ativity: "+fotoPerfil, Toast.LENGTH_LONG).show();
 
 
 //        Log.d("FOTO PERFIL TESTE", fotoPerfil);
 
+
+//        for (Map.Entry<String, String> entry : PerfilActivity.enderecoMap.entrySet()){
+//            String key = entry.getKey();
+//            Log.d("key", " "+ key);
+//            if (key.equals("logradouro")){
+//                logradouro = entry.getValue();
+//                localUser.getAddress().setLogradouro(logradouro);
+//            }else if(key.equals("numero")){
+//                numero = entry.getValue();
+//                localUser.getAddress().setNumero(numero);
+//            }else if(key.equals("complemento")){
+//                complemento = entry.getValue();
+//                localUser.getAddress().setComplemento(complemento);
+//            }else if(key.equals("bairro")){
+//                bairro = entry.getValue();
+//                localUser.getAddress().setBairro(bairro);
+//            }else if(key.equals("cidade")){
+//                cidade = entry.getValue();
+//                localUser.getAddress().setCidade(cidade);
+//            }else if(key.equals("estado")){
+//                estado = entry.getValue();
+//                localUser.getAddress().setEstado(estado);
+//            }
+//        }
+
     }
 
     @Override
     public void onResume(){
         super.onResume();
+//        Intent intent = getIntent();
+//        fragmentASerAberta = intent.getIntExtra("fragment", 0);
+//        perfilTabLayout.setupWithViewPager(perfilViewPager);
+
         fotoPerfil = localUser.getFotoPerfil();
         localUser.setFotoPerfil(fotoPerfil);
+        nome = localUser.getNome();
 //        Toast.makeText(this,"foto do local user on resume activity "+fotoPerfil, Toast.LENGTH_LONG).show();
 
 //        Log.d("FOTO PERFIL", fotoPerfil);

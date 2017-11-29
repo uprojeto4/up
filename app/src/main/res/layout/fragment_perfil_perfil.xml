@@ -76,9 +76,10 @@
                         android:layout_below="@id/profile_image"
                         android:layout_centerHorizontal="true"
                         android:layout_weight="1"
+                        android:gravity="start"
+                        android:maxLines="1"
                         android:text="Fulano da Silva Sobrinho"
                         android:textAlignment="viewStart"
-                        android:gravity="start"
                         android:textColor="@color/primaryTextColor"
                         android:textSize="24sp"
                         android:textStyle="bold" />
@@ -105,6 +106,7 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="5dp"
                             android:layout_weight="1"
+                            android:maxLines="3"
                             android:text="Rua Rodrigues Junior, 1012, Apto 202, Centro, Quixadá - CE"
                             android:textAlignment="viewStart"
                             android:textColor="@color/primaryTextColor" />
@@ -168,7 +170,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/textView4"
+                                android:id="@+id/numVendas"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -194,7 +196,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/textView4"
+                                android:id="@+id/avVendas"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -304,7 +306,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/textView4"
+                                android:id="@+id/numCompras"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -330,7 +332,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/textView4"
+                                android:id="@+id/avCompras"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,10 +18,15 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
+import java.util.Map;
+
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.Address;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
@@ -35,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebasePreferences firebasePreferences;
     private DatabaseReference databaseReference;
     private User localUser;
+    private Address localAddress;
 
 
     @Override
@@ -98,11 +105,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                    GenericTypeIndicator<User> usuarios = new GenericTypeIndicator<User>() {};
                     localUser = singleSnapshot.getValue(User.class);
+//                    Address localAddress = singleSnapshot.child("address").getValue(Address.class);
 //                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
+//                    Log.d("testeAddress", " " + localAddress);
                 }
+//                Log.d("testeAddress", " " + localUser.getAddress());
                 firebasePreferences = new FirebasePreferences(LoginActivity.this);
-                firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil());
+                firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
+                        localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
                 openHome();
                 Toast.makeText(getBaseContext(), "Bem Vindo, "+ localUser.getNome() +"! :)", Toast.LENGTH_LONG).show();
                 updateProfile();

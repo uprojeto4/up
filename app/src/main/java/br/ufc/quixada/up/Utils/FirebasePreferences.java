@@ -13,8 +13,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import br.ufc.quixada.up.Activities.LoginActivity;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.Address;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Models.User;
 
@@ -35,6 +40,12 @@ public class FirebasePreferences {
     private final String CHAVE_NOME = "userLoggedName";
     private final String CHAVE_EMAIL = "userLoggedEmail";
     private final String CHAVE_FOTO_PERFIL = "userLoggedProfilePicture";
+    private final String CHAVE_ENDERECO = "userAdress";
+    private final String CHAVE_NUM_VENDAS = "userNumVendas";
+    private final String CHAVE_AV_VENDEDOR = "userAvVendedor";
+    private final String CHAVE_NUM_COMPRAS = "userNumCompras";
+    private final String CHAVE_AV_COMPRADOR = "userAvComprador";
+
 
     public FirebasePreferences(Context context){
         this.context = context;
@@ -43,11 +54,17 @@ public class FirebasePreferences {
         editor = preferences.edit();
     }
 
-    public void SaveUserPreferences(String userId, String userName, String userEmail, String profilePicture){
+    public void SaveUserPreferences(String userId, String userName, String userEmail, String profilePicture, Address adress,
+                                    int numVendas, float avVendedor, int numCompras, float avComprador){
         editor.putString(CHAVE_ID, userId);
         editor.putString(CHAVE_NOME, userName);
         editor.putString(CHAVE_EMAIL, userEmail);
         editor.putString(CHAVE_FOTO_PERFIL, profilePicture);
+        editor.putString(CHAVE_ENDERECO, adress.toString());
+        editor.putInt(CHAVE_NUM_VENDAS, numVendas);
+        editor.putFloat(CHAVE_AV_VENDEDOR, avVendedor);
+        editor.putInt(CHAVE_NUM_COMPRAS, numCompras);
+        editor.putFloat(CHAVE_AV_COMPRADOR, avComprador);
         editor.commit();
     }
 
@@ -116,4 +133,20 @@ public class FirebasePreferences {
 //
 //        databaseReference.child("countPost").setValue(countPost);
     }
+    public String getAdress(){
+        return preferences.getString(CHAVE_ENDERECO, null);
+    }
+    public int getNumVendas(){
+        return preferences.getInt(CHAVE_NUM_VENDAS, 0);
+    }
+    public float getAvVendas(){
+        return preferences.getFloat(CHAVE_AV_VENDEDOR, 0);
+    }
+    public int getNumCompras(){
+        return preferences.getInt(CHAVE_NUM_COMPRAS, 0);
+    }
+    public float getAvCompras(){
+        return preferences.getFloat(CHAVE_AV_COMPRADOR, 0);
+    }
+
 }
