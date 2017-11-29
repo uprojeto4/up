@@ -59,6 +59,7 @@ public class ChatActivity extends BaseActivity {
         Intent intent = getIntent();
         adId = intent.getStringExtra("adId");
         remoteUserId = intent.getStringExtra("remoteUserId");
+        userId = localUser.getId();
 
         textViewTitleAnuncioChat = findViewById(R.id.titleAnuncioChat);
         textViewTitleAnuncioChat.setText(intent.getStringExtra("adTitle"));
@@ -76,7 +77,7 @@ public class ChatActivity extends BaseActivity {
         linearLayoutManager = new LinearLayoutManager(this);
 //        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        chatAdapter = new ChatAdapter(new ArrayList<Message>());
+        chatAdapter = new ChatAdapter(userId);
         recyclerView.setAdapter(chatAdapter);
 
         buttonSend.setOnClickListener(new View.OnClickListener() {

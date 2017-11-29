@@ -20,7 +20,6 @@ public class Negociacao {
     private String startDate;
     private String messagesId;
     private String status;
-    private String type;
 
     public Negociacao() { }
 
@@ -114,11 +113,4 @@ public class Negociacao {
         this.vendorName = vendorName;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

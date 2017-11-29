@@ -10,25 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
 import br.ufc.quixada.up.Activities.NegociacoesActivity;
-import br.ufc.quixada.up.DAO.FirebaseConfig;
-import br.ufc.quixada.up.Models.Negociacao;
+import br.ufc.quixada.up.Adapters.NegociacoesAdapter;
 import br.ufc.quixada.up.R;
 
 public class ComprasFragment extends Fragment {
 
     RecyclerView recyclerViewBuyChatList;
     LinearLayoutManager linearLayoutManager;
-//    private DatabaseReference dbReference;
-//    private String userId;
-    private Negociacao negociacao;
-//    private NegociacoesAdapter negociacoesAdapter;
     private LinearLayout noBuy;
     private NegociacoesActivity negociacoesActivity;
 
@@ -40,24 +29,18 @@ public class ComprasFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_compras, container, false);
 
-//        dbReference = FirebaseConfig.getDatabase();
         negociacoesActivity = (NegociacoesActivity) getActivity();
-
-//        userId = negociacoesActivity.userId;
 
         recyclerViewBuyChatList = (RecyclerView) rootView.findViewById(R.id.recyclerViewBuyChatList);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewBuyChatList.setLayoutManager(linearLayoutManager);
 
-//        negociacoesAdapter = new NegociacoesAdapter(this.getContext(), new ArrayList<Negociacao>(), userId);
-//        recyclerViewBuyChatList.setAdapter(negociacoesAdapter);
+//        NegociacoesAdapter negociacoesAdapter = negociacoesActivity.negociacoesAdapter;
 
         recyclerViewBuyChatList.setAdapter(negociacoesActivity.negociacoesAdapter);
 
         noBuy = rootView.findViewById(R.id.noBuy);
-
-//        getNegotiations();
 
         return rootView;
 
@@ -77,6 +60,10 @@ public class ComprasFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });*/
+
+    }
+
+    static void manageNoMessageInfo() {
 
     }
 

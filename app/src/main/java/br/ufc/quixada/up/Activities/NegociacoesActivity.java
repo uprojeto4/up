@@ -30,6 +30,7 @@ import java.util.Arrays;
 import br.ufc.quixada.up.Adapters.NegociacoesAdapter;
 import br.ufc.quixada.up.Adapters.NegociacoesFragmentPagerAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Fragments.ComprasFragment;
 import br.ufc.quixada.up.Models.Message;
 import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
@@ -58,6 +59,29 @@ public class NegociacoesActivity extends BaseActivity {
         viewPager.setAdapter(new NegociacoesFragmentPagerAdapter(getSupportFragmentManager(),
                 getResources().getStringArray(R.array.tabs_negociacoes)));
 
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                // Here's your instance
+////                ComprasFragment fragment =(ComprasFragment) negociacoesP.getRegisteredFragment(lastSelectedPosition);
+////                // Here're your details. You can update.
+////                YourDetails details = yourFragment.getDetils();
+////                lastSelectedPosition = position;
+//
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
+
         tabLayout.setupWithViewPager(viewPager);
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -75,22 +99,13 @@ public class NegociacoesActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-//        Button openNegociacao = (Button) findViewById(R.id.openNegociacaoButton);
-//        openNegociacao.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(view.getContext(), NegociacaoActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         dbReference = FirebaseConfig.getDatabase();
         userId = localUser.getId();
-        negociacoesAdapter = new NegociacoesAdapter(this, new ArrayList<Negociacao>(), userId);
-        getNegotiations();
+        negociacoesAdapter = new NegociacoesAdapter(this, userId);
+        manageNegotiations();
 
         filters.addAll(Arrays.asList(getResources().getStringArray(R.array.spinner_negociacoes)));
         spinner = (Spinner) findViewById(R.id.spinnerFilter);
@@ -113,43 +128,30 @@ public class NegociacoesActivity extends BaseActivity {
         });
     }
 
-    public void getNegotiations() {
-        System.out.println("comprasFragment userId: " + userId);
-        dbReference.child("negotiations").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-
+    public void manageNegotiations() {
+        dbReference.child("negotiations").child(userId).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println("comprasFragment dataSnapshot: " + dataSnapshot);
-                System.out.println("comprasFragment dataSnapshotChildrenCount: " + dataSnapshot.getChildrenCount());
-                if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
-                        final Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.getChildrenCount() == 0) {
 
-                        if (negociacao.getType().equals("buy")) {
+                } else {
+//                    noBuy.setVisibility(View.GONE);
+                    final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
+                    final String negotiationKey = dataSnapshot.getKey();
 
-                            final String adId = negociacao.getAdId();
+                    dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
 
-                            dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
+                            String remoteUserId = dataSnapshot.child("userId").getValue(String.class);
+
+                            dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
 
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
-                                    String remoteUserId = dataSnapshot.child("userId").getValue(String.class);
-
-                                    dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
-                                            negociacoesAdapter.addNegociacao(negociacao);
-                                            updateNegotiationsMetadata(adId);
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
+                                    negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
+                                    negociacoesAdapter.addNegociacao(negotiationKey, negociacao);
                                 }
 
                                 @Override
@@ -158,34 +160,48 @@ public class NegociacoesActivity extends BaseActivity {
                                 }
                             });
                         }
-                    }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void updateNegotiationsMetadata(String adId) {
-        dbReference.child("negotiations").child(userId).child(adId).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                System.out.println("added");
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
-                    final Negociacao negociacao = messageDataSnapshot.getValue(Negociacao.class);
-                    final String adId = negociacao.getAdId();
-                    final String lastMessage = negociacao.getLastMessage();
-                    System.out.println("maxxx " + adId);
-                    System.out.println("maxxx " + lastMessage);
-//                    criar método no adapter que busca pelo id e atualiza
-                }
+                System.out.println(dataSnapshot);
+                final int index = negociacoesAdapter.getIndexOfKey(dataSnapshot.getKey());
+                final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
+
+                dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
+                        String remoteUserId = dataSnapshot.child("userId").getValue(String.class);
+
+                        dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
+                                negociacoesAdapter.updateNegociacao(index, negociacao);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -204,10 +220,4 @@ public class NegociacoesActivity extends BaseActivity {
             }
         });
     }
-
-//    public void openChat(View view){
-//        Intent intent = new Intent(this, ChatActivity.class);
-//        startActivity(intent);
-//    }
-
 }
