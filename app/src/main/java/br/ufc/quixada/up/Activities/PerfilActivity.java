@@ -49,6 +49,13 @@ public class PerfilActivity extends BaseActivity {
     public static String id;
     public static String email;
     public static String fotoPerfil;
+
+    public static float avComprador;
+    public static int numCompras;
+
+    public static float avVendedor;
+    public static int numVendas;
+
     public int fragmentASerAberta;
 
 //    public static String logradouro;
@@ -110,6 +117,12 @@ public class PerfilActivity extends BaseActivity {
         id = localUser.getId();
         email = localUser.getEmail();
         fotoPerfil = profilePictureName;
+
+        avVendedor = localUser.getAvVendedor();
+        numVendas = localUser.getNumVendas();
+
+        avComprador = localUser.getAvComprador();
+        numCompras = localUser.getNumCompras();
 
 //        Toast.makeText(this,"foto do local user ao criar ativity: "+fotoPerfil, Toast.LENGTH_LONG).show();
 

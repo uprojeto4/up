@@ -36,12 +36,12 @@ public class CadastroActivity extends AppCompatActivity {
     private EditText editTextPassword;
     private EditText editTextPasswordConfirm;
 
-    private EditText editTextLogradouro;
-    private EditText editTextNumero;
-    private EditText editTextComplemento;
-    private EditText editTextBairro;
-    private EditText editTextCidade;
-    private EditText editTextEstado;
+//    private EditText editTextLogradouro;
+//    private EditText editTextNumero;
+//    private EditText editTextComplemento;
+//    private EditText editTextBairro;
+//    private EditText editTextCidade;
+//    private EditText editTextEstado;
 
     private Button buttonSignup;
 
@@ -61,12 +61,12 @@ public class CadastroActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.passwordInput);
         editTextPasswordConfirm = findViewById(R.id.passwordConfirmationInput);
 
-        editTextLogradouro = findViewById(R.id.logradouroInput);
-        editTextNumero = findViewById(R.id.numeroInput);
-        editTextComplemento = findViewById(R.id.complementoInput);
-        editTextBairro = findViewById(R.id.bairroInput);
-        editTextCidade = findViewById(R.id.cidadeInput);
-        editTextEstado = findViewById(R.id.estadoInput);
+//        editTextLogradouro = findViewById(R.id.logradouroInput);
+//        editTextNumero = findViewById(R.id.numeroInput);
+//        editTextComplemento = findViewById(R.id.complementoInput);
+//        editTextBairro = findViewById(R.id.bairroInput);
+//        editTextCidade = findViewById(R.id.cidadeInput);
+//        editTextEstado = findViewById(R.id.estadoInput);
 
         buttonSignup = findViewById(R.id.buttonSignup);
 
@@ -83,12 +83,13 @@ public class CadastroActivity extends AppCompatActivity {
                         localUser.setNome(editTextName.getText().toString());
                         localUser.setEmail(editTextEmail.getText().toString());
 
-                        adressToObject(editTextLogradouro.getText().toString(),
-                                editTextNumero.getText().toString(),
-                                editTextComplemento.getText().toString(),
-                                editTextBairro.getText().toString(),
-                                editTextCidade.getText().toString(),
-                                editTextEstado.getText().toString());
+//                        adressToObject(editTextLogradouro.getText().toString(),
+//                                editTextNumero.getText().toString(),
+//                                editTextComplemento.getText().toString(),
+//                                editTextBairro.getText().toString(),
+//                                editTextCidade.getText().toString(),
+//                                editTextEstado.getText().toString());
+                        adressToObject("", "", "", "", "", "");
 
                         localUser.setFotoPerfil("profile_picture_default.jpg");
                     } else {
@@ -133,7 +134,8 @@ public class CadastroActivity extends AppCompatActivity {
                        localUser.save();
 
                        FirebasePreferences preferences = new FirebasePreferences(CadastroActivity.this);
-                       preferences.SaveUserPreferences(userId, localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress());
+                       preferences.SaveUserPreferences(userId, localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
+                               localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
 
                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);

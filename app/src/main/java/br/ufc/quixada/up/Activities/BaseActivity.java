@@ -79,6 +79,12 @@ public class BaseActivity extends AppCompatActivity
         localUser.setAddressString(firebasePreferences.getAdress());
 //        localUser.adressToObject(firebasePreferences.getAdress());
 
+        localUser.setNumVendas(firebasePreferences.getNumVendas());
+        localUser.setAvVendedor(firebasePreferences.getAvVendas());
+
+        localUser.setNumCompras(firebasePreferences.getNumCompras());
+        localUser.setAvComprador(firebasePreferences.getAvCompras());
+
 
     }
 

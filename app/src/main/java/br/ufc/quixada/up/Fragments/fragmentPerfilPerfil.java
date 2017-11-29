@@ -64,6 +64,10 @@ public class fragmentPerfilPerfil extends Fragment {
     StorageReference profilePictureRef;
     TextView nome;
     TextView endereco;
+    TextView tvNumVendas;
+    TextView tvAvVendas;
+    TextView tvNumCompras;
+    TextView tvAvCompras;
     public byte[] image;
     Bitmap bitmap;
     public boolean test;
@@ -134,6 +138,19 @@ public class fragmentPerfilPerfil extends Fragment {
         nome.setText(PerfilActivity.nome);
 
         endereco = (TextView) getView().findViewById(R.id.user_profile_adress);
+
+        tvNumVendas = (TextView) getView().findViewById(R.id.numVendas);
+        tvAvVendas = (TextView) getView().findViewById(R.id.avVendas);
+
+        tvNumCompras = (TextView) getView().findViewById(R.id.numCompras);
+        tvAvCompras = (TextView) getView().findViewById(R.id.avCompras);
+
+
+        tvNumVendas.setText(""+PerfilActivity.numVendas);
+        tvAvVendas.setText(""+PerfilActivity.avVendedor);
+
+        tvNumCompras.setText(""+PerfilActivity.numCompras);
+        tvAvCompras.setText(""+PerfilActivity.avComprador);
 
 //        for (Map.Entry<String, String> entry : PerfilActivity.enderecoMap.entrySet()){
 //            String key = entry.getKey();

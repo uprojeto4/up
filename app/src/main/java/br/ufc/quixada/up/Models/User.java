@@ -32,11 +32,12 @@ public class User {
 
     private Address address = new Address();
 
-    private int avComprador = 0;
+    private float avVendedor = 0;
+    private int numVendas = 0;
+
+    private float avComprador = 0;
     private int numCompras = 0;
 
-    private int avVendedor = 0;
-    private int numVendas = 0;
 
 //    public String addressString;
 
@@ -65,11 +66,11 @@ public class User {
 //    }
 
 
-    public int getAvComprador() {
+    public float getAvComprador() {
         return avComprador;
     }
 
-    public void setAvComprador(int avComprador) {
+    public void setAvComprador(float avComprador) {
         this.avComprador = avComprador;
     }
 
@@ -81,11 +82,11 @@ public class User {
         this.numCompras = numCompras;
     }
 
-    public int getAvVendedor() {
+    public float getAvVendedor() {
         return avVendedor;
     }
 
-    public void setAvVendedor(int avVendedor) {
+    public void setAvVendedor(float avVendedor) {
         this.avVendedor = avVendedor;
     }
 
@@ -297,10 +298,10 @@ public class User {
                 ", Id='" + Id + '\'' +
                 ", fotoPerfil='" + fotoPerfil + '\'' +
                 ", endereco='" + address + '\'' +
-                ", avaliacaoVendedor='" + avVendedor + '\'' +
                 ", numeroVendas='" + numVendas + '\'' +
-                ", avaliacaoComprador='" + avComprador + '\'' +
+                ", avaliacaoVendedor='" + avVendedor + '\'' +
                 ", numeroCompras='" + numCompras+ '\'' +
+                ", avaliacaoComprador='" + avComprador + '\'' +
                 '}';
     }
 }

@@ -43,103 +43,103 @@
                 android:inputType="text" />
 
 
-            <TextView
-                android:id="@+id/addressInfosCad"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:layout_weight="6"
-                android:text="Informações de endereço"
-                android:textSize="24sp" />
+            <!--<TextView-->
+                <!--android:id="@+id/addressInfosCad"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:layout_weight="6"-->
+                <!--android:text="Informações de endereço"-->
+                <!--android:textSize="24sp" />-->
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Logradouro" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Logradouro" />-->
 
-            <EditText
-                android:id="@+id/logradouroInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Informe sua rua"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:inputType="text" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Número" />
-
-            <EditText
-                android:id="@+id/numeroInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Informe o número da sua residência"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:inputType="number" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Complemento" />
-
-            <EditText
-                android:id="@+id/complementoInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Informe algum complemento"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:inputType="text" />
+            <!--<EditText-->
+                <!--android:id="@+id/logradouroInput"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Informe sua rua"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:inputType="text" />-->
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Bairro" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Número" />-->
 
-            <EditText
-                android:id="@+id/bairroInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Informe seu bairro"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:inputType="text" />
+            <!--<EditText-->
+                <!--android:id="@+id/numeroInput"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Informe o número da sua residência"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:inputType="number" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Complemento" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/complementoInput"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Informe algum complemento"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:inputType="text" />-->
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cidade" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Bairro" />-->
 
-            <EditText
-                android:id="@+id/cidadeInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Informe sua cidade"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:inputType="text" />
+            <!--<EditText-->
+                <!--android:id="@+id/bairroInput"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Informe seu bairro"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:inputType="text" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Estado" />
 
-            <EditText
-                android:id="@+id/estadoInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Informe seu extado"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:inputType="text" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Cidade" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/cidadeInput"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Informe sua cidade"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:inputType="text" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Estado" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/estadoInput"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Informe seu extado"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:inputType="text" />-->
 
 
             <TextView

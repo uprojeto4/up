@@ -113,7 +113,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 //                Log.d("testeAddress", " " + localUser.getAddress());
                 firebasePreferences = new FirebasePreferences(LoginActivity.this);
-                firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress());
+                firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
+                        localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
                 openHome();
                 Toast.makeText(getBaseContext(), "Bem Vindo, "+ localUser.getNome() +"! :)", Toast.LENGTH_LONG).show();
                 updateProfile();
