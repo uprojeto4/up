@@ -14,10 +14,12 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import br.ufc.quixada.up.Activities.LoginActivity;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.Address;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Models.User;
 
@@ -40,6 +42,7 @@ public class FirebasePreferences {
     private final String CHAVE_FOTO_PERFIL = "userLoggedProfilePicture";
     private final String CHAVE_ENDERECO = "userAdress";
 
+
     public FirebasePreferences(Context context){
         this.context = context;
         preferences = context.getSharedPreferences(NOME_ARQUIVO, MODE);
@@ -47,12 +50,13 @@ public class FirebasePreferences {
         editor = preferences.edit();
     }
 
-    public void SaveUserPreferences(String userId, String userName, String userEmail, String profilePicture, Map adress){
+    public void SaveUserPreferences(String userId, String userName, String userEmail, String profilePicture, Address adress){
         editor.putString(CHAVE_ID, userId);
         editor.putString(CHAVE_NOME, userName);
         editor.putString(CHAVE_EMAIL, userEmail);
         editor.putString(CHAVE_FOTO_PERFIL, profilePicture);
         editor.putString(CHAVE_ENDERECO, adress.toString());
+        Log.d("testeAddress", " " + adress);
         editor.commit();
     }
 
@@ -122,8 +126,11 @@ public class FirebasePreferences {
 //        databaseReference.child("countPost").setValue(countPost);
     }
     public String getAdress(){
+
         return preferences.getString(CHAVE_ENDERECO, null);
-//        return preferences.getAll();
+
+
+
     }
 
 }

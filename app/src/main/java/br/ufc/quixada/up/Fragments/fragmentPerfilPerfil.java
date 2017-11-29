@@ -152,10 +152,16 @@ public class fragmentPerfilPerfil extends Fragment {
 //                estado = entry.getValue();
 //            }
 //        }
-        Log.d("endereco", PerfilActivity.logradouro + ", " + PerfilActivity.numero + ", " + PerfilActivity.complemento + ", " + PerfilActivity.bairro + ", " + PerfilActivity.cidade + " - " + PerfilActivity.estado);
-        address = PerfilActivity.logradouro + ", " + PerfilActivity.numero + ", " + PerfilActivity.complemento + ", " + PerfilActivity.bairro + ", " + PerfilActivity.cidade + " - " + PerfilActivity.estado;
-        endereco.setText(address);
-        addressMap = PerfilActivity.logradouro + ", " + PerfilActivity.numero + ", " + PerfilActivity.bairro + ", " + PerfilActivity.cidade + " - " + PerfilActivity.estado;
+//        Log.d("endereco", PerfilActivity.logradouro + ", " + PerfilActivity.numero + ", " + PerfilActivity.complemento + ", " + PerfilActivity.bairro + ", " + PerfilActivity.cidade + " - " + PerfilActivity.estado);
+        address = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getComplemento() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
+
+        if (PerfilActivity.endereco.getLogradouro().equals("") || PerfilActivity.endereco.getNumero().equals("") ||
+                PerfilActivity.endereco.getBairro().equals("") || PerfilActivity.endereco.getCidade().equals("")){
+            endereco.setText("Usuário não forneceu endereço");
+        }else{
+            endereco.setText(address);
+        }
+        addressMap = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
 //        for (int i = 0; i<addressMap.length(); i++){
 //            if (i)
 //        }

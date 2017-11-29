@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.Address;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.Base64Custom;
@@ -48,7 +49,7 @@ public class CadastroActivity extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference databaseReference;
     private User localUser;
-    Map endereco = new HashMap<String, String>();;
+//    Map endereco = new HashMap<String, String>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,15 +83,7 @@ public class CadastroActivity extends AppCompatActivity {
                         localUser.setNome(editTextName.getText().toString());
                         localUser.setEmail(editTextEmail.getText().toString());
 
-//                        localUser.setLogradouro(editTextLogradouro.getText().toString());
-//                        localUser.setNumero(editTextNumero.getText().toString());
-//                        localUser.setComplemento(editTextComplemento.getText().toString());
-//                        localUser.setBairro(editTextBairro.getText().toString());
-//                        localUser.setCidade(editTextCidade.getText().toString());
-//                        localUser.setEstado(editTextEstado.getText().toString());
-//                        Toast.makeText(CadastroActivity.this, editTextLogradouro.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                        adressToMap(editTextLogradouro.getText().toString(),
+                        adressToObject(editTextLogradouro.getText().toString(),
                                 editTextNumero.getText().toString(),
                                 editTextComplemento.getText().toString(),
                                 editTextBairro.getText().toString(),
@@ -116,14 +109,8 @@ public class CadastroActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
     }
 
-    public void adressToMap(String logradouro, String numero, String complemento, String bairro, String cidade, String estado){
-        this.endereco.put("logradouro", new String(logradouro));
-        this.endereco.put("numero", new String(numero));
-        this.endereco.put("complemento", new String(complemento));
-        this.endereco.put("bairro", new String(bairro));
-        this.endereco.put("cidade", new String(cidade));
-        this.endereco.put("estado", new String(estado));
-        localUser.setEndereco(endereco);
+    public void adressToObject(String logradouro, String numero, String complemento, String bairro, String cidade, String estado){
+        localUser.setAddress(new Address(logradouro, numero, complemento, bairro, cidade, estado));
     }
 
 //    @Override
@@ -146,7 +133,7 @@ public class CadastroActivity extends AppCompatActivity {
                        localUser.save();
 
                        FirebasePreferences preferences = new FirebasePreferences(CadastroActivity.this);
-                       preferences.SaveUserPreferences(userId, localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getEndereco());
+                       preferences.SaveUserPreferences(userId, localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress());
 
                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);

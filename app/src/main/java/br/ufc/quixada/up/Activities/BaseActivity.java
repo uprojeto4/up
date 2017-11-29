@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.MultiTransformation;
@@ -37,7 +35,6 @@ import java.io.File;
 import java.io.IOException;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
-import br.ufc.quixada.up.Fragments.fragmentPerfilAnuncios;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
@@ -78,38 +75,10 @@ public class BaseActivity extends AppCompatActivity
         localUser.setNome(firebasePreferences.getUserName());
         localUser.setEmail(firebasePreferences.getUserEmail());
         localUser.setFotoPerfil(firebasePreferences.getProfilePicture());
-//        localUser.adressToMap(firebasePreferences.getAdress());
+//        localUser.setAddress(new Address());
+        localUser.setAddressString(firebasePreferences.getAdress());
+//        localUser.adressToObject(firebasePreferences.getAdress());
 
-//        setContentView(R.layout.activity_main);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-//
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
-
-//        auth = FirebaseConfig.getAuth();
-//        user = auth.getCurrentUser();
-//        databaseReference = FirebaseConfig.getDatabase();
-//        localUser = new User();
-//
-//        if(user != null){
-//            updateLocalUser();
-//        }
 
     }
 
