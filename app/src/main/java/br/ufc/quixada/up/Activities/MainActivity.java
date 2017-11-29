@@ -196,7 +196,9 @@ public class MainActivity extends BaseActivity{
     }
 
     public void up(View view){
-        Toast.makeText(getBaseContext(),"Dar um up maroto", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getBaseContext(),"Dar um up maroto: "+post.getUps(), Toast.LENGTH_SHORT).show();
+
+//        post.up(localUser.getId());
     }
 
 /*    public void negociar(View view){
