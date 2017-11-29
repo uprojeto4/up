@@ -335,8 +335,8 @@ public class NovoAnuncioActivity extends BaseActivity {
             spinnerCategoriasAnuncio.getSelectedItem() != null &&
             localUser.getId() != null &&
             images.size() > 0){
-                String price = precoAnuncio.getText().toString();
-                String qtd = qtdItensAnuncio.getText().toString();
+//                String price = precoAnuncio.getText().toString();
+//                String qtd = qtdItensAnuncio.getText().toString();
 
                 post.setTitle(tituloAnuncio.getText().toString());
                 post.setSubtitle(descricaoAnuncio.getText().toString());
