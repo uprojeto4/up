@@ -12,7 +12,7 @@ public class Negociacao {
 
     private int unreadMessagesCounter;
     private String title;
-    private String vendorId;
+    private String remoteUserId;
     private String vendorName;
     private String adId;
     private String lastMessage;
@@ -23,9 +23,9 @@ public class Negociacao {
 
     public Negociacao() { }
 
-    public Negociacao(String messagesId, String vendorId, String adId, String lastMessage, String lastMessageSenderId) {
+    public Negociacao(String messagesId, String remoteUserId, String adId, String lastMessage, String lastMessageSenderId) {
         this.messagesId = messagesId;
-        this.vendorId = vendorId;
+        this.remoteUserId = remoteUserId;
         this.adId = adId;
         this.lastMessage = lastMessage;
         this.lastMessageSenderId = lastMessageSenderId;
@@ -49,12 +49,12 @@ public class Negociacao {
         this.unreadMessagesCounter = unreadMessagesCounter;
     }
 
-    public String getVendorId() {
-        return vendorId;
+    public String getRemoteUserId() {
+        return remoteUserId;
     }
 
-    public void setVendorId(String vendorId) {
-        this.vendorId = vendorId;
+    public void setRemoteUserId(String vendorId) {
+        this.remoteUserId = vendorId;
     }
 
     public String getLastMessage() {

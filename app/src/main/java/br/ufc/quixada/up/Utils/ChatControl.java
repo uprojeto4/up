@@ -18,7 +18,9 @@ public abstract class ChatControl {
         String messagesId = dbReference.child("messages").push().getKey();
         Negociacao negociacao = new Negociacao(messagesId, remoteUserId, adId, message.getText(), userId);
         dbReference.child("messages").child(messagesId).push().setValue(message);
+        negociacao.setUnreadMessagesCounter(0);
         dbReference.child("negotiations").child(userId).child(adId).setValue(negociacao);
+        negociacao.setUnreadMessagesCounter(1);
         dbReference.child("negotiations").child(remoteUserId).child(adId).setValue(negociacao);
 
         return messagesId;

@@ -32,7 +32,7 @@ public class VendasFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewSellChatList.setLayoutManager(linearLayoutManager);
 
-        recyclerViewSellChatList.setAdapter(negociacoesActivity.negociacoesAdapter);
+        recyclerViewSellChatList.setAdapter(negociacoesActivity.sellAdapter);
 
         return rootView;
     }

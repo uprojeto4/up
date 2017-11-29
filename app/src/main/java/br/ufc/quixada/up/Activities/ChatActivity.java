@@ -42,6 +42,7 @@ public class ChatActivity extends BaseActivity {
     private String userId;
     private String remoteUserId;
     private String adId;
+    private int unreadMessagesCounter;
     private TextView textViewTitleAnuncioChat;
     private TextView textViewVendedorAnuncioChat;
     private LinearLayout noMessagesLayout;
@@ -89,6 +90,8 @@ public class ChatActivity extends BaseActivity {
                     if (chatId != null) {
                         dbReference.child("messages").child(chatId).push().setValue(message);
                         dbReference.child("negotiations").child(userId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
+                        unreadMessagesCounter += 1;
+                        dbReference.child("negotiations").child(remoteUserId).child(adId).child("unreadMessagesCounter").setValue(unreadMessagesCounter);
                         dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
                     } else {
                         System.out.println("userId " + userId);
@@ -109,6 +112,8 @@ public class ChatActivity extends BaseActivity {
 //                    Log.d("maxxx", "ChatonDataChange: " + negotiationSnapshot);
                     Negociacao negociacao = negotiationSnapshot.getValue(Negociacao.class);
                     chatId = negociacao.getMessagesId();
+                    unreadMessagesCounter = negociacao.getUnreadMessagesCounter();
+                    dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
                     getMessages();
                 } else {
                     recyclerView.setVisibility(View.GONE);

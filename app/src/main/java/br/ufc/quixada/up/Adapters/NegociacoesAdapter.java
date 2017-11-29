@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -44,6 +45,11 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
         negociacaoViewHolder.textViewNomeVendedorNegociacao.setText(negociacaoViewHolder.negociacao.getVendorName());
         negociacaoViewHolder.textViewdataInicioNegociacao.setText(negociacaoViewHolder.negociacao.getStartDate());
         negociacaoViewHolder.textViewLastMessage.setText(negociacaoViewHolder.negociacao.getLastMessage());
+        negociacaoViewHolder.textViewMensagensNaoLidasNegociacao.setText(String.valueOf(negociacaoViewHolder.negociacao.getUnreadMessagesCounter()));
+
+        if (negociacaoViewHolder.negociacao.getUnreadMessagesCounter() == 0) {
+            negociacaoViewHolder.linearLayoutMensagensNaoLidasNegociacao.setVisibility(View.INVISIBLE);
+        }
 
         if (negociacaoViewHolder.negociacao.getLastMessageSenderId().equals(userId)) {
             negociacaoViewHolder.replyIcon.setVisibility(View.VISIBLE);
@@ -75,6 +81,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
 
         TextView textViewTituloNegociacao;
         TextView textViewNomeVendedorNegociacao;
+        LinearLayout linearLayoutMensagensNaoLidasNegociacao;
         TextView textViewdataInicioNegociacao;
         TextView textViewMensagensNaoLidasNegociacao;
         TextView textViewLastMessage;
@@ -89,6 +96,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
             textViewTituloNegociacao = itemLayoutView.findViewById(R.id.textViewTituloNegociacao);
             textViewNomeVendedorNegociacao = itemLayoutView.findViewById(R.id.textViewNomeVendedorNegociacao);
             textViewdataInicioNegociacao = itemLayoutView.findViewById(R.id.dataInicioNegociacao);
+            linearLayoutMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.linearLayoutMensagensNaoLidasNegociacao);
             textViewMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.textViewMensagensNaoLidasNegociacao);
             textViewLastMessage = itemLayoutView.findViewById(R.id.lastMessage);
             replyIcon = itemLayoutView.findViewById(R.id.replyIcon);

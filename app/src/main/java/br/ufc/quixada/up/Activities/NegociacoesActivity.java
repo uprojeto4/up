@@ -1,7 +1,11 @@
 package br.ufc.quixada.up.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -40,7 +44,8 @@ public class NegociacoesActivity extends BaseActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     public String userId;
-    public NegociacoesAdapter negociacoesAdapter;
+    public NegociacoesAdapter buyAdapter;
+    public NegociacoesAdapter sellAdapter;
     private Spinner spinner;
     private DatabaseReference dbReference;
     String spinnerItem;
@@ -104,7 +109,8 @@ public class NegociacoesActivity extends BaseActivity {
 
         dbReference = FirebaseConfig.getDatabase();
         userId = localUser.getId();
-        negociacoesAdapter = new NegociacoesAdapter(this, userId);
+        buyAdapter = new NegociacoesAdapter(this, userId);
+        sellAdapter = new NegociacoesAdapter(this, userId);
         manageNegotiations();
 
         filters.addAll(Arrays.asList(getResources().getStringArray(R.array.spinner_negociacoes)));
@@ -151,7 +157,12 @@ public class NegociacoesActivity extends BaseActivity {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
-                                    negociacoesAdapter.addNegociacao(negotiationKey, negociacao);
+                                    System.out.println(negociacao.getUnreadMessagesCounter());
+                                    if (negociacao.getVendorId().equals(userId)) {
+                                        sellAdapter.addNegociacao(negotiationKey, negociacao);
+                                    } else {
+                                        buyAdapter.addNegociacao(negotiationKey, negociacao);
+                                    }
                                 }
 
                                 @Override
@@ -170,24 +181,35 @@ public class NegociacoesActivity extends BaseActivity {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                System.out.println(dataSnapshot);
-                final int index = negociacoesAdapter.getIndexOfKey(dataSnapshot.getKey());
+            public void onChildChanged(final DataSnapshot dataSnapshot, String s) {
                 final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
 
                 dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
-                        String remoteUserId = dataSnapshot.child("userId").getValue(String.class);
+                    public void onDataChange(DataSnapshot postDataSnapshot) {
+                        negociacao.setTitle(postDataSnapshot.child("title").getValue(String.class));
+                        String remoteUserId = postDataSnapshot.child("userId").getValue(String.class);
 
                         dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
-                                negociacoesAdapter.updateNegociacao(index, negociacao);
+                            public void onDataChange(DataSnapshot userDataSnapshot) {
+                                negociacao.setVendorName(userDataSnapshot.child("nome").getValue(String.class));
+                                final int index;
+                                if (negociacao.getVendorId().equals(userId)) {
+                                    index = sellAdapter.getIndexOfKey(dataSnapshot.getKey());
+                                    sellAdapter.updateNegociacao(index, negociacao);
+                                } else {
+                                    index = buyAdapter.getIndexOfKey(dataSnapshot.getKey());
+                                    buyAdapter.updateNegociacao(index, negociacao);
+                                }
+                                if (Build.VERSION.SDK_INT >= 26) {
+                                    ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150,10));
+                                } else {
+                                    ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(150);
+                                }
+
                             }
 
                             @Override
