@@ -110,6 +110,16 @@
 
                 </android.support.design.widget.TextInputLayout>
 
+
+                <TextView
+                    android:id="@+id/addressInfos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_weight="6"
+                    android:text="Informações de endereço"
+                    android:textSize="24sp" />
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -118,100 +128,172 @@
                     tools:layout_editor_absoluteY="0dp">
 
                     <EditText
-                        android:id="@+id/edit_endereco"
+                        android:id="@+id/edit_logradouro"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         android:focusedByDefault="false"
-                        android:hint="@string/input_edit_endereco_hint"
+                        android:hint="@string/input_edit_logradouro_hint"
                         android:singleLine="true" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="6"
-                    tools:layout_editor_absoluteX="8dp"
-                    tools:layout_editor_absoluteY="0dp">
-
-                    <EditText
-                        android:id="@+id/edit_telefone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:focusedByDefault="false"
-                        android:hint="@string/input_edit_telefone_hint"
-                        android:inputType="phone"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/textView8"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:layout_weight="6"
-                    android:text="Conta"
-                    android:textSize="24sp" />
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="6"
+                    android:layout_weight="0.08"
                     tools:layout_editor_absoluteX="8dp"
                     tools:layout_editor_absoluteY="0dp">
 
                     <EditText
-                        android:id="@+id/edit_email"
+                        android:id="@+id/edit_numero"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         android:focusedByDefault="false"
-                        android:hint="@string/input_edit_email_hint"
-                        android:inputType="textEmailAddress"
+                        android:hint="@string/input_edit_numero_hint"
                         android:singleLine="true" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="6"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.08"
                     tools:layout_editor_absoluteX="8dp"
                     tools:layout_editor_absoluteY="0dp">
 
                     <EditText
-                        android:id="@+id/edit_senha"
+                        android:id="@+id/edit_complemento"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         android:focusedByDefault="false"
-                        android:hint="@string/input_edit_senha_hint"
-                        android:inputType="textPassword"
+                        android:hint="@string/input_edit_complemento_hint"
                         android:singleLine="true" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="6"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.08"
                     tools:layout_editor_absoluteX="8dp"
                     tools:layout_editor_absoluteY="0dp">
 
                     <EditText
-                        android:id="@+id/edit_senha_2"
+                        android:id="@+id/edit_bairro"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         android:focusedByDefault="false"
-                        android:hint="@string/input_edit_confirm_senha_hint"
-                        android:inputType="textPassword"
+                        android:hint="@string/input_edit_bairro_hint"
                         android:singleLine="true" />
 
                 </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.08"
+                    tools:layout_editor_absoluteX="8dp"
+                    tools:layout_editor_absoluteY="0dp">
+
+                    <EditText
+                        android:id="@+id/edit_cidade"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:focusedByDefault="false"
+                        android:hint="@string/input_edit_cidade_hint"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.08"
+                    tools:layout_editor_absoluteX="8dp"
+                    tools:layout_editor_absoluteY="0dp">
+
+                    <EditText
+                        android:id="@+id/edit_estado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:focusedByDefault="false"
+                        android:hint="@string/input_edit_estado_hint"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+
+                <!--<TextView-->
+                    <!--android:id="@+id/textView8"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="16dp"-->
+                    <!--android:layout_weight="6"-->
+                    <!--android:text="Conta"-->
+                    <!--android:textSize="24sp" />-->
+
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="6"-->
+                    <!--tools:layout_editor_absoluteX="8dp"-->
+                    <!--tools:layout_editor_absoluteY="0dp">-->
+
+                    <!--<EditText-->
+                        <!--android:id="@+id/edit_email"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_margin="16dp"-->
+                        <!--android:focusedByDefault="false"-->
+                        <!--android:hint="@string/input_edit_email_hint"-->
+                        <!--android:inputType="textEmailAddress"-->
+                        <!--android:singleLine="true" />-->
+
+                <!--</android.support.design.widget.TextInputLayout>-->
+
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="6"-->
+                    <!--tools:layout_editor_absoluteX="8dp"-->
+                    <!--tools:layout_editor_absoluteY="0dp">-->
+
+                    <!--<EditText-->
+                        <!--android:id="@+id/edit_senha"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_margin="16dp"-->
+                        <!--android:focusedByDefault="false"-->
+                        <!--android:hint="@string/input_edit_senha_hint"-->
+                        <!--android:inputType="textPassword"-->
+                        <!--android:singleLine="true" />-->
+
+                <!--</android.support.design.widget.TextInputLayout>-->
+
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="6"-->
+                    <!--tools:layout_editor_absoluteX="8dp"-->
+                    <!--tools:layout_editor_absoluteY="0dp">-->
+
+                    <!--<EditText-->
+                        <!--android:id="@+id/edit_senha_2"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_margin="16dp"-->
+                        <!--android:focusedByDefault="false"-->
+                        <!--android:hint="@string/input_edit_confirm_senha_hint"-->
+                        <!--android:inputType="textPassword"-->
+                        <!--android:singleLine="true" />-->
+
+                <!--</android.support.design.widget.TextInputLayout>-->
 
                 <Button
                     android:id="@+id/buttonSalvarEdicao"

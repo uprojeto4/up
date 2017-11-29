@@ -15,25 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -83,37 +75,16 @@ public class BaseActivity extends AppCompatActivity
         localUser.setNome(firebasePreferences.getUserName());
         localUser.setEmail(firebasePreferences.getUserEmail());
         localUser.setFotoPerfil(firebasePreferences.getProfilePicture());
+//        localUser.setAddress(new Address());
+        localUser.setAddressString(firebasePreferences.getAdress());
+//        localUser.adressToObject(firebasePreferences.getAdress());
 
-//        setContentView(R.layout.activity_main);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        localUser.setNumVendas(firebasePreferences.getNumVendas());
+        localUser.setAvVendedor(firebasePreferences.getAvVendas());
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        localUser.setNumCompras(firebasePreferences.getNumCompras());
+        localUser.setAvComprador(firebasePreferences.getAvCompras());
 
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-//
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
-
-//        auth = FirebaseConfig.getAuth();
-//        user = auth.getCurrentUser();
-//        databaseReference = FirebaseConfig.getDatabase();
-//        localUser = new User();
-//
-//        if(user != null){
-//            updateLocalUser();
-//        }
 
     }
 
@@ -220,6 +191,10 @@ public class BaseActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
+//        Fragment fragment = null;
+//        Class fragmentClass = null;
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -244,15 +219,30 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_categorias) {
             Intent intent = new Intent(this, CategoriasActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_meus_anuncios) {
+//            fragmentClass = fragmentPerfilAnuncios.class;
+            Intent intent = new Intent(this, PerfilActivity.class);
+            intent.putExtra("fragment",1);
+            startActivity(intent);
+//            PerfilActivity.perfilViewPager.setCurrentItem(1);
         } else if (id == R.id.nav_perfil) {
             Intent intent = new Intent(this, PerfilActivity.class);
+            intent.putExtra("fragment",0);
             startActivity(intent);
+//            PerfilActivity.perfilViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_configuracoes) {
             Intent intent = new Intent(this, ConfiguracoesActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_sair) {
             signOut();
         }
+
+//        try {
+//            fragment = (Fragment) fragmentClass.newInstance();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -350,7 +340,7 @@ public class BaseActivity extends AppCompatActivity
                 @Override
                 //monitora a falha do downlaod
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getBaseContext(),"Foto não encontrada", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getBaseContext(),"Foto não encontrada", Toast.LENGTH_LONG).show();
                 }
             });
         } catch (IOException e){

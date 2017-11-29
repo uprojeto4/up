@@ -339,7 +339,6 @@ public class NovoAnuncioActivity extends BaseActivity {
                 String qtd = qtdItensAnuncio.getText().toString();
                 price = price.replace(".", "");
                 price = price.replace(",", ".");
-
                 post.setTitle(tituloAnuncio.getText().toString());
                 post.setSubtitle(descricaoAnuncio.getText().toString());
                 post.setPrice(Double.parseDouble(price));

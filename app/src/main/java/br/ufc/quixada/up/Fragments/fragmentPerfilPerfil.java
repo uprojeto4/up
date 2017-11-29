@@ -1,5 +1,6 @@
 package br.ufc.quixada.up.Fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -39,9 +40,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 import br.ufc.quixada.up.Activities.PerfilActivity;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.MapsActivityPerfil;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -57,13 +60,30 @@ import static br.ufc.quixada.up.R.drawable.image_test_1;
 
 public class fragmentPerfilPerfil extends Fragment {
 
-    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storage = FirebaseConfig.getStorage();
     StorageReference profilePictureRef;
     TextView nome;
+    TextView endereco;
+    TextView tvNumVendas;
+    TextView tvAvVendas;
+    TextView tvNumCompras;
+    TextView tvAvCompras;
     public byte[] image;
     Bitmap bitmap;
     public boolean test;
     public File localFile;
+
+//    public String logradouro;
+//    public String numero;
+//    public String complemento;
+//    public String bairro;
+//    public String cidade;
+//    public String estado;
+
+    public String address;
+    public String addressMap;
+
+
 
     @Nullable
     @Override
@@ -71,7 +91,7 @@ public class fragmentPerfilPerfil extends Fragment {
 
 
         //cria a referencia para a imagem a ser baixada
-        profilePictureRef = storage.getReference().child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
+        profilePictureRef = storage.child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
 //        Toast.makeText(getActivity(),"caminho da imagem que vai ser baixada "+profilePictureRef.getPath(), Toast.LENGTH_LONG).show();
 
         test = profilePictureRef.getName().equals(PerfilActivity.fotoPerfil);
@@ -117,10 +137,67 @@ public class fragmentPerfilPerfil extends Fragment {
         nome = (TextView) getView().findViewById(R.id.user_profile_name);
         nome.setText(PerfilActivity.nome);
 
-        //apos a view ser criada chama o metodo de download das imagens
-//        downloadProfilePicture();
+        endereco = (TextView) getView().findViewById(R.id.user_profile_adress);
+
+        tvNumVendas = (TextView) getView().findViewById(R.id.numVendas);
+        tvAvVendas = (TextView) getView().findViewById(R.id.avVendas);
+
+        tvNumCompras = (TextView) getView().findViewById(R.id.numCompras);
+        tvAvCompras = (TextView) getView().findViewById(R.id.avCompras);
+
+
+        tvNumVendas.setText(""+PerfilActivity.numVendas);
+        tvAvVendas.setText(""+PerfilActivity.avVendedor);
+
+        tvNumCompras.setText(""+PerfilActivity.numCompras);
+        tvAvCompras.setText(""+PerfilActivity.avComprador);
+
+//        for (Map.Entry<String, String> entry : PerfilActivity.enderecoMap.entrySet()){
+//            String key = entry.getKey();
+//            Log.d("key", " "+ key);
+//            if (key.equals("logradouro")){
+//                logradouro = entry.getValue();
+//            }else if(key.equals("numero")){
+//                numero = entry.getValue();
+//            }else if(key.equals("complemento")){
+//                complemento = entry.getValue();
+//            }else if(key.equals("bairro")){
+//                bairro = entry.getValue();
+//            }else if(key.equals("cidade")){
+//                cidade = entry.getValue();
+//            }else if(key.equals("estado")){
+//                estado = entry.getValue();
+//            }
+//        }
+//        Log.d("endereco", PerfilActivity.logradouro + ", " + PerfilActivity.numero + ", " + PerfilActivity.complemento + ", " + PerfilActivity.bairro + ", " + PerfilActivity.cidade + " - " + PerfilActivity.estado);
+        address = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getComplemento() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
+
+        if (PerfilActivity.endereco.getLogradouro().equals("") || PerfilActivity.endereco.getNumero().equals("") ||
+                PerfilActivity.endereco.getBairro().equals("") || PerfilActivity.endereco.getCidade().equals("")){
+            endereco.setText("Usuário não forneceu endereço");
+        }else{
+            endereco.setText(address);
+        }
+        addressMap = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
+//        for (int i = 0; i<addressMap.length(); i++){
+//            if (i)
+//        }
+        addressMap = "https://maps.googleapis.com/maps/api/geocode/json?address="+addressMap.replaceAll("\\s+","+")+"&key=AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4";
+//        Log
+        Log.d("endereco map", addressMap);
+
+
+        endereco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), MapsActivityPerfil.class);
+                startActivity(intent);
+            }
+        });
 
     }
+
+
 
     public void downloadProfilePicture(){
         //o download com o metodo getFile deve ser feito num try/catch
@@ -263,7 +340,7 @@ public class fragmentPerfilPerfil extends Fragment {
 
         test = profilePictureRef.getName().equals(PerfilActivity.fotoPerfil);
 
-        profilePictureRef = storage.getReference().child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
+        profilePictureRef = storage.child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
         if (!test){
             downloadProfilePicture();
         }else{
