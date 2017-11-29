@@ -88,10 +88,10 @@ public class EditPerfilActivity extends PerfilActivity {
     EditText bairroEt;
     EditText cidadeEt;
     EditText estadoEt;
-    EditText telefone;
-    EditText email;
-    EditText senha;
-    EditText senha2;
+//    EditText telefone;
+//    EditText email;
+//    EditText senha;
+//    EditText senha2;
     ImageView foto;
 
     Bitmap bitmap;
@@ -180,16 +180,16 @@ public class EditPerfilActivity extends PerfilActivity {
         estadoEt = (EditText) findViewById(R.id.edit_estado);
 
 //        endereco = (EditText) findViewById(R.id.edit_endereco);
-        telefone = (EditText) findViewById(R.id.edit_telefone);
-        email = (EditText) findViewById(R.id.edit_email);
-        senha = (EditText) findViewById(R.id.edit_senha);
-        senha2 = (EditText) findViewById(R.id.edit_senha_2);
+//        telefone = (EditText) findViewById(R.id.edit_telefone);
+//        email = (EditText) findViewById(R.id.edit_email);
+//        senha = (EditText) findViewById(R.id.edit_senha);
+//        senha2 = (EditText) findViewById(R.id.edit_senha_2);
 //        foto = (ImageView) findViewById(R.id.imageViewIconeFoto);
 
 
 
         nome.setText(PerfilActivity.nome);
-        email.setText(PerfilActivity.email);
+//        email.setText(PerfilActivity.email);
 
         logradouroEt.setText(localUser.getAddress().getLogradouro());
         numeroEt.setText(localUser.getAddress().getNumero());
