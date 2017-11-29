@@ -108,6 +108,8 @@
     <string name="insert_address_message">Parece que você não forneceu suas informações de endereço, informá-las ajuda a aumentar
         as chances de negociações. Gostaria de adicioná-las agora?</string>
 
+    <string name="insert_profile_picture_message">Parece que você não forneceu uma foto de perfil, gostaria de adicioná-la agora?</string>
+
     <string name="iniciada_em">Iniciada em:</string>
 
     <string name="lista_desejos_action_menu">Limpar lista</string>

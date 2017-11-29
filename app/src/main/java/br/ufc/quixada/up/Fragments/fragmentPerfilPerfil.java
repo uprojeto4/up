@@ -1,5 +1,6 @@
 package br.ufc.quixada.up.Fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +44,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
+import br.ufc.quixada.up.Activities.EditPerfilActivity;
+import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.Activities.PerfilActivity;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.MapsActivityPerfil;
@@ -244,43 +248,49 @@ public class fragmentPerfilPerfil extends Fragment {
 
 //        gs://up-compra-venda.appspot.com/UsersProfilePictures/YnJlbmRvbmdpcmFvQGdtYWlsLmNvbQ==/1509810338632_1.jpg
 
-
         storageRef.child(PerfilActivity.fotoPerfil).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
 
             @Override
-
             public void onSuccess(byte[] bytes) {
-
                 // Use the bytes to display the image
-
                 String path= "/data/data/br.ufc.quixada.up/cache/"+storageRef.child(PerfilActivity.fotoPerfil).getName();
-
                 try {
-
                     FileOutputStream fos = new FileOutputStream(path);
-
                     fos.write(bytes);
-
                     applyImage(bytes);
+                    Log.d("path ", path);
+
+                    bitmap = BitmapFactory.decodeFile(path);
+//                    Toast.makeText(getActivity(),localFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+
+                    Log.d("Caminho", localFile.getPath());
+
+                    //transforma o bitmap em stream
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    //transforma o stream em um array de bytes
+                    image = stream.toByteArray();
 
                     fos.close();
-
-                    Toast.makeText(getActivity(), "Success!!!", Toast.LENGTH_SHORT).show();
-
-
-
                 } catch (FileNotFoundException e) {
-
                     e.printStackTrace();
-
-                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle(R.string.no_address_dialog_title)
+                            .setMessage(getActivity().getString(R.string.insert_address_message))
+                            .setPositiveButton(getActivity().getString(R.string.sim), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+//                            finish();
+                                    Intent intent = new Intent(getActivity(), EditPerfilActivity.class);
+                                    startActivity(intent);
+                                }
+                            }).setNegativeButton(getActivity().getString(R.string.nao), null)
+                            .show();
+//                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
 
                 } catch (IOException e) {
-
                     e.printStackTrace();
-
-                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-
+//                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
 
 //                pd.dismiss();
@@ -297,7 +307,19 @@ public class fragmentPerfilPerfil extends Fragment {
 
 //                pd.dismiss();
 
-                Toast.makeText(getActivity(), exception.toString()+"!!!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), exception.toString()+"!!!", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.no_address_dialog_title)
+                        .setMessage(getActivity().getString(R.string.insert_address_message))
+                        .setPositiveButton(getActivity().getString(R.string.sim), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+//                            finish();
+                                Intent intent = new Intent(getActivity(), EditPerfilActivity.class);
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton(getActivity().getString(R.string.nao), null)
+                        .show();
 
             }
 
