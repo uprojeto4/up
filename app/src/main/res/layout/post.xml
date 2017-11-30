@@ -102,7 +102,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:backgroundTint="@color/cardview_light_background"
-                    android:tint="#444444"
                     android:onClick="up"
                     app:srcCompat="@drawable/ic_thumb_up_black_24dp" />
 

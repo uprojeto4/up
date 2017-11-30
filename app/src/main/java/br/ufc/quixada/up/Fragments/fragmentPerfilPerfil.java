@@ -263,7 +263,7 @@ public class fragmentPerfilPerfil extends Fragment {
                     bitmap = BitmapFactory.decodeFile(path);
 //                    Toast.makeText(getActivity(),localFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
 
-                    Log.d("Caminho", localFile.getPath());
+//                    Log.d("Caminho", localFile.getPath());
 
                     //transforma o bitmap em stream
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -310,7 +310,7 @@ public class fragmentPerfilPerfil extends Fragment {
 //                Toast.makeText(getActivity(), exception.toString()+"!!!", Toast.LENGTH_SHORT).show();
                 new AlertDialog.Builder(getActivity())
                         .setTitle(R.string.no_address_dialog_title)
-                        .setMessage(getActivity().getString(R.string.insert_address_message))
+                        .setMessage(getActivity().getString(R.string.insert_profile_picture_message))
                         .setPositiveButton(getActivity().getString(R.string.sim), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

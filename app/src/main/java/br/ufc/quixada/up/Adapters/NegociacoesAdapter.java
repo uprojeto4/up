@@ -106,7 +106,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                    intent.putExtra("remoteUserId", negociacao.getVendorId());
+                    intent.putExtra("remoteUserId", negociacao.getRemoteUserId());
                     intent.putExtra("adId", negociacao.getAdId());
                     intent.putExtra("adTitle", negociacao.getTitle());
                     context.startActivity(intent);

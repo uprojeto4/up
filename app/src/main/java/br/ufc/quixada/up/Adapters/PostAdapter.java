@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import br.ufc.quixada.up.Activities.ChatActivity;
+import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
 
@@ -138,6 +140,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 //                    context.startActivity(intent);
 
                     post.up(user.getCurrentUser().getUid(), post.getId());
+//                    if(post.getUpsList().contains(user.getCurrentUser().getUid())){
+//                        upButton.setColorFilter(Color.argb(255, 255, 171, 0));
+//                    } else {
+//                        upButton.setColorFilter(Color.argb(255, 136, 136, 136));
+//                    }
+
                 }
             });
         }

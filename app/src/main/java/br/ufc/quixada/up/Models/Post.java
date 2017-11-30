@@ -1,11 +1,14 @@
 package br.ufc.quixada.up.Models;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,7 +31,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.R;
 
@@ -51,6 +56,8 @@ import static br.ufc.quixada.up.R.layout.post;
     private String id;
     private ArrayList<String> upsList = new ArrayList<String>();
 
+//    private List<String> upsList;
+
     int i = 1;
 
 
@@ -58,6 +65,14 @@ import static br.ufc.quixada.up.R.layout.post;
     public void save(){
         DatabaseReference databaseReference = FirebaseConfig.getDatabase();
         databaseReference.child("posts").child(getId()).setValue(this);
+    }
+
+    public ArrayList<String> getUpsList() {
+        return upsList;
+    }
+
+    public void setUpsList(ArrayList<String> upsList) {
+        this.upsList = upsList;
     }
 
     public int getUps() {
@@ -144,6 +159,9 @@ import static br.ufc.quixada.up.R.layout.post;
     }
 
     public void up(final String uid, final String id){
+
+//        final Activity main = mainActivity;
+
         DatabaseReference postRef = FirebaseConfig.getDatabase().child("posts").child(id);
         postRef.runTransaction(new Transaction.Handler() {
 
@@ -151,25 +169,34 @@ import static br.ufc.quixada.up.R.layout.post;
             public Transaction.Result doTransaction(MutableData mutableData) {
 
                 Post post = mutableData.getValue(Post.class);
+//                System.out.println("test " + post);
                 if (post == null) {
                     return Transaction.success(mutableData);
                 }
 
-                System.out.println("posts: "+post.upsList);
+//                System.out.println("posts: "+pos/t.upsList);
 
-                if (post.upsList.contains(uid)) {
+//                ImageButton up = (ImageButton) main.findViewById(R.id.buttonUpCard);
+                ArrayList<String> aux = post.getUpsList();
+                if (post.getUpsList().contains(uid)) {
                 // Unstar the post and remove self from stars
-                    post.upsList.remove(uid);
-                    System.out.println("posts: "+post.upsList);
+                    aux.remove(uid);
+                    System.out.println("posts: "+post.getUpsList());
+//                    up.setColorFilter(Color.argb(255, 136, 136, 136));
+
                 } else {
                 // Star the post and add self to stars
-                    post.upsList.add(uid);
-                    System.out.println("posts2 enois: "+post.upsList);
+                    aux.add(uid);
+                    System.out.println("posts3 enois: "+post.getUpsList());
+//                    up.setColorFilter(Color.argb(255, 255, 171, 0));
+
                 }
+                post.setUpsList(aux);
                 post.setUps();
 
                 // Set value and report transaction success
                 mutableData.setValue(post);
+//                mutableData.child("upsList").setValue(post.getUpsList());
                 return Transaction.success(mutableData);
             }
 
@@ -308,6 +335,7 @@ import static br.ufc.quixada.up.R.layout.post;
                 ", qtd=" + qtd +
                 ", categoria='" + categoria + '\'' +
                 ", ups=" + ups +
+                ", upsList=" + upsList +
                 '}';
     }
 }

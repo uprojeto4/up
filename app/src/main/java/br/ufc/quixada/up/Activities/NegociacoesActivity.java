@@ -158,7 +158,7 @@ public class NegociacoesActivity extends BaseActivity {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
                                     System.out.println(negociacao.getUnreadMessagesCounter());
-                                    if (negociacao.getVendorId().equals(userId)) {
+                                    if (negociacao.getRemoteUserId().equals(userId)) {
                                         sellAdapter.addNegociacao(negotiationKey, negociacao);
                                     } else {
                                         buyAdapter.addNegociacao(negotiationKey, negociacao);
@@ -197,7 +197,7 @@ public class NegociacoesActivity extends BaseActivity {
                             public void onDataChange(DataSnapshot userDataSnapshot) {
                                 negociacao.setVendorName(userDataSnapshot.child("nome").getValue(String.class));
                                 final int index;
-                                if (negociacao.getVendorId().equals(userId)) {
+                                if (negociacao.getRemoteUserId().equals(userId)) {
                                     index = sellAdapter.getIndexOfKey(dataSnapshot.getKey());
                                     sellAdapter.updateNegociacao(index, negociacao);
                                 } else {
