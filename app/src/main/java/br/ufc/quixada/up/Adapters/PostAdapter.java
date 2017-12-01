@@ -38,6 +38,7 @@ import java.util.Locale;
 
 import br.ufc.quixada.up.Activities.ChatActivity;
 import br.ufc.quixada.up.Activities.MainActivity;
+import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
 
@@ -51,6 +52,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     private LayoutInflater layoutInflater;
     private ArrayList<Post> posts;
+    private RecyclerViewOnClickListener recyclerViewOnClickListener;
     Context context;
     StorageReference storageReference;
     StorageReference imageRef;
@@ -97,7 +99,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         return posts.size();
     }
 
-    public class PostViewHolder extends RecyclerView.ViewHolder{
+    public class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView title;
         TextView subtitle;
         TextView price;
@@ -112,6 +114,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             subtitle = (TextView) itemView.findViewById(R.id.textView_describ);
             price = (TextView) itemView.findViewById(R.id.textView_price);
             image = (ImageView) itemView.findViewById(R.id.imageView3);
+
+            itemView.setOnClickListener(this);
 
             openChatButton = (Button) itemView.findViewById(R.id.buttonAnuncioNegociar);
 
@@ -149,6 +153,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 }
             });
         }
+
+        @Override
+        public void onClick(View v) {
+            if(recyclerViewOnClickListener != null){
+                recyclerViewOnClickListener.onClickListener(v, getLayoutPosition());
+            }
+        }
+    }
+
+    public void setRecyclerViewOnClickListener(RecyclerViewOnClickListener recyclerViewOnClickListener) {
+        this.recyclerViewOnClickListener = recyclerViewOnClickListener;
     }
 
     public void addBottomListItem(Post post){
