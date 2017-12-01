@@ -43,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
 import br.ufc.quixada.up.Models.Message;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Adapters.PostAdapter;
@@ -51,9 +52,9 @@ import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.ChatControl;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity implements RecyclerViewOnClickListener{
 
-    ArrayList<Post> posts = new ArrayList<Post>();
+    static ArrayList<Post> posts = new ArrayList<Post>();
     ArrayList<Post> listAux = new ArrayList<Post>();
     private RecyclerView recyclerView;
     DatabaseReference postsReference;
@@ -151,24 +152,25 @@ public class MainActivity extends BaseActivity{
         });
 
         postAdapter = new PostAdapter(this, posts);
+        postAdapter.setRecyclerViewOnClickListener(this);
         recyclerView.setAdapter(postAdapter);
-        anuncioTela();
+//        anuncioTela();
     }
 
-    public AdapterView.OnItemClickListener anuncioTela() {
-        return (new AdapterView.OnItemClickListener(){
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-
-//                Toast.makeText(getBaseContext(),"Clicked item", Toast.LENGTH_LONG).show();
-//                Log.d("debug","teste");
-
-                Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
+//    public AdapterView.OnItemClickListener anuncioTela() {
+//        return (new AdapterView.OnItemClickListener(){
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+//
+////                Toast.makeText(getBaseContext(),"Clicked item", Toast.LENGTH_LONG).show();
+////                Log.d("debug","teste");
+//
+//                Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//    }
 
     public void share(View view){
 
@@ -358,7 +360,7 @@ public class MainActivity extends BaseActivity{
                                 lastPositionId = post.getId();
                                 last--;
                             }else{
-                                postAdapter.addBottomListItem(post);
+                                postAdapter.addListItem(post, posts.size());
                             }
                         }
                     } catch (Exception ex) {
@@ -446,5 +448,12 @@ public class MainActivity extends BaseActivity{
 
             }
         });
+    }
+
+    @Override
+    public void onClickListener(View view, int position) {
+        Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
+        intent.putExtra("position", position);
+        startActivity(intent);
     }
 }
