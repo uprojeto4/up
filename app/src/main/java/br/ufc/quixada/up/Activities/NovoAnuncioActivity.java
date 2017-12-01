@@ -314,30 +314,31 @@ public class NovoAnuncioActivity extends BaseActivity {
 
     public void saveOnFirebase(View view) {
 
-        String price = precoAnuncio.getText().toString();
-        String qtd = qtdItensAnuncio.getText().toString();
-
-        price = price.replace(".", "");
-        price = price.replace(",", ".");
-
-        post.setTitle(tituloAnuncio.getText().toString());
-        post.setSubtitle(descricaoAnuncio.getText().toString());
-        post.setPrice(Double.parseDouble(price));
-        post.setQtd(Integer.parseInt(qtd));
-        post.setCategoria(spinnerCategoriasAnuncio.getSelectedItem().toString());
-        post.setUserId(localUser.getId());
+//        String price = precoAnuncio.getText().toString();
+//        String qtd = qtdItensAnuncio.getText().toString();
+//
+//        price = price.replace(".", "");
+//        price = price.replace(",", ".");
+//
+//        post.setTitle(tituloAnuncio.getText().toString());
+//        post.setSubtitle(descricaoAnuncio.getText().toString());
+//        post.setPrice(Double.parseDouble(price));
+//        post.setQtd(Integer.parseInt(qtd));
+//        post.setCategoria(spinnerCategoriasAnuncio.getSelectedItem().toString());
+//        post.setUserId(localUser.getId());
 //        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
       
-        if( tituloAnuncio.getText() != null &&
+        if (tituloAnuncio.getText() != null &&
             descricaoAnuncio.getText() != null &&
             precoAnuncio.getText() != null &&
             qtdItensAnuncio.getText() != null &&
             spinnerCategoriasAnuncio.getSelectedItem() != null &&
             localUser.getId() != null &&
-            images.size() > 0){
+            images.size() > 0) {
                 String price = precoAnuncio.getText().toString();
                 String qtd = qtdItensAnuncio.getText().toString();
-
+                price = price.replace(".", "");
+                price = price.replace(",", ".");
                 post.setTitle(tituloAnuncio.getText().toString());
                 post.setSubtitle(descricaoAnuncio.getText().toString());
                 post.setPrice(Double.parseDouble(price));
@@ -349,7 +350,7 @@ public class NovoAnuncioActivity extends BaseActivity {
                 post.upload(images);
                 this.finish();
         }else{
-            Toast.makeText(this, "Porfavor, preencha todos os campos!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Por favor, preencha todos os campos!", Toast.LENGTH_SHORT).show();
         }
     }
 

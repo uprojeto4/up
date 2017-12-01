@@ -1,10 +1,14 @@
 package br.ufc.quixada.up.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
 import br.ufc.quixada.up.Models.Message;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Adapters.PostAdapter;
@@ -46,9 +52,9 @@ import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.ChatControl;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity implements RecyclerViewOnClickListener{
 
-    ArrayList<Post> posts = new ArrayList<Post>();
+    static ArrayList<Post> posts = new ArrayList<Post>();
     ArrayList<Post> listAux = new ArrayList<Post>();
     private RecyclerView recyclerView;
     DatabaseReference postsReference;
@@ -95,6 +101,23 @@ public class MainActivity extends BaseActivity{
         }
 
 
+        if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||
+                localUser.getAddress().getBairro().equals("") || localUser.getAddress().getCidade().equals("")){
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.no_address_dialog_title)
+                    .setMessage(MainActivity.this.getString(R.string.insert_address_message))
+                    .setPositiveButton(MainActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+//                            finish();
+                            Intent intent = new Intent(MainActivity.this, EditPerfilActivity.class);
+                            startActivity(intent);
+                        }
+                    }).setNegativeButton(MainActivity.this.getString(R.string.nao), null)
+                    .show();
+        }
+
+
 //        firebasePreferences = new FirebasePreferences(MainActivity.this);
 //        Toast.makeText(this, firebasePreferences.getId()+" - "+firebasePreferences.getUserName()+" - "+firebasePreferences.getUserEmail(), Toast.LENGTH_LONG).show();
 
@@ -129,24 +152,25 @@ public class MainActivity extends BaseActivity{
         });
 
         postAdapter = new PostAdapter(this, posts);
+        postAdapter.setRecyclerViewOnClickListener(this);
         recyclerView.setAdapter(postAdapter);
-        anuncioTela();
+//        anuncioTela();
     }
 
-    public AdapterView.OnItemClickListener anuncioTela() {
-        return (new AdapterView.OnItemClickListener(){
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-
-//                Toast.makeText(getBaseContext(),"Clicked item", Toast.LENGTH_LONG).show();
-//                Log.d("debug","teste");
-
-                Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
+//    public AdapterView.OnItemClickListener anuncioTela() {
+//        return (new AdapterView.OnItemClickListener(){
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+//
+////                Toast.makeText(getBaseContext(),"Clicked item", Toast.LENGTH_LONG).show();
+////                Log.d("debug","teste");
+//
+//                Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//    }
 
     public void share(View view){
 
@@ -177,7 +201,11 @@ public class MainActivity extends BaseActivity{
     }
 
     public void up(View view){
-        Toast.makeText(getBaseContext(),"Dar um up maroto", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getBaseContext(),"Dar um up maroto: "+post.getUps(), Toast.LENGTH_SHORT).show();
+        ImageButton imageButtonUp = (ImageButton)findViewById(R.id.buttonUpCard);
+//        imageButtonUp.setColorFilter(Color.argb(255, 255, 171, 0));
+
+//        post.up(localUser.getId());
     }
 
 /*    public void negociar(View view){
@@ -332,7 +360,7 @@ public class MainActivity extends BaseActivity{
                                 lastPositionId = post.getId();
                                 last--;
                             }else{
-                                postAdapter.addBottomListItem(post);
+                                postAdapter.addListItem(post, posts.size());
                             }
                         }
                     } catch (Exception ex) {
@@ -420,5 +448,12 @@ public class MainActivity extends BaseActivity{
 
             }
         });
+    }
+
+    @Override
+    public void onClickListener(View view, int position) {
+        Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
+        intent.putExtra("position", position);
+        startActivity(intent);
     }
 }

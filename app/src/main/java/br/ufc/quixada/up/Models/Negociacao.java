@@ -2,6 +2,7 @@ package br.ufc.quixada.up.Models;
 
 import java.util.Date;
 
+import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.Utils.DateTimeControl;
 
 /**
@@ -12,26 +13,25 @@ public class Negociacao {
 
     private int unreadMessagesCounter;
     private String title;
-    private String vendorId;
+    private String remoteUserId;
     private String vendorName;
     private String adId;
     private String lastMessage;
     private String lastMessageSenderId;
     private String startDate;
     private String messagesId;
-    private String status;
-    private String type;
+    private int status;
 
     public Negociacao() { }
 
-    public Negociacao(String messagesId, String vendorId, String adId, String lastMessage, String lastMessageSenderId) {
+    public Negociacao(String messagesId, String remoteUserId, String adId, String lastMessage, String lastMessageSenderId) {
         this.messagesId = messagesId;
-        this.vendorId = vendorId;
+        this.remoteUserId = remoteUserId;
         this.adId = adId;
         this.lastMessage = lastMessage;
         this.lastMessageSenderId = lastMessageSenderId;
         this.startDate = DateTimeControl.getCurrentDate();
-        this.status = "opened";
+        this.status = Constant.OPENED_NEGOTIATION;
     }
 
     public String getTitle() {
@@ -50,12 +50,12 @@ public class Negociacao {
         this.unreadMessagesCounter = unreadMessagesCounter;
     }
 
-    public String getVendorId() {
-        return vendorId;
+    public String getRemoteUserId() {
+        return remoteUserId;
     }
 
-    public void setVendorId(String vendorId) {
-        this.vendorId = vendorId;
+    public void setRemoteUserId(String vendorId) {
+        this.remoteUserId = vendorId;
     }
 
     public String getLastMessage() {
@@ -90,11 +90,11 @@ public class Negociacao {
         this.messagesId = chatId;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -114,11 +114,4 @@ public class Negociacao {
         this.vendorName = vendorName;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

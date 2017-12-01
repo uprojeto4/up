@@ -1,15 +1,12 @@
 package br.ufc.quixada.up.Adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import br.ufc.quixada.up.Models.Message;
@@ -21,14 +18,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private static final int RECEIVED_MESSAGE = 2;
 
     private List<Message> mDataSet;
-    private String mId;
+    private String userId;
 
-    public ChatAdapter(List<Message> dataSet) {
-        mDataSet = dataSet;
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            mId = user.getUid();
-        }
+    public ChatAdapter(String userId) {
+        this.mDataSet = new ArrayList<Message>();
+        this.userId = userId;
     }
 
     @Override
@@ -45,7 +39,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (mDataSet.get(position).getUserId().equals(mId)) {
+        if (mDataSet.get(position).getUserId().equals(userId)) {
             return SENT_MESSAGE;
         } else {
             return RECEIVED_MESSAGE;

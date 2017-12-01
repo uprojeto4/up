@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,9 +22,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.nguyenhoanglam.imagepicker.model.Image;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -33,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import br.ufc.quixada.up.Activities.ChatActivity;
+import br.ufc.quixada.up.Activities.MainActivity;
+import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
 
@@ -46,6 +52,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     private LayoutInflater layoutInflater;
     private ArrayList<Post> posts;
+    private RecyclerViewOnClickListener recyclerViewOnClickListener;
     Context context;
     StorageReference storageReference;
     StorageReference imageRef;
@@ -53,6 +60,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     byte[] pictureCover;
     ImageView imageView;
     FirebaseStorage firebaseStorage;
+    FirebaseAuth user = FirebaseAuth.getInstance();
 
 
     public PostAdapter(Context c, ArrayList<Post> p){
@@ -91,12 +99,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         return posts.size();
     }
 
-    public class PostViewHolder extends RecyclerView.ViewHolder{
+    public class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView title;
         TextView subtitle;
         TextView price;
         ImageView image;
         private Button openChatButton;
+        private ImageButton upButton;
         private Post post;
 
         public PostViewHolder(View itemView) {
@@ -105,6 +114,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             subtitle = (TextView) itemView.findViewById(R.id.textView_describ);
             price = (TextView) itemView.findViewById(R.id.textView_price);
             image = (ImageView) itemView.findViewById(R.id.imageView3);
+
+            itemView.setOnClickListener(this);
 
             openChatButton = (Button) itemView.findViewById(R.id.buttonAnuncioNegociar);
 
@@ -119,7 +130,40 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     context.startActivity(intent);
                 }
             });
+
+            upButton = (ImageButton) itemView.findViewById(R.id.buttonUpCard);
+
+            upButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+//                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
+//                    intent.putExtra("remoteUserId", post.getUserId());
+//                    intent.putExtra("adId", post.getId());
+//                    intent.putExtra("adTitle", post.getTitle());
+//                    context.startActivity(intent);
+
+                    post.up(user.getCurrentUser().getUid(), post.getId());
+//                    if(post.getUpsList().contains(user.getCurrentUser().getUid())){
+//                        upButton.setColorFilter(Color.argb(255, 255, 171, 0));
+//                    } else {
+//                        upButton.setColorFilter(Color.argb(255, 136, 136, 136));
+//                    }
+
+                }
+            });
         }
+
+        @Override
+        public void onClick(View v) {
+            if(recyclerViewOnClickListener != null){
+                recyclerViewOnClickListener.onClickListener(v, getLayoutPosition());
+            }
+        }
+    }
+
+    public void setRecyclerViewOnClickListener(RecyclerViewOnClickListener recyclerViewOnClickListener) {
+        this.recyclerViewOnClickListener = recyclerViewOnClickListener;
     }
 
     public void addBottomListItem(Post post){

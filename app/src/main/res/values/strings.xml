@@ -12,6 +12,7 @@
     <string name="navigation_drawer_lista_desejos">Lista de desejos</string>
     <string name="navigation_drawer_categorias">Categorias</string>
     <string name="navigation_drawer_perfil">Meu perfil</string>
+    <string name="navigation_drawer_meus_anuncios">Meus anúncios</string>
     <string name="navigation_drawer_configuracoes">Configurações</string>
     <string name="navigation_drawer_sair">Sair</string>
     <string name="title_activity_novo_anuncio">Novo anúncio</string>
@@ -36,7 +37,9 @@
         <item>Eletrodomésticos</item>
         <item>Imóveis</item>
         <item>Móveis/Decoração</item>
+        <item>Outros</item>
         <item>Pets</item>
+        <item>Utensílios</item>
         <item>Veículos</item>
         <item>Vestuário/Acessórios</item>
     </string-array>
@@ -82,6 +85,7 @@
     <string name="perfil_botao_salvar_edicao">Salvar edição</string>
     <string name="button_marcar_vendido">marcar como vendido</string>
 
+
     <string-array name="tabs_perfil">
         <item>Perfil</item>
         <item>Meus Anúncios</item>
@@ -89,8 +93,13 @@
 
     <string name="title_activity_edit_perfil">Editar perfil</string>
     <string name="input_edit_nome_hint">Altere o seu nome</string>
-    <string name="input_edit_endereco_hint">Altere o seu endereço</string>
-    <string name="input_edit_telefone_hint">Altere o seu telefone</string>
+    <string name="input_edit_logradouro_hint">Informe a sua rua</string>
+    <string name="input_edit_bairro_hint">Informe o seu bairro</string>
+    <string name="input_edit_complemento_hint">Informe um complemento</string>
+    <string name="input_edit_numero_hint">Informe o número da sua residência</string>
+    <string name="input_edit_cidade_hint">Informe a sua cidade</string>
+    <string name="input_edit_estado_hint">Informe o seu estado</string>
+    <string name="input_edit_telefone_hint">Informe o seu telefone</string>
     <string name="input_edit_email_hint">Altere o seu email</string>
     <string name="input_edit_senha_hint">Altere a sua senha</string>
     <string name="input_edit_confirm_senha_hint">Confirme a sua nova senha</string>
@@ -98,7 +107,13 @@
     <string name="dafault_user_name">Visitante</string>
     <string name="dafault_exit_confirmation">Deseja realmente Sair?</string>
 
-    <string name="iniciada_em">Iniciada em:</string>
+    <string name="iniciada_em">Negociação iniciada em</string>
+    <string name="no_address_dialog_title">Ops... </string>
+    <string name="insert_address_message">Parece que você não forneceu suas informações de endereço, informá-las ajuda a aumentar
+        as chances de negociações. Gostaria de adicioná-las agora?</string>
+
+
+    <string name="insert_profile_picture_message">Parece que você não forneceu uma foto de perfil, gostaria de adicioná-la agora?</string>
 
     <string name="lista_desejos_action_menu">Limpar lista</string>
 
@@ -112,6 +127,17 @@
         <item>Fechadas</item>
         <item>Canceladas</item>
     </string-array>
+    <string name="title_activity_maps_perfil">Map</string>
 
+    <!--<string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">-->
+        <!--AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4-->
+    <!--</string>-->
+
+    <string name="label_no_buy">Você ainda não iniciou nenhuma negociação.</string>
+    <string name="label_no_sell">Ninguém iniciou uma negociação com você, ainda.</string>
+    
+    <string name="label_no_messages">Ainda não há mensagens. Comece dizendo alguma coisa!</string>
+
+    <string name="anunciado_por">Anunciado por</string>
 
 </resources>

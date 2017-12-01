@@ -17,14 +17,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.Address;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.Base64Custom;
@@ -36,12 +35,21 @@ public class CadastroActivity extends AppCompatActivity {
     private EditText editTextEmail;
     private EditText editTextPassword;
     private EditText editTextPasswordConfirm;
+
+//    private EditText editTextLogradouro;
+//    private EditText editTextNumero;
+//    private EditText editTextComplemento;
+//    private EditText editTextBairro;
+//    private EditText editTextCidade;
+//    private EditText editTextEstado;
+
     private Button buttonSignup;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
     private DatabaseReference databaseReference;
     private User localUser;
+//    Map endereco = new HashMap<String, String>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,14 @@ public class CadastroActivity extends AppCompatActivity {
         editTextEmail = findViewById(R.id.emailInput);
         editTextPassword = findViewById(R.id.passwordInput);
         editTextPasswordConfirm = findViewById(R.id.passwordConfirmationInput);
+
+//        editTextLogradouro = findViewById(R.id.logradouroInput);
+//        editTextNumero = findViewById(R.id.numeroInput);
+//        editTextComplemento = findViewById(R.id.complementoInput);
+//        editTextBairro = findViewById(R.id.bairroInput);
+//        editTextCidade = findViewById(R.id.cidadeInput);
+//        editTextEstado = findViewById(R.id.estadoInput);
+
         buttonSignup = findViewById(R.id.buttonSignup);
 
         buttonSignup.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +82,15 @@ public class CadastroActivity extends AppCompatActivity {
                         localUser = User.getInstance();
                         localUser.setNome(editTextName.getText().toString());
                         localUser.setEmail(editTextEmail.getText().toString());
+
+//                        adressToObject(editTextLogradouro.getText().toString(),
+//                                editTextNumero.getText().toString(),
+//                                editTextComplemento.getText().toString(),
+//                                editTextBairro.getText().toString(),
+//                                editTextCidade.getText().toString(),
+//                                editTextEstado.getText().toString());
+                        adressToObject("", "", "", "", "", "");
+
                         localUser.setFotoPerfil("profile_picture_default.jpg");
                     } else {
                         Toast.makeText(CadastroActivity.this, "As senhas não são correspondentes", Toast.LENGTH_SHORT).show();
@@ -83,6 +108,10 @@ public class CadastroActivity extends AppCompatActivity {
         databaseReference = FirebaseConfig.getDatabase();
         auth = FirebaseConfig.getAuth();
         user = auth.getCurrentUser();
+    }
+
+    public void adressToObject(String logradouro, String numero, String complemento, String bairro, String cidade, String estado){
+        localUser.setAddress(new Address(logradouro, numero, complemento, bairro, cidade, estado));
     }
 
 //    @Override
@@ -105,7 +134,8 @@ public class CadastroActivity extends AppCompatActivity {
                        localUser.save();
 
                        FirebasePreferences preferences = new FirebasePreferences(CadastroActivity.this);
-                       preferences.SaveUserPreferences(userId, localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil());
+                       preferences.SaveUserPreferences(userId, localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
+                               localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
 
                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
