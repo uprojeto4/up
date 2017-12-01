@@ -1,5 +1,6 @@
 package br.ufc.quixada.up.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -13,18 +14,20 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.Activities.ChatActivity;
+import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
 
 public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.NegociacaoViewHolder> {
 
-    private ArrayList<Negociacao> negotiationSet;
+    private ArrayList<Negociacao> negotiationSet, filteredNegotiations;
     private ArrayList<String> negotiationKeys;
     private String userId;
     Context context;
 
     public NegociacoesAdapter(Context c, String userId) {
         this.negotiationSet = new ArrayList<>();
+        this.filteredNegotiations = new ArrayList<>();
         this.negotiationKeys = new ArrayList<>();
         this.context = c;
         this.userId = userId;
@@ -75,6 +78,44 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
     public int getIndexOfKey(String key){
         System.out.println("negotiation keys list: " + negotiationKeys);
         return negotiationKeys.indexOf(key);
+    }
+
+    public void filterByStatus(final int status) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                filteredNegotiations.clear();
+                switch (status) {
+                    case Constant.OPENED_NEGOTIATION:
+                        for (Negociacao negociacao : negotiationSet) {
+                            if (negociacao.getStatus() == Constant.OPENED_NEGOTIATION) {
+                                filteredNegotiations.add(negociacao);
+                            }
+                        }
+                        break;
+                    case Constant.CLOSED_NEGOTIATION:
+                        for (Negociacao negociacao : negotiationSet) {
+                            if (negociacao.getStatus() == Constant.CLOSED_NEGOTIATION) {
+                                filteredNegotiations.add(negociacao);
+                            }
+                        }
+                        break;
+                    case Constant.CANCELLED_NEGOTIATION:
+                        for (Negociacao negociacao : negotiationSet) {
+                            if (negociacao.getStatus() == Constant.CANCELLED_NEGOTIATION) {
+                                filteredNegotiations.add(negociacao);
+                            }
+                        }
+                        break;
+                }
+                ((Activity) context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
 
     public class NegociacaoViewHolder extends RecyclerView.ViewHolder {

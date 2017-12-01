@@ -2,6 +2,7 @@ package br.ufc.quixada.up.Models;
 
 import java.util.Date;
 
+import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.Utils.DateTimeControl;
 
 /**
@@ -19,7 +20,7 @@ public class Negociacao {
     private String lastMessageSenderId;
     private String startDate;
     private String messagesId;
-    private String status;
+    private int status;
 
     public Negociacao() { }
 
@@ -30,7 +31,7 @@ public class Negociacao {
         this.lastMessage = lastMessage;
         this.lastMessageSenderId = lastMessageSenderId;
         this.startDate = DateTimeControl.getCurrentDate();
-        this.status = "opened";
+        this.status = Constant.OPENED_NEGOTIATION;
     }
 
     public String getTitle() {
@@ -89,11 +90,11 @@ public class Negociacao {
         this.messagesId = chatId;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

@@ -123,6 +123,13 @@ public class NegociacoesActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (position >= 0) {
                     spinnerItem = (String) adapterView.getItemAtPosition(position);
+                    if (position == 0) {
+                        System.out.println("Abertas");
+                    } else if (position == 1) {
+                        System.out.println("Fechadas");
+                    } else if (position == 2) {
+                        System.out.println("Canceladas");
+                    }
 //                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerItem, Toast.LENGTH_SHORT).show();
                 }
             }
