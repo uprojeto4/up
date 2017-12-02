@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Geocoder;
+import android.net.http.HttpResponseCache;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -11,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.util.MalformedJsonException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +28,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,12 +42,25 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import br.ufc.quixada.up.Activities.EditPerfilActivity;
 import br.ufc.quixada.up.Activities.MainActivity;
@@ -51,9 +69,11 @@ import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.MapsActivityPerfil;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.HttpDataHandler;
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import jp.wasabeef.glide.transformations.internal.Utils;
 
 import static br.ufc.quixada.up.DAO.FirebaseConfig.auth;
 import static br.ufc.quixada.up.R.drawable.image_test_1;
@@ -86,6 +106,10 @@ public class fragmentPerfilPerfil extends Fragment {
 
     public String address;
     public String addressMap;
+
+
+
+//    Geocoder geocoder = new Geocoder(getActivity());
 
 
 
@@ -186,19 +210,69 @@ public class fragmentPerfilPerfil extends Fragment {
 //        for (int i = 0; i<addressMap.length(); i++){
 //            if (i)
 //        }
-        addressMap = "https://maps.googleapis.com/maps/api/geocode/json?address="+addressMap.replaceAll("\\s+","+")+"&key=AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4";
-//        Log
+//        addressMap = "https://maps.googleapis.com/maps/api/geocode/json?address="+addressMap.replaceAll("\\s+","+")+"&key=AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4";
+
+
         Log.d("endereco map", addressMap);
+
 
 
         endereco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), MapsActivityPerfil.class);
-                startActivity(intent);
+                new GetCoordinate().execute(addressMap.replaceAll("\\s+","+"));
             }
         });
 
+    }
+
+    private class GetCoordinate extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String response;
+            try{
+                String address = strings[0];
+                HttpDataHandler http = new HttpDataHandler();
+                String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyBEJfX5N3IUByF8qDUXK-ddmsPcGLlaOOo", address);
+                response = http.getHttpData(url);
+                return response;
+            } catch (Exception ex){
+                Log.d("LATITUDE_LONGITUDE", "caiu aqui2");
+                ex.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            try{
+                JSONObject jsonObject = new JSONObject(s);
+
+//                String lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0).getJSONObject("geometry").getJSONObject("location").get("lat").toString();
+                Double lat = Double.parseDouble(((JSONArray)jsonObject.get("results")).getJSONObject(0).getJSONObject("geometry").getJSONObject("location").get("lat").toString());
+//                String lng = ((JSONArray)jsonObject.get("results")).getJSONObject(0).getJSONObject("geometry").getJSONObject("location").get("lng").toString();
+                Double lng = Double.parseDouble(((JSONArray)jsonObject.get("results")).getJSONObject(0).getJSONObject("geometry").getJSONObject("location").get("lng").toString());
+
+                Intent intent = new Intent(getActivity(), MapsActivityPerfil.class);
+                intent.putExtra("Lat", lat);
+                intent.putExtra("Long", lng);
+                intent.putExtra("nomeUsuario", PerfilActivity.nome);
+                startActivity(intent);
+
+                Log.d("LATITUDE_LONGITUDE", " "+ lat);
+                Log.d("LATITUDE_LONGITUDE", " "+ lng);
+
+            }catch (JSONException e){
+                Log.d("LATITUDE_LONGITUDE", s);
+                e.printStackTrace();
+            }
+        }
     }
 
 
