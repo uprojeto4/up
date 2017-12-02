@@ -203,6 +203,9 @@ public class NegociacoesActivity extends BaseActivity {
                             @Override
                             public void onDataChange(DataSnapshot userDataSnapshot) {
                                 negociacao.setVendorName(userDataSnapshot.child("nome").getValue(String.class));
+                                if (!negociacao.getLastMessageSenderId().equals(userId)) {
+                                    vibrate();
+                                }
                                 final int index;
                                 if (negociacao.getRemoteUserId().equals(userId)) {
                                     index = sellAdapter.getIndexOfKey(dataSnapshot.getKey());
@@ -211,12 +214,6 @@ public class NegociacoesActivity extends BaseActivity {
                                     index = buyAdapter.getIndexOfKey(dataSnapshot.getKey());
                                     buyAdapter.updateNegociacao(index, negociacao);
                                 }
-                                if (Build.VERSION.SDK_INT >= 26) {
-                                    ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150,10));
-                                } else {
-                                    ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(150);
-                                }
-
                             }
 
                             @Override
@@ -248,5 +245,13 @@ public class NegociacoesActivity extends BaseActivity {
 
             }
         });
+    }
+
+    public void vibrate() {
+        if (Build.VERSION.SDK_INT >= 26) {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150,10));
+        } else {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(150);
+        }
     }
 }

@@ -36,6 +36,7 @@ import java.util.List;
 import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.DateTimeControl;
 
 import static br.ufc.quixada.up.R.layout.post;
 
@@ -55,6 +56,7 @@ import static br.ufc.quixada.up.R.layout.post;
     private ArrayList<String> pictures;
     private String id;
     private ArrayList<String> upsList = new ArrayList<String>();
+    private long dataCadastro = DateTimeControl.getCurrentDateTime();
 
 //    private List<String> upsList;
 
@@ -153,6 +155,14 @@ import static br.ufc.quixada.up.R.layout.post;
 //    public void setImage(byte[] image) {
 //        this.image = image;
 //    }
+
+    public long getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(long dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
 
     public int getDefaultImage(){
         return R.drawable.default_img;

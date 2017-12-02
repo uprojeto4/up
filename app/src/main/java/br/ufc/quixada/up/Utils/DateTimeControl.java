@@ -2,6 +2,7 @@ package br.ufc.quixada.up.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -10,21 +11,15 @@ import java.util.Date;
 
 public abstract class DateTimeControl {
 
-    public static String getCurrentDate() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    public static long getCurrentDateTime() {
         Date date = new Date();
-        return dateFormat.format(date);
+        return date.getTime();
     }
 
-    public static String getCurrentTime() {
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        Date date = new Date();
-        return dateFormat.format(date);
-    }
-
-    public static String getCurrentDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        Date date = new Date();
-        return dateFormat.format(date);
+    public static String formatMillisToDate(long millis) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        return formatter.format(calendar.getTime());
     }
 }

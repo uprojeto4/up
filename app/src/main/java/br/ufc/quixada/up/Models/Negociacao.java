@@ -18,7 +18,7 @@ public class Negociacao {
     private String adId;
     private String lastMessage;
     private String lastMessageSenderId;
-    private String startDate;
+    private long startDate;
     private String messagesId;
     private int status;
 
@@ -30,7 +30,7 @@ public class Negociacao {
         this.adId = adId;
         this.lastMessage = lastMessage;
         this.lastMessageSenderId = lastMessageSenderId;
-        this.startDate = DateTimeControl.getCurrentDate();
+        this.startDate = DateTimeControl.getCurrentDateTime();
         this.status = Constant.OPENED_NEGOTIATION;
     }
 
@@ -74,11 +74,11 @@ public class Negociacao {
         this.lastMessageSenderId = lastMessageSenderId;
     }
 
-    public String getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 

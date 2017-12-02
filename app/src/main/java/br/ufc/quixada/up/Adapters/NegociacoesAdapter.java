@@ -17,6 +17,7 @@ import br.ufc.quixada.up.Activities.ChatActivity;
 import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.DateTimeControl;
 
 public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.NegociacaoViewHolder> {
 
@@ -46,7 +47,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
         negociacaoViewHolder.negociacao = negotiationSet.get(position);
         negociacaoViewHolder.textViewTituloNegociacao.setText(negociacaoViewHolder.negociacao.getTitle());
         negociacaoViewHolder.textViewNomeVendedorNegociacao.setText(negociacaoViewHolder.negociacao.getVendorName());
-        negociacaoViewHolder.textViewdataInicioNegociacao.setText(negociacaoViewHolder.negociacao.getStartDate());
+        negociacaoViewHolder.textViewdataInicioNegociacao.setText(DateTimeControl.formatMillisToDate(negociacaoViewHolder.negociacao.getStartDate()));
         negociacaoViewHolder.textViewLastMessage.setText(negociacaoViewHolder.negociacao.getLastMessage());
         negociacaoViewHolder.textViewMensagensNaoLidasNegociacao.setText(String.valueOf(negociacaoViewHolder.negociacao.getUnreadMessagesCounter()));
 

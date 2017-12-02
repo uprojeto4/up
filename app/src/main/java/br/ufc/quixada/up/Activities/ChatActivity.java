@@ -30,6 +30,7 @@ import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.ChatControl;
+import br.ufc.quixada.up.Utils.DateTimeControl;
 
 public class ChatActivity extends BaseActivity {
 
@@ -45,7 +46,9 @@ public class ChatActivity extends BaseActivity {
     private int unreadMessagesCounter;
     private TextView textViewTitleAnuncioChat;
     private TextView textViewVendedorAnuncioChat;
+    private TextView textViewDataCadastroAnuncioChat;
     private LinearLayout noMessagesLayout;
+    private boolean isShowingMessages = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +63,15 @@ public class ChatActivity extends BaseActivity {
         Intent intent = getIntent();
         adId = intent.getStringExtra("adId");
         remoteUserId = intent.getStringExtra("remoteUserId");
+
         userId = localUser.getId();
 
         textViewTitleAnuncioChat = findViewById(R.id.titleAnuncioChat);
-        textViewTitleAnuncioChat.setText(intent.getStringExtra("adTitle"));
         textViewVendedorAnuncioChat = findViewById(R.id.vendedorAnuncioChat);
+        textViewDataCadastroAnuncioChat = findViewById(R.id.dataCadastroAnuncio);
+
+        textViewTitleAnuncioChat.setText(intent.getStringExtra("adTitle"));
+        textViewDataCadastroAnuncioChat.setText(DateTimeControl.formatMillisToDate(intent.getLongExtra("submitDate", 0)));
 
         noMessagesLayout = findViewById(R.id.noMessagesLayout);
         messageInput = findViewById(R.id.editTextMessageInput);
@@ -100,6 +107,9 @@ public class ChatActivity extends BaseActivity {
                     chatAdapter.addMessage(message);
                     messageInput.setText("");
                     linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
+                    if (!isShowingMessages) {
+                        showMessages();
+                    }
                 }
             }
         });
@@ -116,8 +126,7 @@ public class ChatActivity extends BaseActivity {
                     dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
                     getMessages();
                 } else {
-                    recyclerView.setVisibility(View.GONE);
-                    noMessagesLayout.setVisibility(View.VISIBLE);
+                    showNoMessageInfo();
                 }
             }
 
@@ -140,8 +149,9 @@ public class ChatActivity extends BaseActivity {
                 }
                 linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
                 if (chatAdapter.getItemCount() > 0) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    noMessagesLayout.setVisibility(View.GONE);
+                    showMessages();
+                } else {
+
                 }
             }
 
@@ -168,6 +178,18 @@ public class ChatActivity extends BaseActivity {
 
             }
         });
+    }
+
+    private void showMessages(){
+        recyclerView.setVisibility(View.VISIBLE);
+        noMessagesLayout.setVisibility(View.GONE);
+        this.isShowingMessages = true;
+    }
+
+    private void showNoMessageInfo(){
+        recyclerView.setVisibility(View.GONE);
+        noMessagesLayout.setVisibility(View.VISIBLE);
+        this.isShowingMessages = false;
     }
 
 //    private class CreateMessageNode extends AsyncTask<String, String, String> {

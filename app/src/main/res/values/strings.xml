@@ -21,7 +21,7 @@
     <string name="title_activity_categorias">Categorias</string>
     <string name="title_activity_lista_desejos">Lista de desejos</string>
     <string name="title_activity_perfil">Meu perfil</string>
-    <string name="title_activity_configuracoes">ConfiguracoesActivity</string>
+    <string name="title_activity_configuracoes">Configurações</string>
     <string name="input_novo_anuncio_titulo">O que deseja anunciar?</string>
     <string name="input_novo_anuncio_descricao">Descreva seu anúncio</string>
     <string name="input_novo_anuncio_preco">Preço</string>
@@ -107,7 +107,7 @@
     <string name="dafault_user_name">Visitante</string>
     <string name="dafault_exit_confirmation">Deseja realmente Sair?</string>
 
-    <string name="iniciada_em">Negociação iniciada em</string>
+    <string name="iniciada_em">Negociação iniciada em:</string>
     <string name="no_address_dialog_title">Ops... </string>
     <string name="insert_address_message">Parece que você não forneceu suas informações de endereço, informá-las ajuda a aumentar
         as chances de negociações. Gostaria de adicioná-las agora?</string>
@@ -138,6 +138,8 @@
     
     <string name="label_no_messages">Ainda não há mensagens. Comece dizendo alguma coisa!</string>
 
-    <string name="anunciado_por">Anunciado por</string>
+    <string name="negociante">Negociante:</string>
+
+    <string name="anuncio_cadastrado_em">Anúncio cadastrado em</string>
 
 </resources>

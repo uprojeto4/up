@@ -127,6 +127,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     intent.putExtra("remoteUserId", post.getUserId());
                     intent.putExtra("adId", post.getId());
                     intent.putExtra("adTitle", post.getTitle());
+                    intent.putExtra("submitDate", post.getDataCadastro());
                     context.startActivity(intent);
                 }
             });
