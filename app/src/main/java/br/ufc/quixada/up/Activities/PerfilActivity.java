@@ -49,6 +49,8 @@ public class PerfilActivity extends BaseActivity {
     public static String id;
     public static String email;
     public static String fotoPerfil;
+//    public static String testFoto;
+
 
     public static float avComprador;
     public static int numCompras;
@@ -117,6 +119,7 @@ public class PerfilActivity extends BaseActivity {
         id = localUser.getId();
         email = localUser.getEmail();
         fotoPerfil = profilePictureName;
+//        testFoto = localUser.getFotoPerfil();
 
         avVendedor = localUser.getAvVendedor();
         numVendas = localUser.getNumVendas();

@@ -55,10 +55,11 @@ import static br.ufc.quixada.up.R.layout.post;
     private ArrayList<String> pictures;
     private String id;
     private ArrayList<String> upsList = new ArrayList<String>();
+    private byte[] imageCover;
 
 //    private List<String> upsList;
 
-    int i = 1;
+    int i;
 
 
 
@@ -150,9 +151,13 @@ import static br.ufc.quixada.up.R.layout.post;
         this.id = id;
     }
 
-//    public void setImage(byte[] image) {
-//        this.image = image;
-//    }
+    public void setImageCover(byte[] image) {
+        this.imageCover = image;
+    }
+
+    public byte[] getImageCover(){
+        return this.imageCover;
+    }
 
     public int getDefaultImage(){
         return R.drawable.default_img;
@@ -209,16 +214,21 @@ import static br.ufc.quixada.up.R.layout.post;
     }
 
     public void upload(final ArrayList<Image> images) {
+        //pega a referencia
         DatabaseReference databaseReference = FirebaseConfig.getDatabase();
         StorageReference storageReference = FirebaseConfig.getStorage();
+        //cria a variavel para receber a referencia
         StorageReference imageRef;
         pictures = new ArrayList<String>();
 
+        //cria nó no banco e retorna id
         setId(databaseReference.child("posts").push().getKey());
 
+        i = 1;
         //Faz upload das novas imagens para o servidor.
         //pega o caminho do arquivo a ser enviado
         for (Image image : images){
+            //pega o caminho da imagem no disco
             Uri file = Uri.fromFile(new File(image.getPath()));
             //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
             //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
@@ -280,7 +290,7 @@ import static br.ufc.quixada.up.R.layout.post;
         }
     }
 
-    public static void downloadImages(String path){
+    public void downloadImages(String path){
         StorageReference storageReference = FirebaseConfig.getStorage();
         StorageReference imageRef;
 
@@ -301,10 +311,11 @@ import static br.ufc.quixada.up.R.layout.post;
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     //transforma o stream em um array de bytes
-                    byte[] picture = stream.toByteArray();
+//                    byte[] picture = stream.toByteArray();
+                    setImageCover(stream.toByteArray());
                     //método que aplica a imagem nos lugares desejsdos
 //                    applyImage(pictureCover);
-                    Log.d("TAG","Imagem baixada com sucesso! "+picture);
+                    Log.d("TAG","Imagem baixada com sucesso! ");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -316,6 +327,7 @@ import static br.ufc.quixada.up.R.layout.post;
             }).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+
                     Log.d("TAG", " "+task.getResult().getTotalByteCount());
                 }
             });

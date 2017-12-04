@@ -122,38 +122,42 @@ public class fragmentPerfilPerfil extends Fragment {
         profilePictureRef = storage.child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
 //        Toast.makeText(getActivity(),"caminho da imagem que vai ser baixada "+profilePictureRef.getPath(), Toast.LENGTH_LONG).show();
 
-        test = profilePictureRef.getName().equals(PerfilActivity.fotoPerfil);
+//        test = profilePictureRef.getName().equals(PerfilActivity.testFoto);
+        downloadProfilePicture();
 
-        Log.d("getName", profilePictureRef.getName());
-        // 1509810338632_1.jpg
-        Log.d("perfilActivity", PerfilActivity.fotoPerfil);
-        //1509810338632_1.jpg
+//        Log.d("getName", profilePictureRef.getName());
+//        // 1509810338632_1.jpg
+//        Log.d("perfilActivity", PerfilActivity.testFoto);
+//        //1509810338632_1.jpg
+//
+//        if (test){
+//            Log.d("getName do if", profilePictureRef.getName());
+//            // 1509810338632_1.jpg
+//            Log.d("perfilActivity do if", PerfilActivity.testFoto);
+//            //1509810338632_1.jpg
+//
+////            Log.d("Caminho", localFile.getName());
+//
+//            try{
+//                localFile = File.createTempFile("jpg", "image");
+//                profilePictureRef.getFile(localFile);
+//                bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
+//                //transforma o stream em um array de bytes
+//                image = stream.toByteArray();
+//                //método que aplica a imagem nos lugares desejsdos
+//                applyImage(image);
+//
+//            }catch (IOException e){
+//                e.printStackTrace();
+//            }
+//
+//
+//        }else{
+//            //nada
+//        }
 
-        if (test){
-            Log.d("getName do if", profilePictureRef.getName());
-            // 1509810338632_1.jpg
-            Log.d("perfilActivity do if", PerfilActivity.fotoPerfil);
-            //1509810338632_1.jpg
-
-//            Log.d("Caminho", localFile.getName());
-
-
-//            bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//            //transforma o stream em um array de bytes
-//            image = stream.toByteArray();
-//            //método que aplica a imagem nos lugares desejsdos
-//            applyImage(image);
-
-            downloadProfilePicture();
-
-        }else{
-            //nada
-        }
-
-        //chama o metodo de download
-//        downloadProfilePicture();
 
         return inflater.inflate(R.layout.fragment_perfil_perfil, container, false);
     }
@@ -180,38 +184,17 @@ public class fragmentPerfilPerfil extends Fragment {
         tvNumCompras.setText(""+PerfilActivity.numCompras);
         tvAvCompras.setText(""+PerfilActivity.avComprador);
 
-//        for (Map.Entry<String, String> entry : PerfilActivity.enderecoMap.entrySet()){
-//            String key = entry.getKey();
-//            Log.d("key", " "+ key);
-//            if (key.equals("logradouro")){
-//                logradouro = entry.getValue();
-//            }else if(key.equals("numero")){
-//                numero = entry.getValue();
-//            }else if(key.equals("complemento")){
-//                complemento = entry.getValue();
-//            }else if(key.equals("bairro")){
-//                bairro = entry.getValue();
-//            }else if(key.equals("cidade")){
-//                cidade = entry.getValue();
-//            }else if(key.equals("estado")){
-//                estado = entry.getValue();
-//            }
-//        }
-//        Log.d("endereco", PerfilActivity.logradouro + ", " + PerfilActivity.numero + ", " + PerfilActivity.complemento + ", " + PerfilActivity.bairro + ", " + PerfilActivity.cidade + " - " + PerfilActivity.estado);
         address = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getComplemento() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
 
         if (PerfilActivity.endereco.getLogradouro().equals("") || PerfilActivity.endereco.getNumero().equals("") ||
                 PerfilActivity.endereco.getBairro().equals("") || PerfilActivity.endereco.getCidade().equals("")){
             endereco.setText("Usuário não forneceu endereço");
+        }else if(PerfilActivity.endereco.getComplemento().equals("")){
+            endereco.setText(PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado());
         }else{
             endereco.setText(address);
         }
         addressMap = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
-//        for (int i = 0; i<addressMap.length(); i++){
-//            if (i)
-//        }
-//        addressMap = "https://maps.googleapis.com/maps/api/geocode/json?address="+addressMap.replaceAll("\\s+","+")+"&key=AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4";
-
 
         Log.d("endereco map", addressMap);
 
@@ -278,126 +261,127 @@ public class fragmentPerfilPerfil extends Fragment {
 
 
     public void downloadProfilePicture(){
-        //o download com o metodo getFile deve ser feito num try/catch
-//        try{
-//            //cria o arquivo temporário local onde a imagem será armazenada
-//            localFile = File.createTempFile("jpg", "image");
-//            profilePictureRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                @Override
-//                //monitora o sucesso do download
-//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                    //transforma a imagem baixada em um bitmap
-//                    bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-////                    Toast.makeText(getActivity(),localFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
-//
-//                    Log.d("Caminho", localFile.getPath());
-//
-//                    //transforma o bitmap em stream
-//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                    //transforma o stream em um array de bytes
-//                    image = stream.toByteArray();
-//                    //método que aplica a imagem nos lugares desejsdos
-//                    applyImage(image);
-////                    Toast.makeText(getActivity(),profilePictureRef.getName(), Toast.LENGTH_LONG).show();
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                //monitora a falha do downlaod
-//                public void onFailure(@NonNull Exception e) {
-//                    Toast.makeText(getActivity(),"Foto não encontrada", Toast.LENGTH_LONG).show();
-//                }
-//            });
-//        } catch (IOException e){
-//            e.printStackTrace();
-//            //manipular exceções
-//            Log.e("Main", "IOE exception");
-//        }
-
         FirebaseStorage storage=FirebaseStorage.getInstance();
-
-        // Create a storage reference from our app
-
-        final StorageReference storageRef = storage.getReferenceFromUrl("gs://up-compra-venda.appspot.com/UsersProfilePictures/"+PerfilActivity.id);
-
-//        gs://up-compra-venda.appspot.com/UsersProfilePictures/YnJlbmRvbmdpcmFvQGdtYWlsLmNvbQ==/1509810338632_1.jpg
-
-        storageRef.child(PerfilActivity.fotoPerfil).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-
-            @Override
-            public void onSuccess(byte[] bytes) {
-                // Use the bytes to display the image
-                String path= "/data/data/br.ufc.quixada.up/cache/"+storageRef.child(PerfilActivity.fotoPerfil).getName();
-                try {
-                    FileOutputStream fos = new FileOutputStream(path);
-                    fos.write(bytes);
-                    applyImage(bytes);
-                    Log.d("path ", path);
-
-                    bitmap = BitmapFactory.decodeFile(path);
+//        o download com o metodo getFile deve ser feito num try/catch
+        try{
+            //cria o arquivo temporário local onde a imagem será armazenada
+            localFile = File.createTempFile("jpg", "image");
+            profilePictureRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                //monitora o sucesso do download
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    //transforma a imagem baixada em um bitmap
+                    bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
 //                    Toast.makeText(getActivity(),localFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
 
-//                    Log.d("Caminho", localFile.getPath());
+                    Log.d("Caminho", localFile.getPath());
 
                     //transforma o bitmap em stream
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     //transforma o stream em um array de bytes
                     image = stream.toByteArray();
-
-                    fos.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    new AlertDialog.Builder(getActivity())
-                            .setTitle(R.string.no_address_dialog_title)
-                            .setMessage(getActivity().getString(R.string.insert_address_message))
-                            .setPositiveButton(getActivity().getString(R.string.sim), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-//                            finish();
-                                    Intent intent = new Intent(getActivity(), EditPerfilActivity.class);
-                                    startActivity(intent);
-                                }
-                            }).setNegativeButton(getActivity().getString(R.string.nao), null)
-                            .show();
-//                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-//                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                    //método que aplica a imagem nos lugares desejsdos
+                    applyImage(image);
+//                    Toast.makeText(getActivity(),profilePictureRef.getName(), Toast.LENGTH_LONG).show();
                 }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                //monitora a falha do downlaod
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getActivity(),"Foto não encontrada", Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e){
+            e.printStackTrace();
+            //manipular exceções
+            Log.e("Main", "IOE exception");
+        }
 
-//                pd.dismiss();
 
-            }
 
-        }).addOnFailureListener(new OnFailureListener() {
+        // Create a storage reference from our app
 
-            @Override
-
-            public void onFailure(@NonNull Exception exception) {
-
-                // Handle any errors
-
-//                pd.dismiss();
-
-//                Toast.makeText(getActivity(), exception.toString()+"!!!", Toast.LENGTH_SHORT).show();
-                new AlertDialog.Builder(getActivity())
-                        .setTitle(R.string.no_address_dialog_title)
-                        .setMessage(getActivity().getString(R.string.insert_profile_picture_message))
-                        .setPositiveButton(getActivity().getString(R.string.sim), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-//                            finish();
-                                Intent intent = new Intent(getActivity(), EditPerfilActivity.class);
-                                startActivity(intent);
-                            }
-                        }).setNegativeButton(getActivity().getString(R.string.nao), null)
-                        .show();
-
-            }
-
-        });
+//        final StorageReference storageRef = storage.getReferenceFromUrl("gs://up-compra-venda.appspot.com/UsersProfilePictures/"+PerfilActivity.id);
+//
+////        gs://up-compra-venda.appspot.com/UsersProfilePictures/YnJlbmRvbmdpcmFvQGdtYWlsLmNvbQ==/1509810338632_1.jpg
+//
+//        storageRef.child(PerfilActivity.fotoPerfil).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                // Use the bytes to display the image
+//                String path= "/data/data/br.ufc.quixada.up/cache/"+storageRef.child(PerfilActivity.fotoPerfil).getName();
+//                try {
+//                    FileOutputStream fos = new FileOutputStream(path);
+//                    fos.write(bytes);
+//                    Log.d("path ", path);
+//
+//                    bitmap = BitmapFactory.decodeFile(path);
+////                    Toast.makeText(getActivity(),localFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+//
+////                    Log.d("Caminho", localFile.getPath());
+//
+//                    //transforma o bitmap em stream
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
+//                    //transforma o stream em um array de bytes
+//                    image = stream.toByteArray();
+//                    applyImage(image);
+//
+//                    fos.close();
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                    new AlertDialog.Builder(getActivity())
+//                            .setTitle(R.string.no_address_dialog_title)
+//                            .setMessage(getActivity().getString(R.string.insert_address_message))
+//                            .setPositiveButton(getActivity().getString(R.string.sim), new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+////                            finish();
+//                                    Intent intent = new Intent(getActivity(), EditPerfilActivity.class);
+//                                    startActivity(intent);
+//                                }
+//                            }).setNegativeButton(getActivity().getString(R.string.nao), null)
+//                            .show();
+////                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+////                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+//                }
+//
+////                pd.dismiss();
+//
+//            }
+//
+//        }).addOnFailureListener(new OnFailureListener() {
+//
+//            @Override
+//
+//            public void onFailure(@NonNull Exception exception) {
+//
+//                // Handle any errors
+//
+////                pd.dismiss();
+//
+////                Toast.makeText(getActivity(), exception.toString()+"!!!", Toast.LENGTH_SHORT).show();
+//                new AlertDialog.Builder(getActivity())
+//                        .setTitle(R.string.no_address_dialog_title)
+//                        .setMessage(getActivity().getString(R.string.insert_profile_picture_message))
+//                        .setPositiveButton(getActivity().getString(R.string.sim), new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+////                            finish();
+//                                Intent intent = new Intent(getActivity(), EditPerfilActivity.class);
+//                                startActivity(intent);
+//                            }
+//                        }).setNegativeButton(getActivity().getString(R.string.nao), null)
+//                        .show();
+//
+//            }
+//
+//        });
 
 
     }
