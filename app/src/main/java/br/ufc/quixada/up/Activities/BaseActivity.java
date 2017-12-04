@@ -1,45 +1,64 @@
 package br.ufc.quixada.up.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.FirebasePreferences;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseAuth auth;
     FirebaseUser user;
+    FirebasePreferences firebasePreferences;
     DatabaseReference databaseReference;
     TextView textViewName;
     TextView textViewEmail;
+    ImageView imageViewPhoto;
     User localUser;
 
-//    User localUser;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
 
+    StorageReference profilePictureRef;
+
+    public byte[] image;
+
+    Bitmap bitmap;
 
 
     @Override
@@ -50,40 +69,24 @@ public class BaseActivity extends AppCompatActivity
         user = auth.getCurrentUser();
         databaseReference = FirebaseConfig.getDatabase();
         localUser = User.getInstance();
+        firebasePreferences = new FirebasePreferences(BaseActivity.this);
 
-//        setContentView(R.layout.activity_main);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        localUser.setId(firebasePreferences.getId());
+        localUser.setNome(firebasePreferences.getUserName());
+        localUser.setEmail(firebasePreferences.getUserEmail());
+        localUser.setFotoPerfil(firebasePreferences.getProfilePicture());
+//        localUser.setAddress(new Address());
+        localUser.setAddressString(firebasePreferences.getAdress());
+//        localUser.adressToObject(firebasePreferences.getAdress());
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        localUser.setNumVendas(firebasePreferences.getNumVendas());
+        localUser.setAvVendedor(firebasePreferences.getAvVendas());
 
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-//
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
+        localUser.setNumCompras(firebasePreferences.getNumCompras());
+        localUser.setAvComprador(firebasePreferences.getAvCompras());
 
-//        auth = FirebaseConfig.getAuth();
-//        user = auth.getCurrentUser();
-//        databaseReference = FirebaseConfig.getDatabase();
-//        localUser = new User();
-//
-//        if(user != null){
-//            updateLocalUser();
-//        }
 
     }
-
 
 //    public void updateLocalUser(){
 //
@@ -149,11 +152,14 @@ public class BaseActivity extends AppCompatActivity
 //        }
 //    }
 
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        //Primeiro testa se o drawer existe, pois estava obtendo erro ao pressionar o back na editPerfilActivity, pois ela não possuía drawer
+        //e ainda assim precisava herdar dela para obter os dados do usuário
+        if(drawer == null){
+            super.onBackPressed();
+        }else if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -185,6 +191,10 @@ public class BaseActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
+//        Fragment fragment = null;
+//        Class fragmentClass = null;
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -209,9 +219,17 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_categorias) {
             Intent intent = new Intent(this, CategoriasActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_meus_anuncios) {
+//            fragmentClass = fragmentPerfilAnuncios.class;
+            Intent intent = new Intent(this, PerfilActivity.class);
+            intent.putExtra("fragment",1);
+            startActivity(intent);
+//            PerfilActivity.perfilViewPager.setCurrentItem(1);
         } else if (id == R.id.nav_perfil) {
             Intent intent = new Intent(this, PerfilActivity.class);
+            intent.putExtra("fragment",0);
             startActivity(intent);
+//            PerfilActivity.perfilViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_configuracoes) {
             Intent intent = new Intent(this, ConfiguracoesActivity.class);
             startActivity(intent);
@@ -219,78 +237,66 @@ public class BaseActivity extends AppCompatActivity
             signOut();
         }
 
+//        try {
+//            fragment = (Fragment) fragmentClass.newInstance();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    //Atualizar usuario local
-    public void updateLocalUser(){
-
-        Query email = databaseReference.child("users").orderByChild("email").equalTo(user.getEmail());
-        email.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    localUser = singleSnapshot.getValue(User.class);
-//                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
-                    updateProfile();
-                    updateUserInfo();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-//                Log.e(TAG, "onCancelled", databaseError.toException());
-                Toast.makeText(getBaseContext(), "Usuário não autorizado!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-//        ValueEventListener userListener = new ValueEventListener() {
+//    //Atualizar usuario local
+//    public void updateLocalUser(){
+//
+//        Query email = databaseReference.child("users").orderByChild("email").equalTo(user.getEmail());
+//        email.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // Get Post object and use the values to update the UI
-////                String s = dataSnapshot.child("users").child("01").getValue(String.class);
-//                User user = dataSnapshot.child("user").child("aXNhYWMtcGpAaG90bWFpbC5jb20=").getValue(User.class);
-//                Toast.makeText(getBaseContext(), "Opa: " + user, Toast.LENGTH_LONG).show();
-//                // ...
+//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                    localUser = singleSnapshot.getValue(User.class);
+////                    Toast.makeText(getBaseContext(), "Olá: "+ localUser, Toast.LENGTH_SHORT).show();
+//                    updateProfile();
+//                    updateUserInfo();
+//                }
 //            }
-//
 //            @Override
 //            public void onCancelled(DatabaseError databaseError) {
-//                // Getting Post failed, log a message
-//                Toast.makeText(getBaseContext(), "Opa, deu merda!", Toast.LENGTH_LONG).show();
-//                // ...
+////                Log.e(TAG, "onCancelled", databaseError.toException());
+//                Toast.makeText(getBaseContext(), "Usuário não autorizado!", Toast.LENGTH_SHORT).show();
 //            }
-//        };
-        //Executa sempre que os dados mudarem
-//        databaseReference.addValueEventListener(userListener);
-
-        //Executa apenas uma vez
-//        databaseReference.addListenerForSingleValueEvent(userListener);
-
-    }
-
-    //Atualizar propriedades do objeto currentUser do firebase
-    public void updateProfile(){
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(localUser.getNome())
-                .build();
-
-        user = auth.getCurrentUser();
-
-        if(user != null){
-            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    Toast.makeText(getBaseContext(), "Olá "+ user.getDisplayName() +"! :)", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-    }
+//        });
+//
+////        ValueEventListener userListener = new ValueEventListener() {
+////            @Override
+////            public void onDataChange(DataSnapshot dataSnapshot) {
+////                // Get Post object and use the values to update the UI
+//////                String s = dataSnapshot.child("users").child("01").getValue(String.class);
+////                User user = dataSnapshot.child("user").child("aXNhYWMtcGpAaG90bWFpbC5jb20=").getValue(User.class);
+////                Toast.makeText(getBaseContext(), "Opa: " + user, Toast.LENGTH_LONG).show();
+////                // ...
+////            }
+////
+////            @Override
+////            public void onCancelled(DatabaseError databaseError) {
+////                // Getting Post failed, log a message
+////                Toast.makeText(getBaseContext(), "Opa, deu merda!", Toast.LENGTH_LONG).show();
+////                // ...
+////            }
+////        };
+//        //Executa sempre que os dados mudarem
+////        databaseReference.addValueEventListener(userListener);
+//
+//        //Executa apenas uma vez
+////        databaseReference.addListenerForSingleValueEvent(userListener);
+//
+//    }
 
     //Metodo pode ser chamado a partir de qualquer activity que extend de BaseAvtivity
     public void updateUserInfo(){
-//        localUser = User.getInstance();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -298,13 +304,81 @@ public class BaseActivity extends AppCompatActivity
 
         textViewName = (TextView)nav_view.findViewById(R.id.textViewName);
         textViewEmail = (TextView)nav_view.findViewById(R.id.textViewEmail);
+        imageViewPhoto = (ImageView)nav_view.findViewById(R.id.imageView);
+
+        profilePictureRef = storage.getReference().child("UsersProfilePictures/"+localUser.getId()+"/"+localUser.getFotoPerfil());
+//        Toast.makeText(getBaseContext(),profilePictureRef.getPath(), Toast.LENGTH_LONG).show();
+
+
+        downloadProfilePicture();
 
         textViewName.setText(localUser.getNome());
         textViewEmail.setText(localUser.getEmail());
-
-//        Toast.makeText(this, "opa: "+ localUser, Toast.LENGTH_SHORT).show();
     }
 
+    public void downloadProfilePicture(){
+        //o download com o metodo getFile deve ser feito num try/catch
+        try{
+            //cria o arquivo temporário local onde a imagem será armazenada
+            final File localFile = File.createTempFile("jpg", "image");
+            profilePictureRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                //monitora o sucesso do download
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    //transforma a imagem baixada em um bitmap
+                    bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    //transforma o bitmap em stream
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    //transforma o stream em um array de bytes
+                    image = stream.toByteArray();
+                    //método que aplica a imagem nos lugares desejsdos
+                    applyImage(image);
+//                    Toast.makeText(getActivity(),profilePictureRef.getName(), Toast.LENGTH_LONG).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                //monitora a falha do downlaod
+                public void onFailure(@NonNull Exception e) {
+//                    Toast.makeText(getBaseContext(),"Foto não encontrada", Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e){
+            e.printStackTrace();
+            //manipular exceções
+            Log.e("Main", "IOE exception");
+        }
+
+    }
+
+    public void applyImage(byte[] bytes){
+        //efeito de blur para a imagem
+        MultiTransformation multi = new MultiTransformation(
+                new BlurTransformation(25));
+
+
+        //options para o glide
+        RequestOptions requestOptions = new RequestOptions();
+        //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+        requestOptions.skipMemoryCache(true);
+
+//        //carrega a imagem
+//        Glide.with(this).load(bytes)
+//                //aplica as options de cache
+//                .apply(requestOptions)
+//                //aplica as options de transformação
+//                .apply(RequestOptions.bitmapTransform(multi))
+//                //insere a imagem no imageView
+//                .into((ImageView) findViewById((R.id.header_cover_image)));
+
+        Glide.with(this).load(bytes)
+                .apply(requestOptions)
+                .apply(RequestOptions.bitmapTransform(new RoundedCorners(200)))
+                .into(imageViewPhoto);
+    }
+
+    //Desloga o usuario da aplicação
     public void signOut(){
         auth = FirebaseConfig.getAuth();
         auth.signOut();

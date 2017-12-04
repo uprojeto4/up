@@ -4,8 +4,10 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -19,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,22 +35,31 @@ import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
 
 import br.ufc.quixada.up.Adapters.NovoAnuncioRecyclerViewImageAdapter;
+import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.InputMask;
 import br.ufc.quixada.up.Utils.RecyclerViewPhotoSeparator;
 
 public class NovoAnuncioActivity extends BaseActivity {
 
+    Post post;
     ConstraintLayout mainConstraintLayout;
     RecyclerView recyclerView;
     LinearLayout linearLayoutNoImage;
@@ -65,6 +77,13 @@ public class NovoAnuncioActivity extends BaseActivity {
     private NovoAnuncioRecyclerViewImageAdapter imageAdapter;
     private ArrayList<Image> images = new ArrayList<>();
     Locale locale = new Locale("pt", "BR");
+
+    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    StorageReference storageReference;
+    StorageReference imageRef;
+    byte[] pictureCover;
+
+    NavigationView navigationView;
 
 //    static final String SAVED_STATE_AD_TITLE = "";
 //    static final String SAVED_STATE_AD_DESCRIPTION = "";
@@ -86,7 +105,7 @@ public class NovoAnuncioActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -99,6 +118,8 @@ public class NovoAnuncioActivity extends BaseActivity {
         buttonSalvarAnuncio = findViewById(R.id.buttonSalvarAnuncio);
         mainConstraintLayout = findViewById(R.id.mainConstraintLayout);
         categoriaAnuncioTitle = findViewById(R.id.textViewCategoria);
+        post = new Post();
+        storageReference = storage.getReference();
 
         // imageAdapter e implementações de swipe para deletar
         imageAdapter = new NovoAnuncioRecyclerViewImageAdapter(this);
@@ -167,7 +188,7 @@ public class NovoAnuncioActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (position > 0) {
                     spinnerCategoriasItemSelecionado = (String) adapterView.getItemAtPosition(position);
-                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerCategoriasItemSelecionado, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerCategoriasItemSelecionado, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -182,7 +203,7 @@ public class NovoAnuncioActivity extends BaseActivity {
         fabAddFotos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                String[] permissionsToRequest = new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+                String[] permissionsToRequest = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
                 PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(NovoAnuncioActivity.this, permissionsToRequest, new PermissionsResultAction() {
 
                     @Override
@@ -200,31 +221,38 @@ public class NovoAnuncioActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_anuncio);
+        menuItem.setChecked(true);
+    }
+
     //configura e obtem imagens usando a library imagePicker
-    protected void getPictures(View view){
+    protected void getPictures(View view) {
         int maxSize = 10 - imageAdapter.getItemCount();
         if (maxSize == 0) {
             Snackbar.make(view, "Você só pode adicionar dez imagens", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         } else {
             ImagePicker.with(NovoAnuncioActivity.this)         //  Initialize ImagePicker with activity or fragment context
-                       .setToolbarColor("#5a185f")             //  Toolbar color
-                       .setStatusBarColor("#2e0035")           //  StatusBar color (works with SDK >= 21  )
-                       .setToolbarTextColor("#FFFFFF")         //  Toolbar text color (Title and Done button)
-                       .setToolbarIconColor("#FFFFFF")         //  Toolbar icon color (Back and Camera button)
-                       .setProgressBarColor("#4CAF50")         //  ProgressBar color
-                       .setBackgroundColor("#212121")          //  Background color
-                       .setCameraOnly(false)                   //  Camera mode
-                       .setMultipleMode(true)                  //  Select multiple images or single image
-                       .setFolderMode(true)                    //  Folder mode
-                       .setShowCamera(true)                    //  Show camera button
-                       .setFolderTitle("Álbuns")               //  Folder title (works with FolderMode = true)
-                       .setImageTitle("Galeria")               //  Image title (works with FolderMode = false)
-                       .setDoneTitle("Finalizar")              //  Done button title
-                       .setMaxSize(maxSize)                    //  Max images can be selected
-                       .setSavePath("Up - Compra e venda")     //  Image capture folder name
-                       .setSelectedImages(images)              //  Selected images
-                       .start();                               //  Start ImagePicker
+                    .setToolbarColor("#5a185f")             //  Toolbar color
+                    .setStatusBarColor("#2e0035")           //  StatusBar color (works with SDK >= 21  )
+                    .setToolbarTextColor("#FFFFFF")         //  Toolbar text color (Title and Done button)
+                    .setToolbarIconColor("#FFFFFF")         //  Toolbar icon color (Back and Camera button)
+                    .setProgressBarColor("#4CAF50")         //  ProgressBar color
+                    .setBackgroundColor("#212121")          //  Background color
+                    .setCameraOnly(false)                   //  Camera mode
+                    .setMultipleMode(true)                  //  Select multiple images or single image
+                    .setFolderMode(true)                    //  Folder mode
+                    .setShowCamera(true)                    //  Show camera button
+                    .setFolderTitle("Álbuns")               //  Folder title (works with FolderMode = true)
+                    .setImageTitle("Galeria")               //  Image title (works with FolderMode = false)
+                    .setDoneTitle("Finalizar")              //  Done button title
+                    .setMaxSize(maxSize)                    //  Max images can be selected
+                    .setSavePath("Up - Compra e venda")     //  Image capture folder name
+                    .setSelectedImages(images)              //  Selected images
+                    .start();                               //  Start ImagePicker
         }
     }
 
@@ -233,7 +261,7 @@ public class NovoAnuncioActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Config.RC_PICK_IMAGES && resultCode == RESULT_OK && data != null) {
 
-            ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+            images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
             imageAdapter.addData(images);
             imagePreviewController();
         }
@@ -244,7 +272,7 @@ public class NovoAnuncioActivity extends BaseActivity {
         //atualização do padding entre as imagens
         recyclerView.removeItemDecoration(itemDecoration);
         recyclerView.addItemDecoration(itemDecoration);
-        
+
         //verificação para decidir exibir ou não a informação de que não há imagens
         if (imageAdapter.getItemCount() == 0) {
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -279,13 +307,14 @@ public class NovoAnuncioActivity extends BaseActivity {
         if (imageAdapter.getItemCount() > 0 || tituloAnuncio.getText().length() != 0 || descricaoAnuncio.getText().length() != 0 ||
                 precoAnuncio.getText().length() != 0 || qtdItensAnuncio.getText().length() != 0 || spinnerCategoriasItemSelecionado != null) {
             new AlertDialog.Builder(this)
+                    .setTitle(R.string.dafault_exit_confirmation)
                     .setMessage(NovoAnuncioActivity.this.getString(R.string.alert_sair_sem_salvar_message))
-                    .setPositiveButton(NovoAnuncioActivity.this.getString(R.string.sair), new DialogInterface.OnClickListener() {
+                    .setPositiveButton(NovoAnuncioActivity.this.getString(R.string.nao), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             finish();
                         }
-                    }).setNegativeButton(NovoAnuncioActivity.this.getString(R.string.cancelar), null)
+                    }).setNegativeButton(NovoAnuncioActivity.this.getString(R.string.sim), null)
                     .show();
         } else {
             finish();
@@ -293,34 +322,49 @@ public class NovoAnuncioActivity extends BaseActivity {
 //        super.onBackPressed();
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle saveInstanceState) {
-//        Log.i("sismac", "called");
-//        saveInstanceState.putString(SAVED_STATE_AD_TITLE, tituloAnuncio.getText().toString());
-//        saveInstanceState.putString(SAVED_STATE_AD_DESCRIPTION, descricaoAnuncio.getText().toString());
-//
-//        super.onSaveInstanceState(saveInstanceState);
-//    }
-//
-//    public void onRestoreInstanceState(Bundle savedInstanceState) {
-//        if (savedInstanceState != null) {
-//            tituloAnuncio.setText(savedInstanceState.getString(SAVED_STATE_AD_TITLE));
-//            descricaoAnuncio.setText(savedInstanceState.getString(SAVED_STATE_AD_DESCRIPTION));
-//            Log.d("sismac", savedInstanceState.getString(SAVED_STATE_AD_TITLE));
-//        }
-//        super.onRestoreInstanceState(savedInstanceState);
-//    }
-//
-//    @Override
-//    public void onPause(){
-//        Log.d("sismac", "pausing");
-//        super.onPause();
-//    }
-//
-//    @Override
-//    public void onStop(){
-//        Log.d("sismac", "stopping");
-//        super.onStop();
-//    }
+    public void saveOnFirebase(View view) {
 
+//        String price = precoAnuncio.getText().toString();
+//        String qtd = qtdItensAnuncio.getText().toString();
+//
+//        price = price.replace(".", "");
+//        price = price.replace(",", ".");
+//
+//        post.setTitle(tituloAnuncio.getText().toString());
+//        post.setSubtitle(descricaoAnuncio.getText().toString());
+//        post.setPrice(Double.parseDouble(price));
+//        post.setQtd(Integer.parseInt(qtd));
+//        post.setCategoria(spinnerCategoriasAnuncio.getSelectedItem().toString());
+//        post.setUserId(localUser.getId());
+//        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
+      
+        if (tituloAnuncio.getText() != null &&
+            descricaoAnuncio.getText() != null &&
+            precoAnuncio.getText() != null &&
+            qtdItensAnuncio.getText() != null &&
+            spinnerCategoriasAnuncio.getSelectedItem() != null &&
+            localUser.getId() != null &&
+            images.size() > 0) {
+                String price = precoAnuncio.getText().toString();
+                String qtd = qtdItensAnuncio.getText().toString();
+                price = price.replace(".", "");
+                price = price.replace(",", ".");
+                post.setTitle(tituloAnuncio.getText().toString());
+                post.setSubtitle(descricaoAnuncio.getText().toString());
+                post.setPrice(Double.parseDouble(price));
+                post.setQtd(Integer.parseInt(qtd));
+                post.setCategoria(spinnerCategoriasAnuncio.getSelectedItem().toString());
+                post.setUserId(localUser.getId());
+        //        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
+
+                post.upload(images);
+                this.finish();
+        }else{
+            Toast.makeText(this, "Por favor, preencha todos os campos!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void cancel(View view) {
+        this.finish();
+    }
 }

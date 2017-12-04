@@ -5,10 +5,13 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import br.ufc.quixada.up.R;
 
 public class ConfiguracoesActivity extends BaseActivity {
+
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +35,15 @@ public class ConfiguracoesActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_configuracoes);
+        menuItem.setChecked(true);
     }
 
 }

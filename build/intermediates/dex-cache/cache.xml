@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/home/aluno/.android/build-cache/7469ef56313069023a71a999a9c7d0a8924c0685/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="51518e8e8f97c314a243d9def0ded91d385b6a1e">
+        <dex dex="/home/aluno/Área de Trabalho/up-2142845fa10643f5da9d644b2e7e36e4f563cebb/app/build/intermediates/pre-dexed/debug/classes_26950b36f3a1239e854f8c563a0fcb13fd686d42.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/aluno/.android/build-cache/e1de3d5cfd853b8696cf21363d641ec1721286b6/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="4b685077cdb08cf7ae8b61afd1fe910e47d91b9a">
+        <dex dex="/home/aluno/Área de Trabalho/up-2142845fa10643f5da9d644b2e7e36e4f563cebb/app/build/intermediates/pre-dexed/debug/classes_578e557ffd9974320bbe73580eb5ad09947fd468.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/aluno/.android/build-cache/b404fd17349bd969ec6c5daef43018abe5c98633/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="fcae52a60bc07924d370b4d376116cd8f8581f54">
+        <dex dex="/home/aluno/Área de Trabalho/up-2142845fa10643f5da9d644b2e7e36e4f563cebb/app/build/intermediates/pre-dexed/debug/classes_89a441f5ee1099b5827bcee440a8625da651908b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/aluno/.android/build-cache/69ba282d7790e9a6e38f306bcf6936b3dc5f362c/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3ac08c35419ab7cf9146969de471768dbe502f0f">
+        <dex dex="/home/aluno/Área de Trabalho/up-2142845fa10643f5da9d644b2e7e36e4f563cebb/app/build/intermediates/pre-dexed/debug/classes_faa635cbfa6f8fb5fac1d2d44f48cae0f055f4ef.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/aluno/.android/build-cache/9808bb1207de445fd126768e849b4212052d7803/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3c433e48557e476290f45fb6cb568d1a103c9978">
+        <dex dex="/home/aluno/Área de Trabalho/up-2142845fa10643f5da9d644b2e7e36e4f563cebb/app/build/intermediates/pre-dexed/debug/classes_5d7038120cfd6e7e95b11e3def4defdde5f56381.jar" />
+    </item>
+
+</items>

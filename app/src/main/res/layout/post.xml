@@ -13,6 +13,8 @@
         app:cardCornerRadius="2dp"
         app:cardElevation="3dp"
         app:cardUseCompatPadding="true"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -39,7 +41,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/image_test_1" />
+                app:srcCompat="@drawable/default_img" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -96,11 +98,11 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/imageButton3"
+                    android:id="@+id/buttonUpCard"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:backgroundTint="@color/cardview_light_background"
-                    android:tint="#444444"
+                    android:onClick="up"
                     app:srcCompat="@drawable/ic_thumb_up_black_24dp" />
 
                 <!--<ImageButton-->
@@ -119,6 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
+
                 <ImageButton
                     android:id="@+id/imageButton"
                     android:layout_width="wrap_content"
@@ -135,14 +138,13 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/button3"
+                        android:id="@+id/buttonAnuncioNegociar"
                         style="@style/Widget.AppCompat.Button.Borderless.Colored"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="right"
                         android:layout_weight="1"
                         android:elevation="0dp"
-                        android:onClick="negociar"
                         android:text="@string/button_comprar" />
                 </LinearLayout>
 

@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import br.ufc.quixada.up.Models.User;
@@ -25,6 +26,7 @@ public class CategoriasActivity extends BaseActivity {
     private int[] icones;
     private ArrayList<Category> arrayListCategorias;
     private CategoriasAdapter adapter;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +50,10 @@ public class CategoriasActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         if(user != null) {
-            updateLocalUser();
             recyclerView = findViewById(R.id.recyclerViewCategorias);
             generateCategories();
 
@@ -69,7 +70,7 @@ public class CategoriasActivity extends BaseActivity {
     private void generateCategories() {
 
         categorias = getResources().getStringArray(R.array.categorias);
-        icones = new int[]{R.drawable.ic_restaurant_black_24dp,
+        icones = new int[]{R.drawable.ic_silverware,
                            R.drawable.ic_school_black_24dp,
                            R.drawable.ic_phone_android_black_24dp,
                            R.drawable.ic_work_black_24dp,
@@ -77,7 +78,9 @@ public class CategoriasActivity extends BaseActivity {
                            R.drawable.ic_fridge_filled,
                            R.drawable.ic_home_variant_black,
                            R.drawable.ic_weekend_black_24dp,
+                           R.drawable.ic_guitar_acoustic,
                            R.drawable.ic_pets_black_24dp,
+                           R.drawable.ic_soy_sauce,
                            R.drawable.ic_directions_car_black_24dp,
                            R.drawable.ic_t_shirt_silhouette};
 
@@ -91,4 +94,11 @@ public class CategoriasActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_categorias);
+        menuItem.setChecked(true);
+    }
 }
+

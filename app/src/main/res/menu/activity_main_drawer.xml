@@ -23,6 +23,10 @@
             android:icon="@drawable/ic_format_list_bulleted_black_24dp"
             android:title="@string/navigation_drawer_categorias" />
         <item
+            android:id="@+id/nav_meus_anuncios"
+            android:icon="@drawable/ic_bullhorn_24dp"
+            android:title="@string/navigation_drawer_meus_anuncios" />
+        <item
             android:id="@+id/nav_perfil"
             android:icon="@drawable/ic_person_black_24dp"
             android:title="@string/navigation_drawer_perfil" />

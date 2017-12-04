@@ -11,10 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +25,7 @@ import com.like.LikeButton;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import br.ufc.quixada.up.Adapters.ListaDesejosPostsAdapter;
@@ -60,7 +64,13 @@ public class ListaDesejosActivity extends BaseActivity {
 
     LikeButton likeButton;
 
+    private Spinner spinner;
 
+    String spinnerItem;
+
+    ArrayList<String> filters = new ArrayList<>();
+
+    NavigationView navigationView;
 
 
     @Override
@@ -76,7 +86,7 @@ public class ListaDesejosActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         likeButton = (LikeButton) findViewById(R.id.heart_button);
@@ -108,19 +118,40 @@ public class ListaDesejosActivity extends BaseActivity {
 
         addPosts();
 
+
+        filters.addAll(Arrays.asList(getResources().getStringArray(R.array.categorias_lista_desejos)));
+        spinner = (Spinner) findViewById(R.id.spinnerFilter);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.custom_spinner_dropdown_item, filters);
+        spinner.setAdapter(arrayAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position > 0) {
+                    spinnerItem = (String) adapterView.getItemAtPosition(position);
+                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerItem, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Toast.makeText(getApplicationContext(), "Opçao Default ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        if(user != null){
+            updateUserInfo();
+        }
+
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.global_filters, menu);
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.lista_desejos, menu);
-        View menuItemView = findViewById(R.id.action_filters); // SAME ID AS MENU ID
-        PopupMenu popupMenu = new PopupMenu(this, menuItemView);
-        popupMenu.inflate(R.menu.popup_filters_user);
-//        popupMenu.show();
-        return true;
+    protected void onResume() {
+        super.onResume();
+        MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_lista_desejos);
+        menuItem.setChecked(true);
     }
+
 
     public void addTags(){
 //        ArrayList<Tag> tags;

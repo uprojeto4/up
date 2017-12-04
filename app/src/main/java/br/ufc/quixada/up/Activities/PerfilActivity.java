@@ -2,16 +2,28 @@ package br.ufc.quixada.up.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import br.ufc.quixada.up.Models.Address;
 import br.ufc.quixada.up.R;
 
 import br.ufc.quixada.up.Adapters.PerfilFragmentPagerAdapter;
@@ -21,7 +33,39 @@ import static br.ufc.quixada.up.R.id.nav_view;
 public class PerfilActivity extends BaseActivity {
 
     private TabLayout perfilTabLayout;
-    private ViewPager perfilViewPager;
+    public static ViewPager perfilViewPager;
+
+    public String profilePictureName;
+
+//    FirebaseStorage storage = FirebaseStorage.getInstance();
+//    public StorageReference storageRef;
+//    public StorageReference pathReference;
+
+//    public static byte[] image;
+    public static String nome;
+    public static Address endereco;
+//    public static Map<String, String> enderecoMap = new HashMap<String, String>();
+    String[] keyValuePairs;
+    public static String id;
+    public static String email;
+    public static String fotoPerfil;
+
+    public static float avComprador;
+    public static int numCompras;
+
+    public static float avVendedor;
+    public static int numVendas;
+
+    public int fragmentASerAberta;
+
+    NavigationView navigationView;
+
+//    public static String logradouro;
+//    public static String numero;
+//    public static String complemento;
+//    public static String bairro;
+//    public static String cidade;
+//    public static String estado;
 
 //    TextView textViewEmail;
 //    TextView textViewName;
@@ -33,22 +77,19 @@ public class PerfilActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = getIntent();
+        fragmentASerAberta = intent.getIntExtra("fragment", 0);
+
+        Log.d("extra", " "+fragmentASerAberta);
 
         perfilTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         perfilViewPager = (ViewPager) findViewById(R.id.view_pager_perfil);
 
         perfilViewPager.setAdapter(new PerfilFragmentPagerAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.tabs_perfil)));
+        perfilViewPager.setCurrentItem(fragmentASerAberta);
 
         perfilTabLayout.setupWithViewPager(perfilViewPager);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -56,29 +97,98 @@ public class PerfilActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(nav_view);
+        navigationView = (NavigationView) findViewById(nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
-//        textViewName = (TextView)findViewById(R.id.textViewName);
-//        textViewEmail = (TextView)findViewById(R.id.textViewEmail);
-//
-//        textViewName.setText(localUser.getNome());
-//        textViewEmail.setText(localUser.getEmail());
+        if(user != null){
+            updateUserInfo();
+        }
 
-//       ImageView imageview = (ImageView) findViewById(R.id.header_cover_image);
-//
-//        BitmapDrawable drawable = (BitmapDrawable) imageview.getDrawable();
-//        Bitmap bitmap = drawable.getBitmap();
-//        Bitmap blurred = blurRenderScript(this, image_test_1, radiusArr[position]);//second parametre is radius
-//        imageview.setImageBitmap(blurred);
+        nome = localUser.getNome();
+        endereco = localUser.getAddress();
 
-//        MultiTransformation multi = new MultiTransformation(
-//                new BlurTransformation(25));
-//
-//        Glide.with(this).load(image_test_1)
-//                .apply(RequestOptions.bitmapTransform(multi))
-//                .into((ImageView) findViewById((R.id.header_cover_image)));
+//        Log.d("endereco_Local+USeer", " "+endereco.getLogradouro());
+//        endereco = endereco.substring(1, endereco.length()-1);
+//        keyValuePairs = endereco.split(",");
+//        for (String pair : keyValuePairs){
+//            String[] entry = pair.split("=");
+////            enderecoMap.put(entry[0].trim(), entry[1].trim());
+//        }
+
+        id = localUser.getId();
+        email = localUser.getEmail();
+        fotoPerfil = profilePictureName;
+
+        avVendedor = localUser.getAvVendedor();
+        numVendas = localUser.getNumVendas();
+
+        avComprador = localUser.getAvComprador();
+        numCompras = localUser.getNumCompras();
+
+//        Toast.makeText(this,"foto do local user ao criar ativity: "+fotoPerfil, Toast.LENGTH_LONG).show();
+
+
+//        Log.d("FOTO PERFIL TESTE", fotoPerfil);
+
+
+//        for (Map.Entry<String, String> entry : PerfilActivity.enderecoMap.entrySet()){
+//            String key = entry.getKey();
+//            Log.d("key", " "+ key);
+//            if (key.equals("logradouro")){
+//                logradouro = entry.getValue();
+//                localUser.getAddress().setLogradouro(logradouro);
+//            }else if(key.equals("numero")){
+//                numero = entry.getValue();
+//                localUser.getAddress().setNumero(numero);
+//            }else if(key.equals("complemento")){
+//                complemento = entry.getValue();
+//                localUser.getAddress().setComplemento(complemento);
+//            }else if(key.equals("bairro")){
+//                bairro = entry.getValue();
+//                localUser.getAddress().setBairro(bairro);
+//            }else if(key.equals("cidade")){
+//                cidade = entry.getValue();
+//                localUser.getAddress().setCidade(cidade);
+//            }else if(key.equals("estado")){
+//                estado = entry.getValue();
+//                localUser.getAddress().setEstado(estado);
+//            }
+//        }
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+//        Intent intent = getIntent();
+//        fragmentASerAberta = intent.getIntExtra("fragment", 0);
+//        perfilTabLayout.setupWithViewPager(perfilViewPager);
+
+        if(fragmentASerAberta == 0){
+            MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_perfil);
+            menuItem.setChecked(true);
+        }else {
+            MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_meus_anuncios);
+            menuItem.setChecked(true);
+        }
+
+        fotoPerfil = localUser.getFotoPerfil();
+        localUser.setFotoPerfil(fotoPerfil);
+        nome = localUser.getNome();
+//        Toast.makeText(this,"foto do local user on resume activity "+fotoPerfil, Toast.LENGTH_LONG).show();
+
+//        Log.d("FOTO PERFIL", fotoPerfil);
+//        fotoPerfil = firebasePreferences.getProfilePicture();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        fotoPerfil = localUser.getFotoPerfil();
+        localUser.setFotoPerfil(fotoPerfil);
+//        Toast.makeText(this,"foto do local user on pause activity "+fotoPerfil, Toast.LENGTH_LONG).show();
+
     }
 
     @Override
