@@ -3,6 +3,7 @@ package br.ufc.quixada.up.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,13 +51,19 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
         negociacaoViewHolder.textViewdataInicioNegociacao.setText(DateTimeControl.formatMillisToDate(negociacaoViewHolder.negociacao.getStartDate()));
         negociacaoViewHolder.textViewLastMessage.setText(negociacaoViewHolder.negociacao.getLastMessage());
         negociacaoViewHolder.textViewMensagensNaoLidasNegociacao.setText(String.valueOf(negociacaoViewHolder.negociacao.getUnreadMessagesCounter()));
-
+        negociacaoViewHolder.negotiationKey = negotiationKeys.get(position);
         if (negociacaoViewHolder.negociacao.getUnreadMessagesCounter() == 0) {
-            negociacaoViewHolder.linearLayoutMensagensNaoLidasNegociacao.setVisibility(View.INVISIBLE);
+            negociacaoViewHolder.linearLayoutMensagensNaoLidasNegociacao.setVisibility(View.GONE);
+        } else {
+            negociacaoViewHolder.linearLayoutMensagensNaoLidasNegociacao.setVisibility(View.VISIBLE);
         }
 
-        if (negociacaoViewHolder.negociacao.getLastMessageSenderId().equals(userId)) {
-            negociacaoViewHolder.replyIcon.setVisibility(View.VISIBLE);
+        if (!negociacaoViewHolder.negociacao.getLastMessageSenderId().equals(userId)) {
+            negociacaoViewHolder.responseIcon.setVisibility(View.VISIBLE);
+            negociacaoViewHolder.textViewLastMessage.setTextColor(Color.parseColor("#FF00948C"));
+        } else {
+            negociacaoViewHolder.textViewLastMessage.setTextColor(Color.parseColor("#808080"));
+            negociacaoViewHolder.responseIcon.setVisibility(View.GONE);
         }
     }
 
@@ -77,7 +84,6 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
     }
 
     public int getIndexOfKey(String key){
-        System.out.println("negotiation keys list: " + negotiationKeys);
         return negotiationKeys.indexOf(key);
     }
 
@@ -127,7 +133,8 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
         TextView textViewdataInicioNegociacao;
         TextView textViewMensagensNaoLidasNegociacao;
         TextView textViewLastMessage;
-        ImageView replyIcon;
+        ImageView responseIcon;
+        String negotiationKey;
 
         private Negociacao negociacao;
 
@@ -141,7 +148,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
             linearLayoutMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.linearLayoutMensagensNaoLidasNegociacao);
             textViewMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.textViewMensagensNaoLidasNegociacao);
             textViewLastMessage = itemLayoutView.findViewById(R.id.lastMessage);
-            replyIcon = itemLayoutView.findViewById(R.id.replyIcon);
+            responseIcon = itemLayoutView.findViewById(R.id.responseIcon);
 
             itemLayoutView.setOnClickListener(new View.OnClickListener() {
 
@@ -151,6 +158,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
                     intent.putExtra("remoteUserId", negociacao.getRemoteUserId());
                     intent.putExtra("adId", negociacao.getAdId());
                     intent.putExtra("adTitle", negociacao.getTitle());
+                    intent.putExtra("negotiationKey", negotiationKey);
                     context.startActivity(intent);
                 }
             });

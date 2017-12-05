@@ -12,14 +12,15 @@ import java.util.Date;
 public abstract class DateTimeControl {
 
     public static long getCurrentDateTime() {
-        Date date = new Date();
-        return date.getTime();
+        return System.currentTimeMillis();
     }
 
     public static String formatMillisToDate(long millis) {
+//        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(millis);
+//        return formatter.format(calendar.getTime());
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(millis);
-        return formatter.format(calendar.getTime());
+        return formatter.format(new Date(millis));
     }
 }

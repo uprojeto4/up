@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,6 +64,8 @@ public class ChatActivity extends BaseActivity {
         Intent intent = getIntent();
         adId = intent.getStringExtra("adId");
         remoteUserId = intent.getStringExtra("remoteUserId");
+        NegociacoesActivity.isChatActivityOpened = true;
+        NegociacoesActivity.currentOpenedChatNegotiationKey = intent.getStringExtra("negotiationKey");
 
         userId = localUser.getId();
 
@@ -97,14 +100,17 @@ public class ChatActivity extends BaseActivity {
                     if (chatId != null) {
                         dbReference.child("messages").child(chatId).push().setValue(message);
                         dbReference.child("negotiations").child(userId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
-                        unreadMessagesCounter += 1;
+                        dbReference.child("negotiations").child(userId).child(adId).child("lastMessageSenderId").setValue(userId);
+                        unreadMessagesCounter ++;
+//                        Toast.makeText(getBaseContext(), "" + unreadMessagesCounter, Toast.LENGTH_SHORT).show();
                         dbReference.child("negotiations").child(remoteUserId).child(adId).child("unreadMessagesCounter").setValue(unreadMessagesCounter);
                         dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
+                        dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessageSenderId").setValue(userId);
                     } else {
                         System.out.println("userId " + userId);
                         chatId = ChatControl.startConversation(userId, remoteUserId, adId, message);
                     }
-                    chatAdapter.addMessage(message);
+//                    chatAdapter.addMessage(message);
                     messageInput.setText("");
                     linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
                     if (!isShowingMessages) {
@@ -114,16 +120,14 @@ public class ChatActivity extends BaseActivity {
             }
         });
 
-        dbReference.child("negotiations").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        dbReference.child("negotiations").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(adId)) {
                     DataSnapshot negotiationSnapshot = dataSnapshot.child(adId);
-//                    Log.d("maxxx", "ChatonDataChange: " + negotiationSnapshot);
-                    Negociacao negociacao = negotiationSnapshot.getValue(Negociacao.class);
-                    chatId = negociacao.getMessagesId();
-                    unreadMessagesCounter = negociacao.getUnreadMessagesCounter();
-                    dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
+                    chatId = negotiationSnapshot.child("messagesId").getValue(String.class);
+                    unreadMessagesCounter = negotiationSnapshot.child("unreadMessagesCounter").getValue(Integer.class);
+//                    dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
                     getMessages();
                 } else {
                     showNoMessageInfo();
@@ -139,20 +143,33 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void getMessages() {
-        dbReference.child("messages").child(chatId).addListenerForSingleValueEvent(new ValueEventListener() {
+        dbReference.child("messages").child(chatId).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot messageDataSnapshot : dataSnapshot.getChildren()) {
-                    Message message = messageDataSnapshot.getValue(Message.class);
-                    chatAdapter.addMessage(message);
-                }
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                System.out.println(dataSnapshot);
+                Message message = dataSnapshot.getValue(Message.class);
+                chatAdapter.addMessage(message);
                 linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
                 if (chatAdapter.getItemCount() > 0) {
                     showMessages();
                 } else {
 
                 }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -163,7 +180,6 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void resolveRemoteUserName() {
-        System.out.println(remoteUserId);
         dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -192,28 +208,22 @@ public class ChatActivity extends BaseActivity {
         this.isShowingMessages = false;
     }
 
-//    private class CreateMessageNode extends AsyncTask<String, String, String> {
-//
-////        negotiationId = ChatControl.startConversation(userId, remoteUserId, adId, message);
-//
-//        protected Long doInBackground() {
-//            int count = urls.length;
-//            long totalSize = 0;
-//            for (int i = 0; i < count; i++) {
-//                totalSize += Downloader.downloadFile(urls[i]);
-//                publishProgress((int) ((i / (float) count) * 100));
-//                // Escape early if cancel() is called
-//                if (isCancelled()) break;
-//            }
-//            return totalSize;
-//        }
-//
-//        protected void onProgressUpdate(Integer... progress) {
-//            setProgressPercent(progress[0]);
-//        }
-//
-//        protected void onPostExecute(Long result) {
-//            showDialog("Downloaded " + result + " bytes");
-//        }
-//    }
+    private void emptyMessagesCounter() {
+        unreadMessagesCounter = 0;
+        dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        emptyMessagesCounter();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        emptyMessagesCounter();
+        NegociacoesActivity.isChatActivityOpened = false;
+        NegociacoesActivity.currentOpenedChatNegotiationKey = "";
+    }
 }

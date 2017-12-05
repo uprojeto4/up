@@ -46,6 +46,8 @@ public class NegociacoesActivity extends BaseActivity {
     public String userId;
     public NegociacoesAdapter buyAdapter;
     public NegociacoesAdapter sellAdapter;
+    public static boolean isChatActivityOpened = false;
+    public static String currentOpenedChatNegotiationKey;
     private Spinner spinner;
     private DatabaseReference dbReference;
     String spinnerItem;
@@ -64,39 +66,7 @@ public class NegociacoesActivity extends BaseActivity {
         viewPager.setAdapter(new NegociacoesFragmentPagerAdapter(getSupportFragmentManager(),
                 getResources().getStringArray(R.array.tabs_negociacoes)));
 
-//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                // Here's your instance
-////                ComprasFragment fragment =(ComprasFragment) negociacoesP.getRegisteredFragment(lastSelectedPosition);
-////                // Here're your details. You can update.
-////                YourDetails details = yourFragment.getDetils();
-////                lastSelectedPosition = position;
-//
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
-
         tabLayout.setupWithViewPager(viewPager);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -164,8 +134,7 @@ public class NegociacoesActivity extends BaseActivity {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
-                                    System.out.println(negociacao.getUnreadMessagesCounter());
-                                    if (negociacao.getRemoteUserId().equals(userId)) {
+                                    if (negociacao.getVendorId().equals(userId)) {
                                         sellAdapter.addNegociacao(negotiationKey, negociacao);
                                     } else {
                                         buyAdapter.addNegociacao(negotiationKey, negociacao);
@@ -186,11 +155,10 @@ public class NegociacoesActivity extends BaseActivity {
                     });
                 }
             }
-
+//
             @Override
             public void onChildChanged(final DataSnapshot dataSnapshot, String s) {
                 final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
-
                 dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
@@ -203,16 +171,17 @@ public class NegociacoesActivity extends BaseActivity {
                             @Override
                             public void onDataChange(DataSnapshot userDataSnapshot) {
                                 negociacao.setVendorName(userDataSnapshot.child("nome").getValue(String.class));
-                                if (!negociacao.getLastMessageSenderId().equals(userId)) {
-                                    vibrate();
-                                }
                                 final int index;
-                                if (negociacao.getRemoteUserId().equals(userId)) {
+                                System.out.println(negociacao.getUnreadMessagesCounter());
+                                if (negociacao.getVendorId().equals(userId)) {
                                     index = sellAdapter.getIndexOfKey(dataSnapshot.getKey());
                                     sellAdapter.updateNegociacao(index, negociacao);
                                 } else {
                                     index = buyAdapter.getIndexOfKey(dataSnapshot.getKey());
                                     buyAdapter.updateNegociacao(index, negociacao);
+                                }
+                                if ((!isChatActivityOpened && !negociacao.getLastMessageSenderId().equals(userId)) || (isChatActivityOpened && !dataSnapshot.getKey().equals(currentOpenedChatNegotiationKey))) {
+                                    vibrate();
                                 }
                             }
 

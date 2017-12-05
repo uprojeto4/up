@@ -56,7 +56,7 @@ import static br.ufc.quixada.up.R.layout.post;
     private ArrayList<String> pictures;
     private String id;
     private ArrayList<String> upsList = new ArrayList<String>();
-    private long dataCadastro = DateTimeControl.getCurrentDateTime();
+    private long dataCadastro;
 
 //    private List<String> upsList;
 
