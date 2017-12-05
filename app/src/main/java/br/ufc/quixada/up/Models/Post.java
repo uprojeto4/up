@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ufc.quixada.up.Activities.MainActivity;
+import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.R;
 
@@ -56,6 +57,8 @@ import static br.ufc.quixada.up.R.layout.post;
     private String id;
     private ArrayList<String> upsList = new ArrayList<String>();
     private byte[] imageCover;
+
+    Post postTemp;
 
 //    private List<String> upsList;
 
@@ -262,7 +265,7 @@ import static br.ufc.quixada.up.R.layout.post;
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if(i == images.size()){
-                        downloadImages("PostsPictures/" + getId() + "/" +getPictures().get(0));
+//                        downloadImages("PostsPictures/" + getId() + "/" +getPictures().get(0));
                         Log.d("TAG", "Anuncio Inserido com Sucesso!");
                         save();
 
@@ -290,12 +293,14 @@ import static br.ufc.quixada.up.R.layout.post;
         }
     }
 
-    public void downloadImages(String path){
+    public void downloadImages(String path, final PostAdapter postAdapter, Post post){
         StorageReference storageReference = FirebaseConfig.getStorage();
         StorageReference imageRef;
 
+        this.postTemp = post;
+
         //recupera apenas a primeira imagem
-        imageRef = storageReference.child(path);
+        imageRef = storageReference.child("PostsPictures/" + getId() + "/" + path);
 
         try{
             //cria o arquivo temporário local onde a imagem será armazenada
@@ -312,7 +317,7 @@ import static br.ufc.quixada.up.R.layout.post;
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     //transforma o stream em um array de bytes
 //                    byte[] picture = stream.toByteArray();
-                    setImageCover(stream.toByteArray());
+                    postTemp.setImageCover(stream.toByteArray());
                     //método que aplica a imagem nos lugares desejsdos
 //                    applyImage(pictureCover);
                     Log.d("TAG","Imagem baixada com sucesso! ");
@@ -327,8 +332,9 @@ import static br.ufc.quixada.up.R.layout.post;
             }).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-
-                    Log.d("TAG", " "+task.getResult().getTotalByteCount());
+                    Log.d("Entrou2", "entrou2");
+                    postAdapter.notifyDataSetChanged();
+//                    Log.d("TAG", " "+task.getResult().getTotalByteCount());
                 }
             });
         } catch (IOException e){
