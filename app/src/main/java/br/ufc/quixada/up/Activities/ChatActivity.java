@@ -97,7 +97,7 @@ public class ChatActivity extends BaseActivity {
         recyclerViewChat.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(userId);
         recyclerViewChat.setAdapter(chatAdapter);
-//
+
 //        tituloAnuncio.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
