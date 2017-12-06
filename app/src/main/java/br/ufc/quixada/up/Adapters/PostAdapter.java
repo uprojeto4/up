@@ -36,6 +36,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import br.ufc.quixada.up.Activities.BaseActivity;
 import br.ufc.quixada.up.Activities.ChatActivity;
 import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.Constant;
@@ -93,6 +94,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.subtitle.setText(post.getSubtitle());
         holder.price.setText("R$ " + price);
         holder.post = post;
+
+        if (holder.post.getUserId().equals(BaseActivity.localUserId)) {
+            holder.openChatButton.setVisibility(View.GONE);
+            holder.markAsSelled.setVisibility(View.VISIBLE);
+        } else {
+            holder.openChatButton.setVisibility(View.VISIBLE);
+            holder.markAsSelled.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -106,6 +115,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView price;
         ImageView image;
         private Button openChatButton;
+        private Button markAsSelled;
         private ImageButton upButton;
         private Post post;
 
@@ -134,6 +144,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     context.startActivity(intent);
                 }
             });
+
+            markAsSelled = (Button) itemView.findViewById(R.id.buttonMarcarComoVendidoPost);
 
             upButton = (ImageButton) itemView.findViewById(R.id.buttonUpCard);
 

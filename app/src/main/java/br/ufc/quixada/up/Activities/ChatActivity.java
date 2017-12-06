@@ -38,7 +38,7 @@ public class ChatActivity extends BaseActivity {
     private String userId;
     private String remoteUserId;
     private String adId;
-    private int unreadMessagesCounter;
+    private int unreadMessagesCounter = 0;
     private TextView tituloAnuncio;
     private TextView vendedorAnuncio;
     private TextView dataCadastroAnuncio;
@@ -97,6 +97,15 @@ public class ChatActivity extends BaseActivity {
         recyclerViewChat.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(userId);
         recyclerViewChat.setAdapter(chatAdapter);
+//
+//        tituloAnuncio.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
+//                intent.putExtra("position", position);
+//                startActivity(intent);
+//            }
+//        });
 
         buttonSend.setOnClickListener(new View.OnClickListener() {
 
@@ -113,6 +122,7 @@ public class ChatActivity extends BaseActivity {
                         dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
                         dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessageSenderId").setValue(userId);
                     } else {
+                        unreadMessagesCounter = 1;
                         chatId = ChatControl.startConversation(userId, remoteUserId, adId, message);
                     }
                     if (!isShowingMessages) {
@@ -146,7 +156,6 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void getMessages() {
-        unreadMessagesCounter = 0;
         dbReference.child("messages").child(chatId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

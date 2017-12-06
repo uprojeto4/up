@@ -51,6 +51,7 @@ public class BaseActivity extends AppCompatActivity
     TextView textViewEmail;
     ImageView imageViewPhoto;
     User localUser;
+    public static String localUserId;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -85,7 +86,7 @@ public class BaseActivity extends AppCompatActivity
         localUser.setNumCompras(firebasePreferences.getNumCompras());
         localUser.setAvComprador(firebasePreferences.getAvCompras());
 
-
+        localUserId = localUser.getId();
     }
 
 //    public void updateLocalUser(){
