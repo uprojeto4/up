@@ -30,10 +30,12 @@ import com.nguyenhoanglam.imagepicker.model.Image;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.ufc.quixada.up.Activities.MainActivity;
+import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.R;
 
@@ -56,6 +58,8 @@ import static br.ufc.quixada.up.R.layout.post;
     private String id;
     private ArrayList<String> upsList = new ArrayList<String>();
     private byte[] imageCover;
+
+    Post postTemp;
 
 //    private List<String> upsList;
 
@@ -213,6 +217,41 @@ import static br.ufc.quixada.up.R.layout.post;
         });
     }
 
+    public int[] scaleImage(double width, double height){
+
+        Double h;
+        Double w;
+        Double scale;
+        int[] dimensoes = {0,0};
+
+        if (width > height){
+            scale=new Double(68000/width);
+            w =new Double(680);
+            h = new Double(height*(scale/100));
+            Log.d("Widht_Height", ""+h);
+            Log.d("Widht_Height", ""+w);
+            dimensoes[0] = w.intValue();
+            dimensoes[1] = h.intValue();
+            return dimensoes;
+//            file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
+        }else if (height > width){
+            scale=new Double(68000/height);
+            h =new Double(680);
+            w = new Double(width*(scale/100));
+            Log.d("Widht_Height", ""+h);
+            Log.d("Widht_Height", ""+w);
+            dimensoes[0] = w.intValue();
+            dimensoes[1] = h.intValue();
+            return dimensoes;
+//            file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
+        }else{
+            dimensoes[0] = 680;
+            dimensoes[1] = 680;
+            return dimensoes;
+//            file = Bitmap.createScaledBitmap(file, 680, 680, false);
+        }
+    }
+
     public void upload(final ArrayList<Image> images) {
         //pega a referencia
         DatabaseReference databaseReference = FirebaseConfig.getDatabase();
@@ -227,17 +266,53 @@ import static br.ufc.quixada.up.R.layout.post;
         i = 1;
         //Faz upload das novas imagens para o servidor.
         //pega o caminho do arquivo a ser enviado
-        for (Image image : images){
-            //pega o caminho da imagem no disco
-            Uri file = Uri.fromFile(new File(image.getPath()));
-            //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
-            //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
-            imageRef = storageReference.child("PostsPictures/" + getId() + "/" + file.getLastPathSegment());
-            final String imageName = imageRef.getName();
-            //cria os metadados
+            for (Image image : images){
+                byte[] imageData=null;
+                //pega o caminho da imagem no disco
+//            Uri file = Uri.fromFile(new File(image.getPath()));
+                Bitmap file = BitmapFactory.decodeFile(image.getPath());
+
+//                int width = file.getWidth();
+//                int height = file.getHeight();
+//
+//                Double h;
+//                Double w;
+//                Double scale;
+
+                int[] dimensoes = scaleImage(file.getWidth(),file.getHeight());
+
+                file = Bitmap.createScaledBitmap(file, dimensoes[0], dimensoes[1], false);
+//                if (width > height){
+//                    scale=new Double(68000/width);
+//                    w =new Double(680);
+//                    h = new Double(height*(scale/100));
+//                    Log.d("Widht_Height", ""+h);
+//                    Log.d("Widht_Height", ""+w);
+//                    file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
+//                }else if (height > width){
+//                    scale=new Double(68000/height);
+//                    h =new Double(680);
+//                    w = new Double(width*(scale/100));
+//                    Log.d("Widht_Height", ""+h);
+//                    Log.d("Widht_Height", ""+w);
+//                    file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
+//                }else{
+//                }
+
+//            .fromFile(new File(image.getPath()));
+                //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
+                //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
+                imageRef = storageReference.child("PostsPictures/" + getId() + "/" + image.getName());
+                final String imageName = imageRef.getName();
+                //cria os metadados
             StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
+
+            ByteArrayOutputStream fileStream = new ByteArrayOutputStream();
+            file.compress(Bitmap.CompressFormat.JPEG, 50, fileStream);
+            imageData = fileStream.toByteArray();
             //faz upload do arquivo junto com os metadados
-            final UploadTask uploadTask = imageRef.putFile(file, metadata);
+//            final UploadTask uploadTask = imageRef.putFile(file, metadata);
+            final UploadTask uploadTask = imageRef.putBytes(imageData, metadata);
             //monitora o andamento do upload
             uploadTask
                     //monitora caso de falha
@@ -253,16 +328,16 @@ import static br.ufc.quixada.up.R.layout.post;
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            Log.d("TAG2", "Imagem enviada com sucesso "+downloadUrl);
 //                    Toast.makeText(context, "Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
                             addPictureName(imageName);
-                            Log.d("TAG", "Imagem enviada com sucesso "+downloadUrl);
 
                         }
                     }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if(i == images.size()){
-                        downloadImages("PostsPictures/" + getId() + "/" +getPictures().get(0));
+//                        downloadImages("PostsPictures/" + getId() + "/" +getPictures().get(0));
                         Log.d("TAG", "Anuncio Inserido com Sucesso!");
                         save();
 
@@ -290,12 +365,14 @@ import static br.ufc.quixada.up.R.layout.post;
         }
     }
 
-    public void downloadImages(String path){
+    public void downloadImages(String path, final PostAdapter postAdapter, Post post){
         StorageReference storageReference = FirebaseConfig.getStorage();
         StorageReference imageRef;
 
+        this.postTemp = post;
+
         //recupera apenas a primeira imagem
-        imageRef = storageReference.child(path);
+        imageRef = storageReference.child("PostsPictures/" + getId() + "/" + path);
 
         try{
             //cria o arquivo temporário local onde a imagem será armazenada
@@ -312,7 +389,7 @@ import static br.ufc.quixada.up.R.layout.post;
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     //transforma o stream em um array de bytes
 //                    byte[] picture = stream.toByteArray();
-                    setImageCover(stream.toByteArray());
+                    postTemp.setImageCover(stream.toByteArray());
                     //método que aplica a imagem nos lugares desejsdos
 //                    applyImage(pictureCover);
                     Log.d("TAG","Imagem baixada com sucesso! ");
@@ -327,8 +404,9 @@ import static br.ufc.quixada.up.R.layout.post;
             }).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-
-                    Log.d("TAG", " "+task.getResult().getTotalByteCount());
+                    Log.d("Entrou2", "entrou2");
+                    postAdapter.notifyDataSetChanged();
+//                    Log.d("TAG", " "+task.getResult().getTotalByteCount());
                 }
             });
         } catch (IOException e){

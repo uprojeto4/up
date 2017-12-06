@@ -58,7 +58,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     StorageReference imageRef;
     Bitmap bitmap;
     byte[] pictureCover;
-    ImageView imageView;
+//    ImageView imageView;
     FirebaseStorage firebaseStorage;
     FirebaseAuth user = FirebaseAuth.getInstance();
 
@@ -81,13 +81,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         Post post = posts.get(position);
 
+        Log.d("entrou", "netrou");
+
         DecimalFormat formatoMoeda = new DecimalFormat("##,###,###,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
         formatoMoeda.setMinimumFractionDigits(2);
         formatoMoeda.setParseBigDecimal (true);
         String price = formatoMoeda.format(post.getPrice());
 
-        holder.image.setImageResource(post.getDefaultImage());
-        imageView = holder.image;
+//        holder.image.setImageResource(post.getDefaultImage());
+//        imageView = holder.image;
+        Log.d("imageCOver", post.getImageCover()+"");
+        if(post.getImageCover()!= null){
+            applyImage(post.getImageCover(), holder.image);
+            Log.d("chamou","applyImage");
+        }
         holder.title.setText(post.getTitle());
         holder.subtitle.setText(post.getSubtitle());
         holder.price.setText("R$ " + price);
@@ -181,7 +188,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         notifyItemInserted(position);
     }
 
-    public void applyImage(byte[] bytes){
+    public void applyImage(byte[] bytes, ImageView imageView){
         //options para o glide
         RequestOptions requestOptions = new RequestOptions();
         //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
