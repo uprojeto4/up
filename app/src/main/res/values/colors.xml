@@ -6,15 +6,17 @@
     <!--<color name="colorAccent">#FF4081</color>-->
 <!--</resources>-->
 <resources>
-    <color name="colorPrimary">#5a185f</color>
-    <color name="primaryLightColor">#89458d</color>
-    <color name="colorPrimaryDark">#19001d</color>
-    <color name="colorAccent">#ffab00</color>
-    <color name="secondaryLightColor">#ffdd4b</color>
-    <color name="secondaryDarkColor">#c67c00</color>
+    <color name="colorPrimary">#ffab00</color>
+    <color name="primaryLightColor">#ffdd4b</color>
+    <!--<color name="primaryLightColor">#89458d</color>-->
+    <color name="colorPrimaryDark">#c67c00</color>
+    <!--<color name="colorPrimaryDark">#19001d</color>-->
+    <color name="colorAccent">#00948c</color>
+    <!--<color name="secondaryLightColor">#ffdd4b</color>-->
+    <!--<color name="secondaryDarkColor">#c67c00</color>-->
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="backgroundDarker">#f0f0f0</color>
-    <color name="colorAccent2">#00948c</color>
+    <color name="colorAccent2">#5a185f</color>
     <color name="goldYellow">#f2ed00</color>
 </resources>
