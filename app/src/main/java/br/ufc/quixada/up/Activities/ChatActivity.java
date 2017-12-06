@@ -5,29 +5,23 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 import br.ufc.quixada.up.Adapters.ChatAdapter;
+import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Message;
 
-import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.ChatControl;
@@ -36,8 +30,8 @@ import br.ufc.quixada.up.Utils.DateTimeControl;
 public class ChatActivity extends BaseActivity {
 
     private DatabaseReference dbReference;
-    private RecyclerView recyclerView;
-    LinearLayoutManager linearLayoutManager;
+    private RecyclerView recyclerViewChat;
+    public LinearLayoutManager linearLayoutManager;
     private EditText messageInput;
     private ChatAdapter chatAdapter;
     private String chatId;
@@ -45,10 +39,13 @@ public class ChatActivity extends BaseActivity {
     private String remoteUserId;
     private String adId;
     private int unreadMessagesCounter;
-    private TextView textViewTitleAnuncioChat;
-    private TextView textViewVendedorAnuncioChat;
-    private TextView textViewDataCadastroAnuncioChat;
+    private TextView tituloAnuncio;
+    private TextView vendedorAnuncio;
+    private TextView dataCadastroAnuncio;
+    private TextView negociante;
     private LinearLayout noMessagesLayout;
+    private int negotiationType;
+    private int callerId;
     private boolean isShowingMessages = false;
 
     @Override
@@ -64,32 +61,42 @@ public class ChatActivity extends BaseActivity {
         Intent intent = getIntent();
         adId = intent.getStringExtra("adId");
         remoteUserId = intent.getStringExtra("remoteUserId");
-        NegociacoesActivity.isChatActivityOpened = true;
-        NegociacoesActivity.currentOpenedChatNegotiationKey = intent.getStringExtra("negotiationKey");
+        negotiationType = intent.getIntExtra("negotiationType", 0);
+        callerId = intent.getIntExtra("callerId", 0);
+
+        if (callerId == Constant.CHAT_CALLER_POST_ADAPTER) {
+
+        } else if (callerId == Constant.CHAT_CALLER_NEGOTIATION_ACTIVITY) {
+            NegociacoesActivity.isChatActivityOpened = true;
+            NegociacoesActivity.currentOpenedChatNegotiationKey = intent.getStringExtra("negotiationKey");
+        }
 
         userId = localUser.getId();
 
-        textViewTitleAnuncioChat = findViewById(R.id.titleAnuncioChat);
-        textViewVendedorAnuncioChat = findViewById(R.id.vendedorAnuncioChat);
-        textViewDataCadastroAnuncioChat = findViewById(R.id.dataCadastroAnuncio);
+        tituloAnuncio = findViewById(R.id.titleAnuncioChat);
+        negociante = findViewById(R.id.textViewNegocianteChat);
+        vendedorAnuncio = findViewById(R.id.vendedorAnuncioChat);
+        dataCadastroAnuncio = findViewById(R.id.dataCadastroAnuncio);
 
-        textViewTitleAnuncioChat.setText(intent.getStringExtra("adTitle"));
-        textViewDataCadastroAnuncioChat.setText(DateTimeControl.formatMillisToDate(intent.getLongExtra("submitDate", 0)));
+        tituloAnuncio.setText(intent.getStringExtra("adTitle"));
+        if (negotiationType == Constant.NEGOTIATION_TYPE_BUY) {
+            negociante.setText(R.string.vendedor);
+        } else {
+            negociante.setText(R.string.comprador);
+        }
+        dataCadastroAnuncio.setText(DateTimeControl.formatMillisToDate(intent.getLongExtra("submitDate", 0)));
 
         noMessagesLayout = findViewById(R.id.noMessagesLayout);
         messageInput = findViewById(R.id.editTextMessageInput);
         Button buttonSend = findViewById(R.id.buttonSend);
         dbReference = FirebaseConfig.getDatabase();
         resolveRemoteUserName();
-//        dbReference.keepSynced(true);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewConversation);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewChat = findViewById(R.id.recyclerViewConversation);
         linearLayoutManager = new LinearLayoutManager(this);
-//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerViewChat.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(userId);
-        recyclerView.setAdapter(chatAdapter);
+        recyclerViewChat.setAdapter(chatAdapter);
 
         buttonSend.setOnClickListener(new View.OnClickListener() {
 
@@ -102,20 +109,17 @@ public class ChatActivity extends BaseActivity {
                         dbReference.child("negotiations").child(userId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
                         dbReference.child("negotiations").child(userId).child(adId).child("lastMessageSenderId").setValue(userId);
                         unreadMessagesCounter ++;
-//                        Toast.makeText(getBaseContext(), "" + unreadMessagesCounter, Toast.LENGTH_SHORT).show();
                         dbReference.child("negotiations").child(remoteUserId).child(adId).child("unreadMessagesCounter").setValue(unreadMessagesCounter);
                         dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
                         dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessageSenderId").setValue(userId);
                     } else {
-                        System.out.println("userId " + userId);
                         chatId = ChatControl.startConversation(userId, remoteUserId, adId, message);
                     }
-//                    chatAdapter.addMessage(message);
+                    if (!isShowingMessages) {
+                        getMessages();
+                    }
                     messageInput.setText("");
                     linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
-                    if (!isShowingMessages) {
-                        showMessages();
-                    }
                 }
             }
         });
@@ -127,7 +131,6 @@ public class ChatActivity extends BaseActivity {
                     DataSnapshot negotiationSnapshot = dataSnapshot.child(adId);
                     chatId = negotiationSnapshot.child("messagesId").getValue(String.class);
                     unreadMessagesCounter = negotiationSnapshot.child("unreadMessagesCounter").getValue(Integer.class);
-//                    dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
                     getMessages();
                 } else {
                     showNoMessageInfo();
@@ -143,12 +146,15 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void getMessages() {
+        unreadMessagesCounter = 0;
         dbReference.child("messages").child(chatId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                System.out.println(dataSnapshot);
                 Message message = dataSnapshot.getValue(Message.class);
                 chatAdapter.addMessage(message);
+                if (!isShowingMessages) {
+                    showMessages();
+                }
                 linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
                 if (chatAdapter.getItemCount() > 0) {
                     showMessages();
@@ -186,7 +192,7 @@ public class ChatActivity extends BaseActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 System.out.println(dataSnapshot);
                 User user = dataSnapshot.getValue(User.class);
-                textViewVendedorAnuncioChat.setText(user.getNome());
+                vendedorAnuncio.setText(user.getNome());
             }
 
             @Override
@@ -197,20 +203,22 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void showMessages(){
-        recyclerView.setVisibility(View.VISIBLE);
+        recyclerViewChat.setVisibility(View.VISIBLE);
         noMessagesLayout.setVisibility(View.GONE);
         this.isShowingMessages = true;
     }
 
     private void showNoMessageInfo(){
-        recyclerView.setVisibility(View.GONE);
+        recyclerViewChat.setVisibility(View.GONE);
         noMessagesLayout.setVisibility(View.VISIBLE);
         this.isShowingMessages = false;
     }
 
     private void emptyMessagesCounter() {
-        unreadMessagesCounter = 0;
-        dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
+        if (isShowingMessages) {
+            unreadMessagesCounter = 0;
+            dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
+        }
     }
 
     @Override
@@ -223,7 +231,9 @@ public class ChatActivity extends BaseActivity {
     public void onStop() {
         super.onStop();
         emptyMessagesCounter();
-        NegociacoesActivity.isChatActivityOpened = false;
-        NegociacoesActivity.currentOpenedChatNegotiationKey = "";
+        if (callerId == Constant.CHAT_CALLER_NEGOTIATION_ACTIVITY) {
+            NegociacoesActivity.isChatActivityOpened = false;
+            NegociacoesActivity.currentOpenedChatNegotiationKey = "";
+        }
     }
 }

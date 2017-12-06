@@ -139,6 +139,8 @@
     <string name="label_no_messages">Ainda não há mensagens. Comece dizendo alguma coisa!</string>
 
     <string name="negociante">Negociante:</string>
+    <string name="comprador">Comprador:</string>
+    <string name="vendedor">Vendedor:</string>
 
     <string name="anuncio_cadastrado_em">Anúncio cadastrado em</string>
 

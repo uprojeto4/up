@@ -18,7 +18,6 @@ import br.ufc.quixada.up.Activities.ChatActivity;
 import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
-import br.ufc.quixada.up.Utils.DateTimeControl;
 
 public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.NegociacaoViewHolder> {
 
@@ -47,8 +46,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
 
         negociacaoViewHolder.negociacao = negotiationSet.get(position);
         negociacaoViewHolder.textViewTituloNegociacao.setText(negociacaoViewHolder.negociacao.getTitle());
-        negociacaoViewHolder.textViewNomeVendedorNegociacao.setText(negociacaoViewHolder.negociacao.getVendorName());
-        negociacaoViewHolder.textViewdataInicioNegociacao.setText(DateTimeControl.formatMillisToDate(negociacaoViewHolder.negociacao.getStartDate()));
+//        negociacaoViewHolder.textViewdataInicioNegociacao.setText(DateTimeControl.formatMillisToDate(negociacaoViewHolder.negociacao.getStartDate()));
         negociacaoViewHolder.textViewLastMessage.setText(negociacaoViewHolder.negociacao.getLastMessage());
         negociacaoViewHolder.textViewMensagensNaoLidasNegociacao.setText(String.valueOf(negociacaoViewHolder.negociacao.getUnreadMessagesCounter()));
         negociacaoViewHolder.negotiationKey = negotiationKeys.get(position);
@@ -56,6 +54,12 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
             negociacaoViewHolder.linearLayoutMensagensNaoLidasNegociacao.setVisibility(View.GONE);
         } else {
             negociacaoViewHolder.linearLayoutMensagensNaoLidasNegociacao.setVisibility(View.VISIBLE);
+        }
+
+        if (negociacaoViewHolder.negociacao.getVendorId().equals(userId)) {
+            negociacaoViewHolder.textViewNomeVendedorNegociacao.setText("Comprador: " + negociacaoViewHolder.negociacao.getVendorName());
+        } else {
+            negociacaoViewHolder.textViewNomeVendedorNegociacao.setText("Vendedor: " + negociacaoViewHolder.negociacao.getVendorName());
         }
 
         if (!negociacaoViewHolder.negociacao.getLastMessageSenderId().equals(userId)) {
@@ -130,7 +134,6 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
         TextView textViewTituloNegociacao;
         TextView textViewNomeVendedorNegociacao;
         LinearLayout linearLayoutMensagensNaoLidasNegociacao;
-        TextView textViewdataInicioNegociacao;
         TextView textViewMensagensNaoLidasNegociacao;
         TextView textViewLastMessage;
         ImageView responseIcon;
@@ -143,8 +146,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
             super(itemLayoutView);
 
             textViewTituloNegociacao = itemLayoutView.findViewById(R.id.textViewTituloNegociacao);
-            textViewNomeVendedorNegociacao = itemLayoutView.findViewById(R.id.textViewNomeVendedorNegociacao);
-            textViewdataInicioNegociacao = itemLayoutView.findViewById(R.id.dataInicioNegociacao);
+            textViewNomeVendedorNegociacao = itemLayoutView.findViewById(R.id.textViewNegocianteChat);
             linearLayoutMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.linearLayoutMensagensNaoLidasNegociacao);
             textViewMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.textViewMensagensNaoLidasNegociacao);
             textViewLastMessage = itemLayoutView.findViewById(R.id.lastMessage);

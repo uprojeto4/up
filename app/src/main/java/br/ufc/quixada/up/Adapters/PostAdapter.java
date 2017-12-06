@@ -38,6 +38,7 @@ import java.util.Locale;
 
 import br.ufc.quixada.up.Activities.ChatActivity;
 import br.ufc.quixada.up.Activities.MainActivity;
+import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
@@ -128,6 +129,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     intent.putExtra("adId", post.getId());
                     intent.putExtra("adTitle", post.getTitle());
                     intent.putExtra("submitDate", post.getDataCadastro());
+                    intent.putExtra("negotiationType", Constant.NEGOTIATION_TYPE_BUY);
+                    intent.putExtra("callerId", Constant.CHAT_CALLER_POST_ADAPTER);
                     context.startActivity(intent);
                 }
             });
