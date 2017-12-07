@@ -51,6 +51,7 @@ import java.util.Locale;
 
 
 import br.ufc.quixada.up.Adapters.NovoAnuncioRecyclerViewImageAdapter;
+import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.InputMask;

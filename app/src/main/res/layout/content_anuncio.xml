@@ -211,11 +211,11 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView9"
+                        android:id="@+id/anuncianteNome"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:text="Felipe Coutinho"
+                        android:text=""
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="18sp" />
 
@@ -234,11 +234,11 @@
                             app:srcCompat="@drawable/ic_star_black_24dp" />
 
                         <TextView
-                            android:id="@+id/textView10"
+                            android:id="@+id/avVendedor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="4.5"
+                            android:text=""
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -259,11 +259,11 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView12"
+                            android:id="@+id/tituloUsuario"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
-                            android:text="Senior" />
+                            android:text="" />
 
                         <TextView
                             android:id="@+id/textView15"

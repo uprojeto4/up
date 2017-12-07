@@ -64,6 +64,8 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
     private String lastPositionId;
     private boolean lastPost = false;
 
+    public static String localUserId;
+
     LikeButton likeButton;
 
 
@@ -99,6 +101,8 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
             updateUserInfo();
             loadFromFirebase(numPostsByTime, null);
         }
+
+        localUserId = localUser.getId();
 
 
         if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||
@@ -334,35 +338,90 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
     public void loadFromFirebase(final int num, final String position){
         postsReference = FirebaseConfig.getDatabase().child("posts");
         if(position != null){
-            postsReference.orderByKey().endAt(lastPositionId).limitToFirst(num).addListenerForSingleValueEvent(new ValueEventListener() {
+            postsReference.orderByKey().endAt(lastPositionId).limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<Post> listAux = new ArrayList<Post>();
 //                    Log.e("TAG", "novo: "+dataSnapshot.getChildrenCount()+" - "+recyclerView.getScrollY());
                     int last = numPostsByTime;
                     try {
-                        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                            post = singleSnapshot.getValue(Post.class);
-                            Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
-//                            Log.d("TAG", "epaai: "+ post.getId());
+//                        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                            post = singleSnapshot.getValue(Post.class);
+//                            Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
+////                            Log.d("TAG", "epaai: "+ post.getId());
 //                            if(dataSnapshot.getChildrenCount() == numPostsByTime){
-//                                if (last > 1){
-//                                    postAdapter.addBottomListItem(post);
+//                                if (last == numPostsByTime){
+//                                    lastPositionId = post.getId();
 //                                    last--;
 //                                }else{
-//                                    lastPositionId = post.getId();
+//                                    postAdapter.addBottomListItem(post);
 //                                }
 //                            }else{
 //                                postAdapter.addBottomListItem(post);
 //                                lastPost = true;
 //                            }
+//
+//                        }
 
-                            if (last == numPostsByTime){
-                                lastPositionId = post.getId();
-                                last--;
-                            }else{
-                                postAdapter.addListItem(post, posts.size());
-                            }
+                        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                            post = singleSnapshot.getValue(Post.class);
+                            listAux.add(singleSnapshot.getValue(Post.class));
                         }
+
+                        for (int i=listAux.size(); i>0; i--){
+                            Log.d("TAG", i+"");
+
+                            post = listAux.get(i-1);
+                            Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
+                            if(dataSnapshot.getChildrenCount() == numPostsByTime){
+                                if (last > 1){
+//                                    recyclerView.scrollToPosition(0);
+                                    if(!posts.contains(post)){
+                                        post.downloadImages(post.getPictures().get(0), postAdapter, post);
+                                    }
+                                    Log.d("testando", "entrou");
+                                    postAdapter.addBottomListItem(post);
+                                    last--;
+                                }else{
+                                    lastPositionId = post.getId();
+                                    Log.d("TAG", "postID: "+lastPositionId);
+                                }
+                            }else{
+                                postAdapter.addBottomListItem(post);
+                                lastPost = true;
+                            }
+
+//                            if (last == numPostsByTime){
+//                                lastPositionId = post.getId();
+//                                last--;
+//                            }else{
+//                                recyclerView.scrollToPosition(0);
+//                                postAdapter.addTopListItem(post);
+//                            }
+                        }
+
+
+//                        int size = 0;
+//                        for (DataSnapshot singlesnapshot : dataSnapshot.getChildren()) {
+//                            size++ ;
+//                        }
+
+//                        if (last == numPostsByTime){
+//                            lastPositionId = post.getId();
+//                            last--;
+//                        }else{
+//                            postAdapter.addBottomListItem(post);
+//                        }
+//                        if(dataSnapshot.getChildrenCount() == numPostsByTime){
+//                        }else{
+//                            postAdapter.addBottomListItem(post);
+//                            lastPost = true;
+//                        }
+//                        for (int i = size; i>0; i--){
+//
+//
+//                        }
+
                     } catch (Exception ex) {
                         Log.e("oops", ex.getMessage());
                     }
@@ -378,7 +437,40 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     int last = numPostsByTime;
+//                    ArrayList<Post> listAux = new ArrayList<Post>();
                     try {
+
+//                        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+////                            post = singleSnapshot.getValue(Post.class);
+//                            listAux.add(singleSnapshot.getValue(Post.class));
+//                        }
+//
+//                        for (int i=listAux.size(); i>0; i--){
+//                            Log.d("TAG", i+"");
+//
+//                            post = listAux.get(i-1);
+//                            Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
+//                            if (last == numPostsByTime){
+//                                lastPositionId = post.getId();
+//                                Log.d("TAG", "postID: "+lastPositionId);
+//                                last--;
+//                            }else{
+//                                recyclerView.scrollToPosition(0);
+//                                if(!posts.contains(post)){
+//                                    post.downloadImages(post.getPictures().get(0), postAdapter, post);
+//                                }
+//                                Log.d("testando", "entrou");
+//                                postAdapter.addTopListItem(post);
+////                                last--;
+//                            }
+////                            if (last == numPostsByTime){
+////                                lastPositionId = post.getId();
+////                                last--;
+////                            }else{
+////                                recyclerView.scrollToPosition(0);
+////                                postAdapter.addTopListItem(post);
+////                            }
+//                        }
                         for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                             post = singleSnapshot.getValue(Post.class);
                             Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
@@ -388,6 +480,10 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                                 last--;
                             }else{
                                 recyclerView.scrollToPosition(0);
+                                if(!posts.contains(post)){
+                                    post.downloadImages(post.getPictures().get(0), postAdapter, post);
+                                }
+                                Log.d("testando", "entrou");
                                 postAdapter.addTopListItem(post);
 //                                last--;
                             }
@@ -426,6 +522,10 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 ////                    }
 //                    Toast.makeText(MainActivity.this, "New Posts", Toast.LENGTH_SHORT).show();
 //                }
+//                if(!posts.contains(dataSnapshot)){
+//                    post.downloadImages(post.getPictures().get(0), postAdapter, posts.indexOf(post));
+//                }
+//                Log.d("testando", "entrou");
             }
 
             @Override

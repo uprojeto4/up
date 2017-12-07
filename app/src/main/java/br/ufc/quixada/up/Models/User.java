@@ -32,6 +32,13 @@ public class User {
 
     private Address address = new Address();
 
+    private int qtdAvVendedor = 0;
+    private int somaAvVendedor = 0;
+
+    private int qtdAvComprador = 0;
+    private int somaAvComprador = 0;
+
+
     private float avVendedor = 0;
     private int numVendas = 0;
 
@@ -65,6 +72,38 @@ public class User {
 //        return userHashMap;
 //    }
 
+
+    public int getQtdAvVendedor() {
+        return qtdAvVendedor;
+    }
+
+    public void setQtdAvVendedor(int qtdAvVendedor) {
+        this.qtdAvVendedor = qtdAvVendedor;
+    }
+
+    public int getSomaAvVendedor() {
+        return somaAvVendedor;
+    }
+
+    public void setSomaAvVendedor(int somaAvVendedor) {
+        this.somaAvVendedor = somaAvVendedor;
+    }
+
+    public int getQtdAvComprador() {
+        return qtdAvComprador;
+    }
+
+    public void setQtdAvComprador(int qtdAvComprador) {
+        this.qtdAvComprador = qtdAvComprador;
+    }
+
+    public int getSomaAvComprador() {
+        return somaAvComprador;
+    }
+
+    public void setSomaAvComprador(int somaAvComprador) {
+        this.somaAvComprador = somaAvComprador;
+    }
 
     public float getAvComprador() {
         return avComprador;
