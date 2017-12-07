@@ -159,6 +159,7 @@ public class ChatActivity extends BaseActivity {
         dbReference.child("messages").child(chatId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.out.println("incoming message: " + dataSnapshot);
                 Message message = dataSnapshot.getValue(Message.class);
                 chatAdapter.addMessage(message);
                 if (!isShowingMessages) {

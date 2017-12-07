@@ -52,7 +52,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         Message message = mDataSet.get(position);
         holder.mTextView.setText(message.getText());
-        holder.timestamp.setText(DateTimeControl.formatMillisToDate(message.getDateTime()));
     }
 
     @Override
@@ -74,12 +73,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView mTextView;
-        TextView timestamp;
 
         ViewHolder(View v) {
             super(v);
             mTextView = (TextView) itemView.findViewById(R.id.messageText);
-            timestamp = (TextView) itemView.findViewById(R.id.timestampChat);
 
         }
     }

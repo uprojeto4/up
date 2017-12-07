@@ -1,27 +1,21 @@
 package br.ufc.quixada.up.Activities;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,13 +27,14 @@ import java.util.Arrays;
 
 import br.ufc.quixada.up.Adapters.NegociacoesAdapter;
 import br.ufc.quixada.up.Adapters.NegociacoesFragmentPagerAdapter;
+import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Fragments.ComprasFragment;
-import br.ufc.quixada.up.Models.Message;
+import br.ufc.quixada.up.Interfaces.NegotiationFragmentDisplay;
 import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
 
-public class NegociacoesActivity extends BaseActivity {
+public class NegociacoesActivity extends BaseActivity implements NegotiationFragmentDisplay {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -52,6 +47,7 @@ public class NegociacoesActivity extends BaseActivity {
     private DatabaseReference dbReference;
     String spinnerItem;
     ArrayList<String> filters = new ArrayList<>();
+    private NegociacoesFragmentPagerAdapter negociacoesFragmentPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +59,10 @@ public class NegociacoesActivity extends BaseActivity {
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
 
-        viewPager.setAdapter(new NegociacoesFragmentPagerAdapter(getSupportFragmentManager(),
-                getResources().getStringArray(R.array.tabs_negociacoes)));
+        negociacoesFragmentPagerAdapter = new NegociacoesFragmentPagerAdapter(getSupportFragmentManager(),
+                getResources().getStringArray(R.array.tabs_negociacoes));
+
+        viewPager.setAdapter(negociacoesFragmentPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
 
@@ -81,6 +79,7 @@ public class NegociacoesActivity extends BaseActivity {
         userId = localUser.getId();
         buyAdapter = new NegociacoesAdapter(this, userId);
         sellAdapter = new NegociacoesAdapter(this, userId);
+
         manageNegotiations();
 
         filters.addAll(Arrays.asList(getResources().getStringArray(R.array.spinner_negociacoes)));
@@ -94,11 +93,11 @@ public class NegociacoesActivity extends BaseActivity {
                 if (position >= 0) {
                     spinnerItem = (String) adapterView.getItemAtPosition(position);
                     if (position == 0) {
-                        System.out.println("Abertas");
+//                        System.out.println("Abertas");
                     } else if (position == 1) {
-                        System.out.println("Fechadas");
+//                        System.out.println("Fechadas");
                     } else if (position == 2) {
-                        System.out.println("Canceladas");
+//                        System.out.println("Canceladas");
                     }
 //                    Toast.makeText(getApplicationContext(), "Selecionado: " + spinnerItem, Toast.LENGTH_SHORT).show();
                 }
@@ -115,12 +114,11 @@ public class NegociacoesActivity extends BaseActivity {
         dbReference.child("negotiations").child(userId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.getChildrenCount() == 0) {
-
-                } else {
-//                    noBuy.setVisibility(View.GONE);
+                if (dataSnapshot.getChildrenCount() != 0) {
                     final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
                     final String negotiationKey = dataSnapshot.getKey();
+
+//                    manageNegotiationsVisibility(Constant.SHOW_BUY_NEGOTIATIONS);
 
                     dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -158,6 +156,7 @@ public class NegociacoesActivity extends BaseActivity {
 //
             @Override
             public void onChildChanged(final DataSnapshot dataSnapshot, String s) {
+
                 final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
                 dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -214,6 +213,24 @@ public class NegociacoesActivity extends BaseActivity {
 
             }
         });
+    }
+
+    public void manageNegotiationsVisibility(int control) {
+        int position = tabLayout.getSelectedTabPosition();
+        Fragment fragment = negociacoesFragmentPagerAdapter.getItem(tabLayout.getSelectedTabPosition());
+        if (fragment != null) {
+            switch (position) {
+                case 0:
+                    System.out.println("compras");
+                    ((ComprasFragment) fragment).manageNegotiationsVisibility(control);
+//                    ((ComprasFragment) fragment).noBuy.setVisibility(View.GONE);
+                    break;
+                case 1:
+                    System.out.println("vendas");
+//                    ((VendasFragment) fragment).onRefresh();
+                    break;
+            }
+        }
     }
 
     public void vibrate() {

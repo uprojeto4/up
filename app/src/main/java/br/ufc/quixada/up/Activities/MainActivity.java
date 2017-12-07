@@ -66,7 +66,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 
     LikeButton likeButton;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -154,6 +153,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         postAdapter = new PostAdapter(this, posts);
         postAdapter.setRecyclerViewOnClickListener(this);
         recyclerView.setAdapter(postAdapter);
+
 //        anuncioTela();
     }
 

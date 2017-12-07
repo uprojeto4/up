@@ -19,4 +19,10 @@ public class Constant {
     public static final int CHAT_CALLER_POST_ADAPTER = 0;
     public static final int CHAT_CALLER_NEGOTIATION_ACTIVITY = 1;
 
+//    Controle de exibição das negociações
+    public static final int SHOW_SELL_NEGOTIATIONS = 0;
+    public static final int SHOW_BUY_NEGOTIATIONS = 1;
+    public static final int HIDE_SELL_NEGOTIATIONS = 2;
+    public static final int HIDE_BUY_NEGOTIATIONS = 3;
+
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,12 +63,14 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
             negociacaoViewHolder.textViewNomeVendedorNegociacao.setText("Vendedor: " + negociacaoViewHolder.negociacao.getVendorName());
         }
 
-        if (!negociacaoViewHolder.negociacao.getLastMessageSenderId().equals(userId)) {
-            negociacaoViewHolder.responseIcon.setVisibility(View.VISIBLE);
-            negociacaoViewHolder.textViewLastMessage.setTextColor(Color.parseColor("#FF00948C"));
-        } else {
+        if (negociacaoViewHolder.negociacao.getLastMessageSenderId().equals(userId)) {
+            negociacaoViewHolder.responseIcon.setRotation(0);
+            negociacaoViewHolder.responseIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_response_24dp));
             negociacaoViewHolder.textViewLastMessage.setTextColor(Color.parseColor("#808080"));
-            negociacaoViewHolder.responseIcon.setVisibility(View.GONE);
+        } else {
+            negociacaoViewHolder.responseIcon.setRotation(180);
+            negociacaoViewHolder.responseIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_reply_24dp));
+            negociacaoViewHolder.textViewLastMessage.setTextColor(Color.parseColor("#FF00948C"));
         }
     }
 

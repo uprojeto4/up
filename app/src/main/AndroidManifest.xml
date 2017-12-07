@@ -118,7 +118,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.ufc.quixada.up.Activities.NegociacoesActivity" />
         </activity>
-        <activity android:name=".Activities.NegociacaoActivity" />
+        <!--<activity android:name=".Activities.NegociacoesActivity" />-->
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -134,6 +134,7 @@
         <activity
             android:name=".MapsActivityPerfil"
             android:label="@string/title_activity_maps_perfil"></activity>
+
     </application>
 
 </manifest>
