@@ -39,6 +39,7 @@ import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.DateTimeControl;
+import br.ufc.quixada.up.TesteActivity;
 
 import static br.ufc.quixada.up.R.layout.post;
 
@@ -59,6 +60,7 @@ import static br.ufc.quixada.up.R.layout.post;
     private String id;
     private ArrayList<String> upsList = new ArrayList<String>();
     private byte[] imageCover;
+    private MainActivity activity;
 
     Post postTemp;
     private long dataCadastro;
@@ -262,6 +264,10 @@ import static br.ufc.quixada.up.R.layout.post;
         }
     }
 
+    public void setActivity (MainActivity activity){
+        this.activity = activity;
+    }
+
     public void upload(final ArrayList<Image> images) {
         //pega a referencia
         DatabaseReference databaseReference = FirebaseConfig.getDatabase();
@@ -375,7 +381,7 @@ import static br.ufc.quixada.up.R.layout.post;
         }
     }
 
-    public void downloadImages(String path, final PostAdapter postAdapter, Post post){
+    public void downloadImages(String path, final PostAdapter postAdapter, final Post post){
         StorageReference storageReference = FirebaseConfig.getStorage();
         StorageReference imageRef;
 
@@ -417,6 +423,7 @@ import static br.ufc.quixada.up.R.layout.post;
                     Log.d("Entrou2", "entrou2");
                     postAdapter.notifyDataSetChanged();
 //                    Log.d("TAG", " "+task.getResult().getTotalByteCount());
+//                    MainActivity.getInstance().mudarImage(postTemp.getPictures().get(0));
                 }
             });
         } catch (IOException e){

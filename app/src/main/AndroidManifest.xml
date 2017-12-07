@@ -141,6 +141,7 @@
             android:parentActivityName=".Activities.ChatActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
+        <activity android:name=".TesteActivity"></activity>
     </application>
 
 </manifest>
