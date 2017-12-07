@@ -311,36 +311,36 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
 //            }
 //        });
 
-//        dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                User remoteUser = dataSnapshot.getValue(User.class);
-//                System.out.println("usuarioRemoto"+remoteUser);
-//                if (remoteUser.getId().equals(remoteUserId)){
-//                    Log.d("Você vai avaliar", "vendedor - " + remoteUser.getNome());
-//                    dataSnapshot.getRef().child("somaAvVendedor").setValue(remoteUser.getSomaAvVendedor()+rate);
-//                    double soma = remoteUser.getSomaAvVendedor()+rate;
-//                    dataSnapshot.getRef().child("qtdAvVendedor").setValue(remoteUser.getQtdAvVendedor()+1);
-//                    double qtd = remoteUser.getQtdAvVendedor()+1;
-//                    dataSnapshot.getRef().child("avVendedor").setValue(soma / qtd);
-//                    dataSnapshot.getRef().child("numVendas").setValue(remoteUser.getNumVendas() + 1);
-//                } else {
-//                    Log.d("Você vai avaliar", "comprador - " + remoteUser.getNome());
-//                    Log.d("Você vai avaliar", "vendedor - " + remoteUser.getNome());
-//                    dataSnapshot.getRef().child("somaAvComprador").setValue(remoteUser.getSomaAvComprador()+rate);
-//                    double soma = remoteUser.getSomaAvComprador()+rate;
-//                    dataSnapshot.getRef().child("qtdAvComprador").setValue(remoteUser.getQtdAvComprador()+1);
-//                    double qtd = remoteUser.getQtdAvComprador()+1;
-//                    dataSnapshot.getRef().child("avComprador").setValue(soma / qtd);
-//                    dataSnapshot.getRef().child("numCompras").setValue(remoteUser.getNumCompras() + 1);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+        dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User remoteUser = dataSnapshot.getValue(User.class);
+                System.out.println("usuarioRemoto"+remoteUser);
+                if (remoteUser.getId().equals(remoteUserId)){
+                    Log.d("Você vai avaliar", "vendedor - " + remoteUser.getNome());
+                    dataSnapshot.getRef().child("somaAvVendedor").setValue(remoteUser.getSomaAvVendedor()+rate);
+                    double soma = remoteUser.getSomaAvVendedor()+rate;
+                    dataSnapshot.getRef().child("qtdAvVendedor").setValue(remoteUser.getQtdAvVendedor()+1);
+                    double qtd = remoteUser.getQtdAvVendedor()+1;
+                    dataSnapshot.getRef().child("avVendedor").setValue(soma / qtd);
+                    dataSnapshot.getRef().child("numVendas").setValue(remoteUser.getNumVendas() + 1);
+                } else {
+                    Log.d("Você vai avaliar", "comprador - " + remoteUser.getNome());
+                    Log.d("Você vai avaliar", "vendedor - " + remoteUser.getNome());
+                    dataSnapshot.getRef().child("somaAvComprador").setValue(remoteUser.getSomaAvComprador()+rate);
+                    double soma = remoteUser.getSomaAvComprador()+rate;
+                    dataSnapshot.getRef().child("qtdAvComprador").setValue(remoteUser.getQtdAvComprador()+1);
+                    double qtd = remoteUser.getQtdAvComprador()+1;
+                    dataSnapshot.getRef().child("avComprador").setValue(soma / qtd);
+                    dataSnapshot.getRef().child("numCompras").setValue(remoteUser.getNumCompras() + 1);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

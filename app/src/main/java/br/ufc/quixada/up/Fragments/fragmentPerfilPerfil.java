@@ -235,7 +235,11 @@ public class fragmentPerfilPerfil extends Fragment {
                         tvNumVendas.setText(""+usuarioAnunciante.getNumVendas());
 //                        tvAvVendas.setText(""+usuarioAnunciante.getAvVendedor());
                         DecimalFormat numberFormat = new DecimalFormat("#.0");
-                        tvAvVendas.setText(""+numberFormat.format(usuarioAnunciante.getAvVendedor()));
+                        if(usuarioAnunciante.getAvVendedor() == 0){
+                            tvAvVendas.setText(""+usuarioAnunciante.getAvVendedor());
+                        }else{
+                            tvAvVendas.setText(""+numberFormat.format(usuarioAnunciante.getAvVendedor()));
+                        }
 
                         tvNumCompras.setText(""+usuarioAnunciante.getNumCompras());
                         tvAvCompras.setText(""+usuarioAnunciante.getAvComprador());

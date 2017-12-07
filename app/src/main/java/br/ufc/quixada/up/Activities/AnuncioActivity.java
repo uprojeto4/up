@@ -109,7 +109,11 @@ public class AnuncioActivity extends BaseActivity {
                     anuncianteNome.setText(usuarioAnunciante.getNome());
                     DecimalFormat numberFormat = new DecimalFormat("#.0");
 
-                    avaliacaoVendedor.setText(""+numberFormat.format(usuarioAnunciante.getAvVendedor()));
+                    if(usuarioAnunciante.getAvVendedor() == 0){
+                        avaliacaoVendedor.setText(""+usuarioAnunciante.getAvVendedor());
+                    }else{
+                        avaliacaoVendedor.setText(""+numberFormat.format(usuarioAnunciante.getAvVendedor()));
+                    }
 
                     if (usuarioAnunciante.getNumVendas() == 0){
                         tituloUsuario.setText("Novato");
