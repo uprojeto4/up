@@ -10,27 +10,30 @@ import br.ufc.quixada.up.Utils.DateTimeControl;
  */
 
 public class Negociacao {
-
+// remoteUserId eh o usuário remoto, a outra parte com quem se negocia
+// vendorId eh o vendedor
     private int unreadMessagesCounter;
     private String title;
     private String remoteUserId;
+    private String vendorId;
     private String vendorName;
     private String adId;
     private String lastMessage;
     private String lastMessageSenderId;
-    private String startDate;
+    private long startDate;
     private String messagesId;
     private int status;
 
     public Negociacao() { }
 
-    public Negociacao(String messagesId, String remoteUserId, String adId, String lastMessage, String lastMessageSenderId) {
+    public Negociacao(String messagesId, String remoteUserId, String vendorId, String adId, String lastMessage, String lastMessageSenderId) {
         this.messagesId = messagesId;
         this.remoteUserId = remoteUserId;
+        this.vendorId = vendorId;
         this.adId = adId;
         this.lastMessage = lastMessage;
         this.lastMessageSenderId = lastMessageSenderId;
-        this.startDate = DateTimeControl.getCurrentDate();
+        this.startDate = DateTimeControl.getCurrentDateTime();
         this.status = Constant.OPENED_NEGOTIATION;
     }
 
@@ -74,11 +77,11 @@ public class Negociacao {
         this.lastMessageSenderId = lastMessageSenderId;
     }
 
-    public String getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 
@@ -114,4 +117,11 @@ public class Negociacao {
         this.vendorName = vendorName;
     }
 
+    public String getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(String vendorId) {
+        this.vendorId = vendorId;
+    }
 }

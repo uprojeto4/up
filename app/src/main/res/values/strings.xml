@@ -109,7 +109,7 @@
     <string name="dafault_user_name">Visitante</string>
     <string name="dafault_exit_confirmation">Deseja realmente Sair?</string>
 
-    <string name="iniciada_em">Negociação iniciada em</string>
+    <string name="iniciada_em">Negociação iniciada em:</string>
     <string name="no_address_dialog_title">Ops... </string>
     <string name="insert_address_message">Informações de endereço não cadastradas, informá-las ajuda a aumentar
         as chances de negociações. Gostaria de adicioná-las agora?</string>
@@ -142,5 +142,10 @@
 
     <string name="anunciado_por">Anunciado por</string>
     <string name="title_activity_perfil_publico">PerfilPublicoActivity</string>
+    <string name="negociante">Negociante:</string>
+    <string name="comprador">Comprador:</string>
+    <string name="vendedor">Vendedor:</string>
+
+    <string name="anuncio_cadastrado_em">Anúncio cadastrado em</string>
 
 </resources>

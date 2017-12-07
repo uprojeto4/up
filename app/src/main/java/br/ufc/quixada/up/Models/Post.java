@@ -38,6 +38,7 @@ import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.DateTimeControl;
 
 import static br.ufc.quixada.up.R.layout.post;
 
@@ -60,6 +61,7 @@ import static br.ufc.quixada.up.R.layout.post;
     private byte[] imageCover;
 
     Post postTemp;
+    private long dataCadastro;
 
 //    private List<String> upsList;
 
@@ -161,6 +163,14 @@ import static br.ufc.quixada.up.R.layout.post;
 
     public byte[] getImageCover(){
         return this.imageCover;
+    }
+
+    public long getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(long dataCadastro) {
+        this.dataCadastro = dataCadastro;
     }
 
     public int getDefaultImage(){

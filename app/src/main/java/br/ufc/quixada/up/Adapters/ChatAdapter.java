@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import br.ufc.quixada.up.Models.Message;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.DateTimeControl;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
@@ -69,11 +71,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 //    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+
         TextView mTextView;
 
         ViewHolder(View v) {
             super(v);
             mTextView = (TextView) itemView.findViewById(R.id.messageText);
+
         }
     }
 }

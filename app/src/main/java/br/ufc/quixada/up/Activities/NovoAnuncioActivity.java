@@ -54,6 +54,7 @@ import br.ufc.quixada.up.Adapters.NovoAnuncioRecyclerViewImageAdapter;
 import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.DateTimeControl;
 import br.ufc.quixada.up.Utils.InputMask;
 import br.ufc.quixada.up.Utils.RecyclerViewPhotoSeparator;
 
@@ -346,6 +347,7 @@ public class NovoAnuncioActivity extends BaseActivity {
                 post.setQtd(Integer.parseInt(qtd));
                 post.setCategoria(spinnerCategoriasAnuncio.getSelectedItem().toString());
                 post.setUserId(localUser.getId());
+                post.setDataCadastro(DateTimeControl.getCurrentDateTime());
         //        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
 
                 post.upload(images);

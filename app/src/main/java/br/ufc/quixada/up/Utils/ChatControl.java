@@ -16,12 +16,15 @@ public abstract class ChatControl {
 
         final DatabaseReference dbReference = FirebaseConfig.getDatabase();
         String messagesId = dbReference.child("messages").push().getKey();
-        Negociacao negociacao = new Negociacao(messagesId, remoteUserId, adId, message.getText(), userId);
+        Negociacao negociacao = new Negociacao(messagesId, remoteUserId, remoteUserId, adId, message.getText(), userId);
         dbReference.child("messages").child(messagesId).push().setValue(message);
         negociacao.setUnreadMessagesCounter(0);
         dbReference.child("negotiations").child(userId).child(adId).setValue(negociacao);
+        negociacao.setRemoteUserId(userId);
         negociacao.setUnreadMessagesCounter(1);
         dbReference.child("negotiations").child(remoteUserId).child(adId).setValue(negociacao);
+
+        //se nao der certo, trocar em new negociacao userId por remoteUserId
 
         return messagesId;
     }
