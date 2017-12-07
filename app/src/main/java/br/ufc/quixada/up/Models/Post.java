@@ -195,21 +195,18 @@ import static br.ufc.quixada.up.R.layout.post;
                     return Transaction.success(mutableData);
                 }
 
-//                System.out.println("posts: "+pos/t.upsList);
-
-//                ImageButton up = (ImageButton) main.findViewById(R.id.buttonUpCard);
                 ArrayList<String> aux = post.getUpsList();
                 if (post.getUpsList().contains(uid)) {
                 // Unstar the post and remove self from stars
                     aux.remove(uid);
                     System.out.println("posts: "+post.getUpsList());
-//                    up.setColorFilter(Color.argb(255, 136, 136, 136));
+                    MainActivity.getInstance().up(false);
 
                 } else {
                 // Star the post and add self to stars
                     aux.add(uid);
                     System.out.println("posts3 enois: "+post.getUpsList());
-//                    up.setColorFilter(Color.argb(255, 255, 171, 0));
+                    MainActivity.getInstance().up(true);
 
                 }
                 post.setUpsList(aux);
@@ -225,6 +222,7 @@ import static br.ufc.quixada.up.R.layout.post;
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                 // Transaction completed
                 Log.d("TAG", "postTransaction:onComplete:" + databaseError);
+                Log.d("TAG", "postTransaction:onComplete:" + dataSnapshot.child("ups").getValue());
             }
         });
     }

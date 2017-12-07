@@ -33,8 +33,10 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
@@ -42,6 +44,8 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    static ArrayList<Post> posts = new ArrayList<Post>();
 
     FirebaseAuth auth;
     FirebaseUser user;

@@ -3,12 +3,16 @@ package br.ufc.quixada.up.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +71,7 @@ public class AnuncioActivity extends BaseActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         Intent intent = getIntent();
         if(intent != null){
             position = intent.getIntExtra("position", -1);
@@ -80,7 +85,15 @@ public class AnuncioActivity extends BaseActivity {
     }
 
     public void start(){
-        Post post = MainActivity.posts.get(position);
+//<<<<<<< HEAD
+//        Post post = MainActivity.posts.get(position);
+//=======
+
+//        Log.d("posts", BaseActivity.posts+"");
+
+        Post post = BaseActivity.posts.get(position);
+
+//>>>>>>> origin/mainActivity4
 //        Toast.makeText(this, "opa é nois"+post.getTitle(), Toast.LENGTH_SHORT).show();
 
         TextView title = (TextView)findViewById(R.id.textView_title);
@@ -104,6 +117,7 @@ public class AnuncioActivity extends BaseActivity {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                     User usuarioAnunciante = singleSnapshot.getValue(User.class);
                     Log.d("nome_anunciane", ""+usuarioAnunciante.getNome());
+//<<<<<<< HEAD
                     idAnunciante = usuarioAnunciante.getId();
                     nomeAnunciante = usuarioAnunciante.getNome();
                     anuncianteNome.setText(usuarioAnunciante.getNome());
@@ -114,6 +128,10 @@ public class AnuncioActivity extends BaseActivity {
                     }else{
                         avaliacaoVendedor.setText(""+numberFormat.format(usuarioAnunciante.getAvVendedor()));
                     }
+//=======
+                    anuncianteNome.setText(usuarioAnunciante.getNome());
+                    avaliacaoVendedor.setText(""+usuarioAnunciante.getAvVendedor());
+//>>>>>>> origin/mainActivity4
 
                     if (usuarioAnunciante.getNumVendas() == 0){
                         tituloUsuario.setText("Novato");
