@@ -56,17 +56,19 @@ import br.ufc.quixada.up.Utils.FirebasePreferences;
 
 public class MainActivity extends BaseActivity implements RecyclerViewOnClickListener{
 
+    DatabaseReference postsReference = FirebaseConfig.getDatabase().child("posts");
+
     ArrayList<Post> posts = new ArrayList<Post>();
-    ArrayList<Post> listAux = new ArrayList<Post>();
-    private RecyclerView recyclerView;
-    DatabaseReference postsReference = FirebaseConfig.getDatabase().child("posts");;
-    PostAdapter postAdapter;
     Post post;
+    RecyclerView recyclerView;
+    PostAdapter postAdapter;
+
     private int numPostsByTime = 3;
     private String lastPositionId;
     private boolean lastPost = false;
-    static  MainActivity mainActivity;
     LikeButton likeButton;
+
+    static  MainActivity mainActivity;
 
 
     @Override
@@ -156,18 +158,18 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         postAdapter = new PostAdapter(this, posts);
         postAdapter.setRecyclerViewOnClickListener(this);
         recyclerView.setAdapter(postAdapter);
-//        anuncioTela();
-//        MainActivity.mainActivity = this;
+        MainActivity.mainActivity = this;
+    }
+
+    public static MainActivity getInstance(){
+        return MainActivity.mainActivity;
     }
 
 //    public synchronized void mudarImage(String msg){
 //        TextView textView = (TextView) findViewById(R.id.textView9);
 //        textView.setText(msg);
 //    }
-//
-//    public static MainActivity getInstance(){
-//        return MainActivity.mainActivity;
-//    }
+
 
     public void share(View view){
         TextView textView_title = (TextView)findViewById(R.id.textView_title);
@@ -183,12 +185,14 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         startActivity(sendIntent);
     }
 
-    public void up(View view){
-        Toast.makeText(getBaseContext(),"Dar um up maroto: "+post.getUps(), Toast.LENGTH_SHORT).show();
+    public void up(Boolean b){
+//        Toast.makeText(getBaseContext(),"Dar um up maroto: "+post.getUps(), Toast.LENGTH_SHORT).show();
         ImageButton imageButtonUp = (ImageButton)findViewById(R.id.buttonUpCard);
-//        imageButtonUp.setColorFilter(Color.argb(255, 255, 171, 0));
-
-//        post.up(localUser.getId());
+        if(b == true){
+            imageButtonUp.setColorFilter(Color.argb(255, 255, 171, 0));
+        }else {
+            imageButtonUp.setColorFilter(Color.argb(255, 102, 102, 102));
+        }
     }
 
 /*    public void negociar(View view){
