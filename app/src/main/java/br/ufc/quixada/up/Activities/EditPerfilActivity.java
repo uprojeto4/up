@@ -34,8 +34,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
@@ -303,43 +305,81 @@ public class EditPerfilActivity extends PerfilActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    public int[] scaleImage(double width, double height){
+
+        Double h;
+        Double w;
+        Double scale;
+        int[] dimensoes = {0,0};
+
+        if (width > height){
+            scale=new Double(48000/width);
+            w =new Double(480);
+            h = new Double(height*(scale/100));
+            Log.d("Widht_Height", ""+h);
+            Log.d("Widht_Height", ""+w);
+            dimensoes[0] = w.intValue();
+            dimensoes[1] = h.intValue();
+            return dimensoes;
+//            file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
+        }else if (height > width){
+            scale=new Double(48000/height);
+            h =new Double(480);
+            w = new Double(width*(scale/100));
+            Log.d("Widht_Height", ""+h);
+            Log.d("Widht_Height", ""+w);
+            dimensoes[0] = w.intValue();
+            dimensoes[1] = h.intValue();
+            return dimensoes;
+//            file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
+        }else{
+            dimensoes[0] = 480;
+            dimensoes[1] = 480;
+            return dimensoes;
+//            file = Bitmap.createScaledBitmap(file, 680, 680, false);
+        }
+    }
+
     public void uploadProfilePicture(){
+
+        byte[] imageData=null;
 
         //testa se o array de imagens contem alguma imagem para o caso de o usuario querer alter so as outras informações e não a foto
         if (images.size() >= 1){
             //pega o caminho do arquivo a ser enviado
-            Uri file = Uri.fromFile(new File(images.get(0).getPath()));
+//            Uri file = Uri.fromFile(new File(images.get(0).getPath()));
 
-            try{
-                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), file);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.JPEG, 10, baos);
-                byte[] data = baos.toByteArray();
-                //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
-                //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
-                final StorageReference imageProfileRef = storageRef.child("UsersProfilePictures/"+firebasePreferences.getId()+"/"+file.getLastPathSegment());
+            Bitmap file = BitmapFactory.decodeFile(images.get(0).getPath());
+            int[] dimensoes = scaleImage(file.getWidth(),file.getHeight());
+            file = Bitmap.createScaledBitmap(file, dimensoes[0], dimensoes[1], false);
 
-                //cria os metadados
-                StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
+            final StorageReference imageProfileRef = storageRef.child("UsersProfilePictures/"+firebasePreferences.getId()+"/"+images.get(0).getName());
 
-                //faz upload do arquivo junto com os metadados
-                UploadTask uploadTask = imageProfileRef.putBytes(data, metadata);
+            final String imageName = imageProfileRef.getName();
 
+            StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
 
-                //monitora o andamento do upload
-                uploadTask
-                        //monitora caso de falha
-                        .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getBaseContext(),"Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
-                    }
-                })
-                        //monitora caso de sucesso
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            ByteArrayOutputStream fileStream = new ByteArrayOutputStream();
+            file.compress(Bitmap.CompressFormat.JPEG, 50, fileStream);
+            imageData = fileStream.toByteArray();
+
+            final UploadTask uploadTask = imageProfileRef.putBytes(imageData, metadata);
+            //monitora o andamento do upload
+            uploadTask
+                    //monitora caso de falha
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+//                            Toast.makeText(context, "Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
+                            Log.d("TAG", "Erro ao enviar a imagem");
+                        }
+                    })
+                    //monitora caso de sucesso
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         Toast.makeText(getBaseContext(),"Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
                         profilePictureName = imageProfileRef.getName();
 
@@ -357,10 +397,9 @@ public class EditPerfilActivity extends PerfilActivity {
 
                         //chama metodo para atualizar outras informações apenas quando a foto for enviada
                         updateInfos();
-                    }
-                })
-                        //monitora o progresso
-                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                      @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
@@ -372,10 +411,77 @@ public class EditPerfilActivity extends PerfilActivity {
                              loading.setVisibility(View.GONE);
                          }
                     }
-                });
-            }catch (IOException e){
-                e.printStackTrace();
-            }
+            });
+
+
+
+
+//            try{
+//                Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), file);
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                bmp.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+//                byte[] data = baos.toByteArray();
+//                //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
+//                //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
+//                final StorageReference imageProfileRef = storageRef.child("UsersProfilePictures/"+firebasePreferences.getId()+"/"+file.getLastPathSegment());
+//
+//                //cria os metadados
+//                StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
+//
+//                //faz upload do arquivo junto com os metadados
+//                UploadTask uploadTask = imageProfileRef.putBytes(data, metadata);
+//
+//
+//                //monitora o andamento do upload
+//                uploadTask
+//                        //monitora caso de falha
+//                        .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(getBaseContext(),"Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
+//                    }
+//                })
+//                        //monitora caso de sucesso
+//                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//                        Toast.makeText(getBaseContext(),"Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
+//                        profilePictureName = imageProfileRef.getName();
+//
+//                        //atualiza a foto do usuario local
+//                        localUser.setFotoPerfil(imageProfileRef.getName());
+//        //                Toast.makeText(getBaseContext(),"foto do user local " + localUser.getFotoPerfil(), Toast.LENGTH_LONG).show();
+//
+//                        firebasePreferences = new FirebasePreferences(EditPerfilActivity.this);
+//                        firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
+//                                localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
+//
+//                        //atualiza a referencia a foto no banco
+//                        databaseReference.child("users").child(PerfilActivity.id).child("fotoPerfil").setValue(localUser.getFotoPerfil());
+//                        PerfilActivity.fotoPerfil = localUser.getFotoPerfil();
+//
+//                        //chama metodo para atualizar outras informações apenas quando a foto for enviada
+//                        updateInfos();
+//                    }
+//                })
+//                        //monitora o progresso
+//                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                     @Override
+//                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+//                         if (progress < 100.0){
+//                             //deixa o loading visivel
+//                            loading.setVisibility(View.VISIBLE);
+//                         }else{
+//                             //deixa o loading invisível
+//                             loading.setVisibility(View.GONE);
+//                         }
+//                    }
+//                });
+//            }catch (IOException e){
+//                e.printStackTrace();
+//            }
 
 
         } else{

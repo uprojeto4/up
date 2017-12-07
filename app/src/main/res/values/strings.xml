@@ -6,6 +6,8 @@
 
     <string name="action_settings">Configurações</string>
 
+    <string name="action_finalizar_negociacao">Finalizar Negociação</string>
+
     <string name="navigation_drawer_inicio">Início</string>
     <string name="navigation_drawer_novo_anuncio">Novo anúncio</string>
     <string name="navigation_drawer_negociacoes">Negociações</string>
@@ -130,14 +132,15 @@
     <string name="title_activity_maps_perfil">Map</string>
 
     <!--<string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">-->
-        <!--AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4-->
+    <!--AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4-->
     <!--</string>-->
 
     <string name="label_no_buy">Você ainda não iniciou nenhuma negociação.</string>
     <string name="label_no_sell">Ninguém iniciou uma negociação com você, ainda.</string>
-    
+
     <string name="label_no_messages">Ainda não há mensagens. Comece dizendo alguma coisa!</string>
 
     <string name="anunciado_por">Anunciado por</string>
+    <string name="title_activity_perfil_publico">PerfilPublicoActivity</string>
 
 </resources>

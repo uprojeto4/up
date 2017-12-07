@@ -54,7 +54,7 @@ import br.ufc.quixada.up.Utils.FirebasePreferences;
 
 public class MainActivity extends BaseActivity implements RecyclerViewOnClickListener{
 
-    ArrayList<Post> posts = new ArrayList<Post>();
+    static ArrayList<Post> posts = new ArrayList<Post>();
     ArrayList<Post> listAux = new ArrayList<Post>();
     private RecyclerView recyclerView;
     DatabaseReference postsReference;
@@ -63,6 +63,8 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
     private int numPostsByTime = 3;
     private String lastPositionId;
     private boolean lastPost = false;
+
+    public static String localUserId;
 
     LikeButton likeButton;
 
@@ -99,6 +101,8 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
             updateUserInfo();
             loadFromFirebase(numPostsByTime, null);
         }
+
+        localUserId = localUser.getId();
 
 
         if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||

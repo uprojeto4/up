@@ -37,6 +37,9 @@ public class PerfilActivity extends BaseActivity {
 
     public String profilePictureName;
 
+    public static String anuncianteId;
+
+
 //    FirebaseStorage storage = FirebaseStorage.getInstance();
 //    public StorageReference storageRef;
 //    public StorageReference pathReference;
@@ -79,6 +82,9 @@ public class PerfilActivity extends BaseActivity {
 
         Intent intent = getIntent();
         fragmentASerAberta = intent.getIntExtra("fragment", 0);
+
+        Intent intent2 = getIntent();
+        anuncianteId = intent2.getStringExtra("idAnunciante");
 
         Log.d("extra", " "+fragmentASerAberta);
 
@@ -165,6 +171,7 @@ public class PerfilActivity extends BaseActivity {
 //        Intent intent = getIntent();
 //        fragmentASerAberta = intent.getIntExtra("fragment", 0);
 //        perfilTabLayout.setupWithViewPager(perfilViewPager);
+
 
         fotoPerfil = localUser.getFotoPerfil();
         localUser.setFotoPerfil(fotoPerfil);

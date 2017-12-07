@@ -106,6 +106,8 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="5dp"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:longClickable="true"
                             android:maxLines="3"
                             android:text="Rua Rodrigues Junior, 1012, Apto 202, Centro, Quixadá - CE"
                             android:textAlignment="viewStart"
