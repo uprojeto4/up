@@ -1,4 +1,4 @@
-package br.ufc.quixada.up;
+package br.ufc.quixada.up.Models;
 
 /**
  * Created by Macelo on 01/12/2017.

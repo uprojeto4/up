@@ -16,7 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.Activities.ChatActivity;
-import br.ufc.quixada.up.Constant;
+import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
 
@@ -59,8 +59,10 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
 
         if (negociacaoViewHolder.negociacao.getVendorId().equals(userId)) {
             negociacaoViewHolder.textViewNomeVendedorNegociacao.setText("Comprador: " + negociacaoViewHolder.negociacao.getVendorName());
+            negociacaoViewHolder.negotiationType = Constant.NEGOTIATION_TYPE_SELL;
         } else {
             negociacaoViewHolder.textViewNomeVendedorNegociacao.setText("Vendedor: " + negociacaoViewHolder.negociacao.getVendorName());
+            negociacaoViewHolder.negotiationType = Constant.NEGOTIATION_TYPE_BUY;
         }
 
         if (negociacaoViewHolder.negociacao.getLastMessageSenderId().equals(userId)) {
@@ -141,6 +143,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
         TextView textViewLastMessage;
         ImageView responseIcon;
         String negotiationKey;
+        int negotiationType;
 
         private Negociacao negociacao;
 
@@ -164,6 +167,8 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
                     intent.putExtra("adId", negociacao.getAdId());
                     intent.putExtra("adTitle", negociacao.getTitle());
                     intent.putExtra("negotiationKey", negotiationKey);
+                    intent.putExtra("negotiationType", negotiationType);
+                    intent.putExtra("submitDate", negociacao.getStartDate());
                     context.startActivity(intent);
                 }
             });

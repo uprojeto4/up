@@ -27,7 +27,6 @@ import java.util.Arrays;
 
 import br.ufc.quixada.up.Adapters.NegociacoesAdapter;
 import br.ufc.quixada.up.Adapters.NegociacoesFragmentPagerAdapter;
-import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Fragments.ComprasFragment;
 import br.ufc.quixada.up.Interfaces.NegotiationFragmentDisplay;
@@ -131,6 +130,7 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
 
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
+                                    System.out.println("venda: " + dataSnapshot);
                                     negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
                                     if (negociacao.getVendorId().equals(userId)) {
                                         sellAdapter.addNegociacao(negotiationKey, negociacao);

@@ -1,8 +1,5 @@
 package br.ufc.quixada.up.Models;
 
-import java.util.Date;
-
-import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.Utils.DateTimeControl;
 
 /**

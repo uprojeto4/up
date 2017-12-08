@@ -106,7 +106,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 
         localUserId = localUser.getId();
 
-
         if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||
                 localUser.getAddress().getBairro().equals("") || localUser.getAddress().getCidade().equals("")){
             new AlertDialog.Builder(this)

@@ -114,6 +114,10 @@
             android:name=".Activities.ChatActivity"
             android:parentActivityName=".Activities.NegociacoesActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="br.ufc.quixada.up_TARGET_NOTIFICATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.ufc.quixada.up.Activities.NegociacoesActivity" />
@@ -142,6 +146,13 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity android:name=".TesteActivity"></activity>
+
+        <service android:name=".Services.FirebaseMessageNotificationService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
