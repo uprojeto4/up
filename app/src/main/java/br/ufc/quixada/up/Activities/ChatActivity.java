@@ -41,7 +41,7 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
     public LinearLayoutManager linearLayoutManager;
     private EditText messageInput;
     private ChatAdapter chatAdapter;
-    private String chatId;
+    private String messagesId;
     private String userId;
     private String remoteUserId;
     private String adId;
@@ -52,6 +52,7 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
     private TextView negociante;
     private LinearLayout noMessagesLayout;
     private int negotiationType;
+    private String negotiationKey;
     private int callerId;
     private boolean isShowingMessages = false;
 
@@ -72,12 +73,13 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
         remoteUserId = intent.getStringExtra("remoteUserId");
         negotiationType = intent.getIntExtra("negotiationType", 0);
         callerId = intent.getIntExtra("callerId", -1);
+        negotiationKey = intent.getStringExtra("negotiationKey");
 
         if (callerId == Constant.CHAT_CALLER_POST_ADAPTER) {
 
         } else if (callerId == Constant.CHAT_CALLER_NEGOTIATION_ACTIVITY) {
             NegociacoesActivity.isChatActivityOpened = true;
-            NegociacoesActivity.currentOpenedChatNegotiationKey = intent.getStringExtra("negotiationKey");
+            NegociacoesActivity.currentOpenedChatNegotiationKey = negotiationKey;
         }
 
         userId = localUser.getId();
@@ -122,17 +124,19 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
             public void onClick(View view) {
                 if (!messageInput.getText().toString().isEmpty()) {
                     Message message = new Message(messageInput.getText().toString(), userId);
-                    if (chatId != null) {
-//                        dbReference.child("messages").child(chatId).push().setValue(message);
-//                        dbReference.child("negotiations").child(userId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
-//                        dbReference.child("negotiations").child(userId).child(adId).child("lastMessageSenderId").setValue(userId);
-//                        unreadMessagesCounter ++;
-//                        dbReference.child("negotiations").child(remoteUserId).child(adId).child("unreadMessagesCounter").setValue(unreadMessagesCounter);
-//                        dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessage").setValue(messageInput.getText().toString());
-//                        dbReference.child("negotiations").child(remoteUserId).child(adId).child("lastMessageSenderId").setValue(userId);
+                    if (messagesId != null) {
+                        dbReference.child("messages").child(messagesId).push().setValue(message);
+                        dbReference.child("negotiations").child(userId).child(negotiationKey).child("lastMessage").setValue(messageInput.getText().toString());
+                        dbReference.child("negotiations").child(userId).child(negotiationKey).child("lastMessageSenderId").setValue(userId);
+                        unreadMessagesCounter ++;
+                        dbReference.child("negotiations").child(remoteUserId).child(negotiationKey).child("unreadMessagesCounter").setValue(unreadMessagesCounter);
+                        dbReference.child("negotiations").child(remoteUserId).child(negotiationKey).child("lastMessage").setValue(messageInput.getText().toString());
+                        dbReference.child("negotiations").child(remoteUserId).child(negotiationKey).child("lastMessageSenderId").setValue(userId);
                     } else {
                         unreadMessagesCounter = 1;
-                        chatId = ChatControl.startConversation(userId, remoteUserId, adId, message);
+                        messagesId = ChatControl.startConversation(userId, remoteUserId, adId, message);
+                        negotiationKey = ChatControl.negotiationKey;
+                        System.out.println("Negotiation key: " + negotiationKey);
                     }
                     if (!isShowingMessages) {
                         getMessages();
@@ -143,31 +147,28 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
             }
         });
 
-        dbReference.child("negotiations").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        dbReference.child("negotiations").child(userId).orderByChild("adId").equalTo(adId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(adId)) {
-                    DataSnapshot negotiationSnapshot = dataSnapshot.child(adId);
-                    chatId = negotiationSnapshot.child("messagesId").getValue(String.class);
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot negotiationSnapshot : dataSnapshot.getChildren()) {
+                        messagesId = negotiationSnapshot.child("messagesId").getValue(String.class);
+                        negotiationKey = negotiationSnapshot.getKey();
 
-                    dbReference.child("negotiations").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.hasChild(adId)) {
-                                DataSnapshot negotiationSnapshot = dataSnapshot.child(adId);
-                                unreadMessagesCounter = negotiationSnapshot.child("unreadMessagesCounter").getValue(Integer.class);
-                                System.out.println("unread messages: " + unreadMessagesCounter);
-                                getMessages();
-                            } else {
-                                showNoMessageInfo();
+                        getMessages();
+
+                        dbReference.child("negotiations").child(remoteUserId).child(negotiationKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                unreadMessagesCounter = dataSnapshot.child("unreadMessagesCounter").getValue(Integer.class);
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 } else {
                     showNoMessageInfo();
                 }
@@ -426,21 +427,15 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
     }
 
     private void getMessages() {
-        dbReference.child("messages").child(chatId).addChildEventListener(new ChildEventListener() {
+        dbReference.child("messages").child(messagesId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                System.out.println("incoming message: " + dataSnapshot);
                 Message message = dataSnapshot.getValue(Message.class);
                 chatAdapter.addMessage(message);
                 if (!isShowingMessages) {
                     showMessages();
                 }
                 linearLayoutManager.scrollToPosition(chatAdapter.getItemCount() - 1);
-                if (chatAdapter.getItemCount() > 0) {
-                    showMessages();
-                } else {
-
-                }
             }
 
             @Override
@@ -498,7 +493,7 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
     public void onStart() {
         super.onStart();
         if (callerId != Constant.CHAT_CALLER_POST_ADAPTER) {
-            dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
+//            dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
         }
     }
 
@@ -509,7 +504,7 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
             unreadMessagesCounter = 0;
         }
         if (callerId != Constant.CHAT_CALLER_POST_ADAPTER) {
-            dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
+//            dbReference.child("negotiations").child(userId).child(adId).child("unreadMessagesCounter").setValue(0);
         }
         if (callerId == Constant.CHAT_CALLER_NEGOTIATION_ACTIVITY) {
             NegociacoesActivity.isChatActivityOpened = false;
