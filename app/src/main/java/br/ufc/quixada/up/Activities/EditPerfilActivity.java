@@ -527,6 +527,7 @@ public class EditPerfilActivity extends PerfilActivity {
                 firebasePreferences = new FirebasePreferences(EditPerfilActivity.this);
                 firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
                         localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
+                finish();
 //                openHome();
 //                Toast.makeText(getBaseContext(), "Bem Vindo, "+ localUser.getNome() +"! :)", Toast.LENGTH_LONG).show();
 //                updateProfile();

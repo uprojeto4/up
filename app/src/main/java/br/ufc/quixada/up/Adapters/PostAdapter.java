@@ -1,11 +1,13 @@
 package br.ufc.quixada.up.Adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +40,8 @@ import java.util.Locale;
 
 import br.ufc.quixada.up.Activities.BaseActivity;
 import br.ufc.quixada.up.Activities.ChatActivity;
+import br.ufc.quixada.up.Activities.EditPerfilActivity;
+import br.ufc.quixada.up.Activities.LoginActivity;
 import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.Constant;
 import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
@@ -63,6 +67,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 //    ImageView imageView;
     FirebaseStorage firebaseStorage;
     FirebaseAuth user = FirebaseAuth.getInstance();
+
+    View v1;
 
 
     public PostAdapter(Context c, ArrayList<Post> p){
@@ -141,14 +147,30 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                    intent.putExtra("remoteUserId", post.getUserId());
-                    intent.putExtra("adId", post.getId());
-                    intent.putExtra("adTitle", post.getTitle());
-                    intent.putExtra("submitDate", post.getDataCadastro());
-                    intent.putExtra("negotiationType", Constant.NEGOTIATION_TYPE_BUY);
-                    intent.putExtra("callerId", Constant.CHAT_CALLER_POST_ADAPTER);
-                    context.startActivity(intent);
+                    v1 = v;
+                    if (MainActivity.isLogged){
+                        Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                        intent.putExtra("remoteUserId", post.getUserId());
+                        intent.putExtra("adId", post.getId());
+                        intent.putExtra("adTitle", post.getTitle());
+                        intent.putExtra("submitDate", post.getDataCadastro());
+                        intent.putExtra("negotiationType", Constant.NEGOTIATION_TYPE_BUY);
+                        intent.putExtra("callerId", Constant.CHAT_CALLER_POST_ADAPTER);
+                        context.startActivity(intent);
+                    } else{
+                        new AlertDialog.Builder(v.getContext())
+                            .setTitle(R.string.no_address_dialog_title)
+                            .setMessage(v.getContext().getString(R.string.faca_login))
+                            .setPositiveButton(v.getContext().getString(R.string.sim), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //                            finish();
+                                    Intent intent = new Intent(v1.getContext(), LoginActivity.class);
+                                    context.startActivity(intent);
+                                }
+                            }).setNegativeButton(v.getContext().getString(R.string.nao), null)
+                            .show();
+                    }
                 }
             });
 

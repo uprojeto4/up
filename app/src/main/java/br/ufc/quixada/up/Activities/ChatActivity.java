@@ -62,6 +62,9 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
     private int callerId;
     private boolean isShowingMessages = false;
 
+    User remoteUser;
+    Negociacao negociacao;
+
     MenuItem finalizar;
 
     @Override
@@ -311,35 +314,50 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
 //            }
 //        });
 
-        dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+        dbReference.child("negotiations").child(remoteUserId).child(adId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User remoteUser = dataSnapshot.getValue(User.class);
-                System.out.println("usuarioRemoto"+remoteUser);
-                if (remoteUser.getId().equals(remoteUserId)){
-                    Log.d("Você vai avaliar", "vendedor - " + remoteUser.getNome());
-                    dataSnapshot.getRef().child("somaAvVendedor").setValue(remoteUser.getSomaAvVendedor()+rate);
-                    double soma = remoteUser.getSomaAvVendedor()+rate;
-                    dataSnapshot.getRef().child("qtdAvVendedor").setValue(remoteUser.getQtdAvVendedor()+1);
-                    double qtd = remoteUser.getQtdAvVendedor()+1;
-                    dataSnapshot.getRef().child("avVendedor").setValue(soma / qtd);
-                    dataSnapshot.getRef().child("numVendas").setValue(remoteUser.getNumVendas() + 1);
-                } else {
-                    Log.d("Você vai avaliar", "comprador - " + remoteUser.getNome());
-                    Log.d("Você vai avaliar", "vendedor - " + remoteUser.getNome());
-                    dataSnapshot.getRef().child("somaAvComprador").setValue(remoteUser.getSomaAvComprador()+rate);
-                    double soma = remoteUser.getSomaAvComprador()+rate;
-                    dataSnapshot.getRef().child("qtdAvComprador").setValue(remoteUser.getQtdAvComprador()+1);
-                    double qtd = remoteUser.getQtdAvComprador()+1;
-                    dataSnapshot.getRef().child("avComprador").setValue(soma / qtd);
-                    dataSnapshot.getRef().child("numCompras").setValue(remoteUser.getNumCompras() + 1);
-                }
+                negociacao = dataSnapshot.getValue(Negociacao.class);
+
+                dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        remoteUser = dataSnapshot.getValue(User.class);
+//                        System.out.println("usuarioRemoto"+remoteUser);
+                        if (negociacao.getVendorId().equals(remoteUserId)){
+//                if (negotiationType == Constant.NEGOTIATION_TYPE_BUY){
+                            Log.d("Você vai avaliar if", "vendedor - " + remoteUser.getNome());
+                            dataSnapshot.getRef().child("somaAvVendedor").setValue(remoteUser.getSomaAvVendedor()+rate);
+                            double soma = remoteUser.getSomaAvVendedor()+rate;
+                            dataSnapshot.getRef().child("qtdAvVendedor").setValue(remoteUser.getQtdAvVendedor()+1);
+                            double qtd = remoteUser.getQtdAvVendedor()+1;
+                            dataSnapshot.getRef().child("avVendedor").setValue(soma / qtd);
+                            dataSnapshot.getRef().child("numVendas").setValue(remoteUser.getNumVendas() + 1);
+                        }else {
+                            Log.d("Você vai avaliar else", "comprador - " + remoteUser.getNome());
+//                    Log.d("Você vai avaliar", "vendedor - " + remoteUser.getNome());
+                            dataSnapshot.getRef().child("somaAvComprador").setValue(remoteUser.getSomaAvComprador()+rate);
+                            double soma = remoteUser.getSomaAvComprador()+rate;
+                            dataSnapshot.getRef().child("qtdAvComprador").setValue(remoteUser.getQtdAvComprador()+1);
+                            double qtd = remoteUser.getQtdAvComprador()+1;
+                            dataSnapshot.getRef().child("avComprador").setValue(soma / qtd);
+                            dataSnapshot.getRef().child("numCompras").setValue(remoteUser.getNumCompras() + 1);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
         });
 
     }
@@ -380,7 +398,7 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
                 User remoteUser = dataSnapshot.getValue(User.class);
                 System.out.println("usuarioRemoto"+remoteUser);
                 if (remoteUser.getId().equals(remoteUserId)){
-                    Log.d("Você vai avaliar", "vendedor - " + remoteUser.getNome());
+//                    Log.d("Você vai avaliar", "vendedor - " + remoteUser.getNome());
 
                     new AppRatingDialog.Builder()
                             .setPositiveButtonText("Avaliar")
@@ -404,6 +422,25 @@ public class ChatActivity extends BaseActivity implements RatingDialogListener {
 
 
                 } else {
+                    new AppRatingDialog.Builder()
+                            .setPositiveButtonText("Avaliar")
+                            .setNegativeButtonText("Cancelar")
+                            .setNoteDescriptions(Arrays.asList("Muito ruim", "Ruim", "Razoável", "Bom", "Muito bom"))
+                            .setDefaultRating(3)
+                            .setTitle("Avalie "+remoteUser.getNome())
+                            .setStarColor(R.color.colorPrimary)
+                            .setNoteDescriptionTextColor(R.color.colorPrimary)
+                            .setTitleTextColor(R.color.colorPrimary)
+                            .setDescriptionTextColor(R.color.colorPrimary)
+//                            .setHint("Please write your comment here ...")
+                            .setHintTextColor(R.color.primaryTextColor)
+                            .setCommentTextColor(R.color.primaryTextColor)
+                            .setHint("Deixe um comentario sobre o comprador")
+                            .setHintTextColor(R.color.primaryTextColor)
+                            .setCommentBackgroundColor(R.color.colorPrimaryDark)
+                            .setWindowAnimation(R.style.MyDialogFadeAnimation)
+                            .create(ChatActivity.this)
+                            .show();
                     Log.d("Você vai avaliar", "comprador - " + remoteUser.getNome());
                 }
             }

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 
 import br.ufc.quixada.up.Adapters.PerfilFragmentPagerAdapter;
 import br.ufc.quixada.up.R;
@@ -41,6 +42,12 @@ public class PerfilPublicoActivity extends BaseActivity {
 //        perfilViewPager.setCurrentItem(fragmentASerAberta);
 
         perfilTabLayout.setupWithViewPager(perfilViewPager);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit_perfil, menu);
+        return true;
     }
 
     @Override

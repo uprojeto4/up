@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -36,12 +37,15 @@ public class LoginActivity extends AppCompatActivity {
     EditText email;
     EditText senha;
 
+    Button skipLogin;
+
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebasePreferences firebasePreferences;
     private DatabaseReference databaseReference;
     private User localUser;
     private Address localAddress;
+
 
 
     @Override
@@ -56,6 +60,25 @@ public class LoginActivity extends AppCompatActivity {
         //Inicializando variaveis
         databaseReference = FirebaseConfig.getDatabase();
         auth = FirebaseConfig.getAuth();
+    }
+
+
+    public void skipLogin(View view){
+//        else {
+        auth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    user = auth.getCurrentUser();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+//                    updateProfile();
+                } else{
+                    Log.d("brendon", "caiu no else");
+                }
+            }
+        });
+//        }
     }
 
     //Abrir tela de Cadastro
@@ -130,10 +153,9 @@ public class LoginActivity extends AppCompatActivity {
     //Atualizar propriedades do objeto currentUser do firebase
     public void updateProfile(){
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(localUser.getNome())
                 .build();
 
-        user = auth.getCurrentUser();
+//        user = auth.getCurrentUser();
 
         if(user != null){
             user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -1,5 +1,6 @@
 package br.ufc.quixada.up.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -195,7 +197,7 @@ public class BaseActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(final MenuItem item) {
 
 //        Fragment fragment = null;
 //        Class fragmentClass = null;
@@ -209,31 +211,110 @@ public class BaseActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_anuncio) {
             // Handle the camera action
-            Intent intent = new Intent(this, NovoAnuncioActivity.class);
+            if (localUser.getEmail() != null) {
+
+                Intent intent = new Intent(this, NovoAnuncioActivity.class);
 //            isso serve para usar flags de configurações do intent
 
 //            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            startActivity(intent);
+                startActivity(intent);
+            }else{
+                new AlertDialog.Builder(this)
+                    .setTitle(R.string.no_address_dialog_title)
+                    .setMessage(this.getString(R.string.faca_login))
+                    .setPositiveButton(this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //                            finish();
+                            Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    }).setNegativeButton(this.getString(R.string.nao), null)
+                    .show();
+            }
         } else if (id == R.id.nav_negociacoes) {
-            Intent intent = new Intent(this, NegociacoesActivity.class);
-            startActivity(intent);
+            if (localUser.getEmail() != null) {
+
+                Intent intent = new Intent(this, NegociacoesActivity.class);
+                startActivity(intent);
+            }else{
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.no_address_dialog_title)
+                        .setMessage(this.getString(R.string.faca_login))
+                        .setPositiveButton(this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //                            finish();
+                                Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton(this.getString(R.string.nao), null)
+                        .show();
+            }
         } else if (id == R.id.nav_lista_desejos) {
-            Intent intent = new Intent(this, ListaDesejosActivity.class);
-            startActivity(intent);
+            if (localUser.getEmail() != null){
+                Intent intent = new Intent(this, ListaDesejosActivity.class);
+                startActivity(intent);
+            } else{
+                new AlertDialog.Builder(this)
+                    .setTitle(R.string.no_address_dialog_title)
+                    .setMessage(this.getString(R.string.faca_login))
+                    .setPositiveButton(this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //                            finish();
+                            Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    }).setNegativeButton(this.getString(R.string.nao), null)
+                    .show();
+            }
         } else if (id == R.id.nav_categorias) {
             Intent intent = new Intent(this, CategoriasActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_meus_anuncios) {
 //            fragmentClass = fragmentPerfilAnuncios.class;
-            Intent intent = new Intent(this, PerfilActivity.class);
-            intent.putExtra("fragment",1);
-            startActivity(intent);
+            if (localUser.getEmail() != null) {
+
+                Intent intent = new Intent(this, PerfilActivity.class);
+                intent.putExtra("fragment", 1);
+                startActivity(intent);
+            }else{
+                new AlertDialog.Builder(this)
+                    .setTitle(R.string.no_address_dialog_title)
+                    .setMessage(this.getString(R.string.faca_login))
+                    .setPositiveButton(this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //                            finish();
+                            Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    }).setNegativeButton(this.getString(R.string.nao), null)
+                    .show();
+            }
 //            PerfilActivity.perfilViewPager.setCurrentItem(1);
         } else if (id == R.id.nav_perfil) {
-            Intent intent = new Intent(this, PerfilActivity.class);
-            intent.putExtra("fragment",0);
-            startActivity(intent);
+            if (localUser.getEmail() != null) {
+
+                Intent intent = new Intent(this, PerfilActivity.class);
+                intent.putExtra("fragment", 0);
+                startActivity(intent);
+            } else{
+                new AlertDialog.Builder(this)
+                    .setTitle(R.string.no_address_dialog_title)
+                    .setMessage(this.getString(R.string.faca_login))
+                    .setPositiveButton(this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //                            finish();
+                            Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    }).setNegativeButton(this.getString(R.string.nao), null)
+                    .show();
+            }
 //            PerfilActivity.perfilViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_configuracoes) {
             Intent intent = new Intent(this, ConfiguracoesActivity.class);
@@ -387,6 +468,8 @@ public class BaseActivity extends AppCompatActivity
     public void signOut(){
         auth = FirebaseConfig.getAuth();
         auth.signOut();
+        localUser = null;
+        firebasePreferences.clearUserPreferences();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

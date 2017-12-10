@@ -1,5 +1,7 @@
 package br.ufc.quixada.up.Activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -9,10 +11,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -56,36 +63,25 @@ import br.ufc.quixada.up.Utils.FirebasePreferences;
 
 public class MainActivity extends BaseActivity implements RecyclerViewOnClickListener{
 
-//<<<<<<< HEAD
-//    static ArrayList<Post> posts = new ArrayList<Post>();
-//    ArrayList<Post> listAux = new ArrayList<Post>();
-//    private RecyclerView recyclerView;
-//    DatabaseReference postsReference = FirebaseConfig.getDatabase().child("posts");;
-//    PostAdapter postAdapter;
-//=======
     DatabaseReference postsReference = FirebaseConfig.getDatabase().child("posts");
 
-//    ArrayList<Post> posts = new ArrayList<Post>();
-//>>>>>>> origin/mainActivity4
     Post post;
     RecyclerView recyclerView;
     PostAdapter postAdapter;
 
+    public static Post searchPost;
+    String searchTerm;
+    public static ArrayList<Post> searchPosts = new ArrayList<Post>();
+
     private int numPostsByTime = 3;
     private String lastPositionId;
     private boolean lastPost = false;
-//<<<<<<< HEAD
-//    public static String localUserId;
-//    static  MainActivity mainActivity;
-////    LikeButton likeButton;
-//
-//    LikeButton likeButton;
-//=======
+
     LikeButton likeButton;
 
-    static  MainActivity mainActivity;
+    public static boolean isLogged;
 
-//>>>>>>> origin/mainActivity4
+    static  MainActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -99,8 +95,23 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), NovoAnuncioActivity.class);
-                startActivity(intent);
+                if(isLogged){
+                    Intent intent = new Intent(getApplicationContext(), NovoAnuncioActivity.class);
+                    startActivity(intent);
+                }else{
+                    new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.no_address_dialog_title)
+                        .setMessage(MainActivity.this.getString(R.string.faca_login))
+                        .setPositiveButton(MainActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //                            finish();
+                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton(MainActivity.this.getString(R.string.nao), null)
+                        .show();
+                }
             }
         });
 
@@ -122,12 +133,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 
         localUserId = localUser.getId();
 
-
-
-
-
-//        firebasePreferences = new FirebasePreferences(MainActivity.this);
-//        Toast.makeText(this, firebasePreferences.getId()+" - "+firebasePreferences.getUserName()+" - "+firebasePreferences.getUserEmail(), Toast.LENGTH_LONG).show();
 
         likeButton = (LikeButton) findViewById(R.id.heart_button);
 
@@ -163,38 +168,124 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         postAdapter.setRecyclerViewOnClickListener(this);
         recyclerView.setAdapter(postAdapter);
 
-//<<<<<<< HEAD
-////        anuncioTela();
-////        MainActivity.mainActivity = this;
-//=======
-        if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||
-                localUser.getAddress().getBairro().equals("") || localUser.getAddress().getCidade().equals("")){
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.no_address_dialog_title)
-                    .setMessage(MainActivity.this.getString(R.string.insert_address_message))
-                    .setPositiveButton(MainActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-//                            finish();
-                            Intent intent = new Intent(MainActivity.this, EditPerfilActivity.class);
-                            startActivity(intent);
-                        }
-                    }).setNegativeButton(MainActivity.this.getString(R.string.nao), null)
-                    .show();
+        if (localUser.getEmail() != null){
+            if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||
+                    localUser.getAddress().getBairro().equals("") || localUser.getAddress().getCidade().equals("")){
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.no_address_dialog_title)
+                        .setMessage(MainActivity.this.getString(R.string.insert_address_message))
+                        .setPositiveButton(MainActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+    //                            finish();
+                                Intent intent = new Intent(MainActivity.this, EditPerfilActivity.class);
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton(MainActivity.this.getString(R.string.nao), null)
+                        .show();
+            }
+        } else{
+            isLogged = false;
         }
 
+
         MainActivity.mainActivity = this;
+
+//        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null){
+            Log.d("currentUser if", currentUser+"");
+        }else {
+            Log.d("currentUser else", currentUser + "");
+        }
+//        updateProfile();
+    }
+
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        handleIntent(intent);
+//    }
+
+//    private void handleIntent(Intent intent) {
+//
+//        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//            String query = intent.getStringExtra(SearchManager.QUERY);
+//        }
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_search, menu);
+
+        final MenuItem searchItem = menu.findItem(R.id.search);
+
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                searchTerm = query;
+                postsReference.orderByChild("title").equalTo(query).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("resultados", dataSnapshot+"");
+                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                            searchPost = singleSnapshot.getValue(Post.class);
+                            searchPosts.add(searchPost);
+                        }
+                        Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
+                        intent.putExtra("searchTerm", searchTerm);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+//                postsReference.orderByChild("title").equalTo(newText).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        Log.d("resultados", dataSnapshot+"");
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+
+                return false;
+            }
+        });
+
+        return true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         BaseActivity.posts = new ArrayList<Post>();
+        MainActivity.searchPosts = new ArrayList<Post>();
     }
 
     public static MainActivity getInstance(){
         return MainActivity.mainActivity;
-//>>>>>>> origin/mainActivity4
     }
 
 //    public synchronized void mudarImage(String msg){
@@ -227,14 +318,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         }
     }
 
-/*    public void negociar(View view){
-//        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("remoteUserId", "YnJlbmRvbkBnbWFpbC5jb20=");
-        intent.putExtra("adId", "-Kz7OnP9IF00E0jPBxTh");
-        startActivity(intent);
-//        ChatControl.startConversation("remoteUserId", "productId");
-    }*/
 
     public void favorite(View view) {
 //        favorite = (ImageButton) findViewById(R.id.favorite);
@@ -243,36 +326,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 //        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
     }
 
-//    public void loadFromFirebase(int num){
-//        postsReference.limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                int last = numPostsByTime;
-//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//                    post = singleSnapshot.getValue(Post.class);
-//
-//                    Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
-//                    if (last == numPostsByTime){
-//                        lastPositionId = post.getId();
-//                        Log.d("TAG", "postID: "+lastPositionId);
-//                        last--;
-//                    }else{
-//                        recyclerView.scrollToPosition(0);
-//                        if(!posts.contains(post)){
-//                            post.downloadImages(post.getPictures().get(0), postAdapter, post);
-//                        }
-//                        Log.d("testando", "entrou");
-//                        postAdapter.addTopListItem(post);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.e("oops", databaseError.getMessage());
-//            }
-//        });
-//    }
 
     public void loadFromFirebase(int num){
         postsReference.limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {

@@ -50,7 +50,8 @@
                     android:layout_marginRight="20dp"
                     android:background="@drawable/profile_circular_border_imageview"
                     android:elevation="5dp"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/perfil_icone_redondo" />
 
                 <!--<de.hdodenhof.circleimageview.CircleImageView-->
                     <!--android:id="@+id/profile_image"-->
@@ -78,7 +79,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:maxLines="1"
-                        android:text="Fulano da Silva Sobrinho"
                         android:textAlignment="viewStart"
                         android:textColor="@color/primaryTextColor"
                         android:textSize="24sp"
@@ -109,7 +109,6 @@
                             android:clickable="true"
                             android:longClickable="true"
                             android:maxLines="3"
-                            android:text="Rua Rodrigues Junior, 1012, Apto 202, Centro, Quixadá - CE"
                             android:textAlignment="viewStart"
                             android:textColor="@color/primaryTextColor" />
                     </LinearLayout>
@@ -177,7 +176,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:paddingTop="8dp"
-                                android:text="10"
                                 android:textAlignment="center"
                                 android:textSize="24sp" />
 
@@ -203,7 +201,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:paddingTop="8dp"
-                                android:text="4,5"
                                 android:textAlignment="center"
                                 android:textSize="24sp" />
 
@@ -313,7 +310,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:paddingTop="8dp"
-                                android:text="10"
                                 android:textAlignment="center"
                                 android:textSize="24sp" />
 
@@ -339,7 +335,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:paddingTop="8dp"
-                                android:text="4,5"
                                 android:textAlignment="center"
                                 android:textSize="24sp" />
 

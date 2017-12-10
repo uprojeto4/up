@@ -89,7 +89,7 @@ public class ListaDesejosActivity extends BaseActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        likeButton = (LikeButton) findViewById(R.id.heart_button);
+//        likeButton = (LikeButton) findViewById(R.id.heart_button);
 
         tagAdapter = new TagAdapter(this, arrayOfTags);
 
@@ -143,6 +143,13 @@ public class ListaDesejosActivity extends BaseActivity {
             updateUserInfo();
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit_perfil, menu);
+        return true;
     }
 
 
@@ -200,7 +207,7 @@ public class ListaDesejosActivity extends BaseActivity {
     public void unfavorite(View view){
 //        favorite = (ImageButton) findViewById(R.id.favorite);
 //        favorite.setColorFilter(Color.argb(255, 68, 68, 68));
-        likeButton.setLiked(true);
+//        likeButton.setLiked(true);
 //        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
     }
 

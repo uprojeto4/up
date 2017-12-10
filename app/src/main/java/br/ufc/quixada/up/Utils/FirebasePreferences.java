@@ -68,6 +68,11 @@ public class FirebasePreferences {
         editor.commit();
     }
 
+    public void clearUserPreferences(){
+        editor.clear();
+        editor.commit();
+    }
+
     public String getId () {
         return preferences.getString(CHAVE_ID, null);
     }

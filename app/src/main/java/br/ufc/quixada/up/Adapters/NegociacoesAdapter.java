@@ -140,6 +140,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
         TextView textViewMensagensNaoLidasNegociacao;
         TextView textViewLastMessage;
         ImageView responseIcon;
+        ImageView adPicture;
         String negotiationKey;
 
         private Negociacao negociacao;
@@ -154,6 +155,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
             textViewMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.textViewMensagensNaoLidasNegociacao);
             textViewLastMessage = itemLayoutView.findViewById(R.id.lastMessage);
             responseIcon = itemLayoutView.findViewById(R.id.responseIcon);
+            adPicture = itemLayoutView.findViewById(R.id.adPicturePreview);
 
             itemLayoutView.setOnClickListener(new View.OnClickListener() {
 

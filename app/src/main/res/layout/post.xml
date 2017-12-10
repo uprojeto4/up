@@ -103,7 +103,7 @@
                     android:layout_height="match_parent"
                     android:backgroundTint="@color/cardview_light_background"
                     android:tint="#666666"
-                    app:srcCompat="@drawable/ic_thumb_up_black_24dp" />
+                    app:srcCompat="@drawable/ic_up_icone_02" />
 
                 <!--<ImageButton-->
                     <!--android:id="@+id/imageButton2"-->
