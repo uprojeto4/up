@@ -86,7 +86,7 @@
                         android:paddingTop="8dp"
                         android:text="@string/price"
                         android:textAllCaps="true"
-                        android:textColor="@color/colorAccent2"
+                        android:textColor="@color/SecondaryColor"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -117,7 +117,7 @@
                         android:paddingTop="8dp"
                         android:text="@string/available"
                         android:textAllCaps="true"
-                        android:textColor="@color/colorAccent2"
+                        android:textColor="@color/SecondaryColor"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 

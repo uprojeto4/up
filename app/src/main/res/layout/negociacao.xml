@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="2"
                     android:text="Sapato Alto Vizano muito alto e muito vizano"
-                    android:textColor="@color/colorAccent2"
+                    android:textColor="@color/SecondaryColor"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 

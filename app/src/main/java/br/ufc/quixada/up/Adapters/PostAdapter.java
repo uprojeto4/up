@@ -36,6 +36,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import br.ufc.quixada.up.Activities.BaseActivity;
 import br.ufc.quixada.up.Activities.ChatActivity;
 import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
@@ -51,15 +52,9 @@ import static br.ufc.quixada.up.R.layout.post;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     private LayoutInflater layoutInflater;
-    private ArrayList<Post> posts;
+    protected ArrayList<Post> posts;
     private RecyclerViewOnClickListener recyclerViewOnClickListener;
     Context context;
-    StorageReference storageReference;
-    StorageReference imageRef;
-    Bitmap bitmap;
-    byte[] pictureCover;
-//    ImageView imageView;
-    FirebaseStorage firebaseStorage;
     FirebaseAuth user = FirebaseAuth.getInstance();
 
 
@@ -81,19 +76,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         Post post = posts.get(position);
 
-        Log.d("entrou", "netrou");
+//        Log.d("entrou", "netrou");
 
         DecimalFormat formatoMoeda = new DecimalFormat("##,###,###,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
         formatoMoeda.setMinimumFractionDigits(2);
         formatoMoeda.setParseBigDecimal (true);
         String price = formatoMoeda.format(post.getPrice());
 
-//        holder.image.setImageResource(post.getDefaultImage());
-//        imageView = holder.image;
         Log.d("imageCOver", post.getImageCover()+"");
         if(post.getImageCover()!= null){
             applyImage(post.getImageCover(), holder.image);
             Log.d("chamou","applyImage");
+        }
+
+        if (post.getUpsList()!= null){
+            if (post.getUpsList().contains(user.getCurrentUser().getUid())){
+                holder.upButton.setColorFilter(Color.argb(255, 255, 171, 0));
+            } else{
+                holder.upButton.setColorFilter(Color.argb(255, 102, 102, 102));
+            }
         }
         holder.title.setText(post.getTitle());
         holder.subtitle.setText(post.getSubtitle());
@@ -140,23 +141,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
             upButton = (ImageButton) itemView.findViewById(R.id.buttonUpCard);
 
+//
+//            Log.d("post", ""+post);
+
             upButton.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-//                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
-//                    intent.putExtra("remoteUserId", post.getUserId());
-//                    intent.putExtra("adId", post.getId());
-//                    intent.putExtra("adTitle", post.getTitle());
-//                    context.startActivity(intent);
-
                     post.up(user.getCurrentUser().getUid(), post.getId());
-//                    if(post.getUpsList().contains(user.getCurrentUser().getUid())){
-//                        upButton.setColorFilter(Color.argb(255, 255, 171, 0));
-//                    } else {
-//                        upButton.setColorFilter(Color.argb(255, 136, 136, 136));
-//                    }
-
                 }
             });
         }
@@ -173,6 +165,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         this.recyclerViewOnClickListener = recyclerViewOnClickListener;
     }
 
+
+//    Mecher com a lista de posts
     public void addBottomListItem(Post post){
         posts.add(post);
         notifyItemInserted(posts.size());
@@ -186,6 +180,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void addListItem(Post post, int position){
         posts.add(position, post);
         notifyItemInserted(position);
+    }
+
+    public void setListItem(Post post, int position){
+        posts.set(position, post);
+        notifyItemChanged(position);
+    }
+
+    public int searchListItem(String id){
+        for(Post i : posts) {
+            if (id.equals(i.getId())) {
+                return posts.indexOf(i);
+            }
+        }
+        return -1;
     }
 
     public void applyImage(byte[] bytes, ImageView imageView){

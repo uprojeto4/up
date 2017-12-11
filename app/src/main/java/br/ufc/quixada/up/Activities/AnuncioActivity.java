@@ -77,12 +77,7 @@ public class AnuncioActivity extends BaseActivity {
     }
 
     public void start(){
-
-//        Log.d("posts", BaseActivity.posts+"");
-
         Post post = BaseActivity.posts.get(position);
-
-//        Toast.makeText(this, "opa é nois"+post.getTitle(), Toast.LENGTH_SHORT).show();
 
         TextView title = (TextView)findViewById(R.id.textView_title);
         TextView subtitle = (TextView)findViewById(R.id.textView_describ);

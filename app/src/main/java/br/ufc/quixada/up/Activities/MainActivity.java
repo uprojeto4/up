@@ -6,9 +6,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,12 +26,14 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +46,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.like.Utils;
 
 import java.util.ArrayList;
 
@@ -53,6 +60,7 @@ import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.TesteActivity;
 import br.ufc.quixada.up.Utils.ChatControl;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
+import br.ufc.quixada.up.Utils.Network;
 
 public class MainActivity extends BaseActivity implements RecyclerViewOnClickListener{
 
@@ -61,15 +69,13 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 //    ArrayList<Post> posts = new ArrayList<Post>();
     Post post;
     RecyclerView recyclerView;
+    SwipeRefreshLayout swipeRefreshLayout;
     PostAdapter postAdapter;
 
     private int numPostsByTime = 3;
     private String lastPositionId;
     private boolean lastPost = false;
     LikeButton likeButton;
-
-    static  MainActivity mainActivity;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -101,15 +107,8 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 
         if(user != null){
             updateUserInfo();
-            loadFromFirebase(numPostsByTime);
+            loadFromFirebase(numPostsByTime, recyclerView);
         }
-
-
-
-
-
-//        firebasePreferences = new FirebasePreferences(MainActivity.this);
-//        Toast.makeText(this, firebasePreferences.getId()+" - "+firebasePreferences.getUserName()+" - "+firebasePreferences.getUserEmail(), Toast.LENGTH_LONG).show();
 
         likeButton = (LikeButton) findViewById(R.id.heart_button);
 
@@ -135,15 +134,60 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                 PostAdapter pa = (PostAdapter)recyclerView.getAdapter();
                 if(BaseActivity.posts.size() == llm.findLastCompletelyVisibleItemPosition()+1 && lastPost == false){
                     Toast.makeText(MainActivity.this, "Carregando ...", Toast.LENGTH_SHORT).show();
-                    loadMoreFromFirebase(numPostsByTime, lastPositionId);
+                    loadMoreFromFirebase(numPostsByTime, lastPositionId, recyclerView);
                 }
 
             }
         });
 
-        postAdapter = new PostAdapter(this, BaseActivity.posts);
-        postAdapter.setRecyclerViewOnClickListener(this);
-        recyclerView.setAdapter(postAdapter);
+//        postAdapter = new PostAdapter(this, BaseActivity.posts);
+//        postAdapter.setRecyclerViewOnClickListener(this);
+
+        recyclerView.setAdapter(startAdapter());
+
+        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                boolean show = false;
+                final Snackbar snackbar = Snackbar.make(recyclerView, "Sinto Muito! não há conexão com a internet.", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Settings", new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                        startActivity(intent);
+                    }
+
+                }).setActionTextColor(getResources().getColor(R.color.colorPrimary));
+
+                if(Network.hasNetwork(getBaseContext())){
+                    if (snackbar.isShown()){
+                        snackbar.dismiss();
+                    }
+                    recyclerView.setAdapter(startAdapter());
+                    loadFromFirebase(numPostsByTime, recyclerView);
+                }else{
+                    show = true;
+                }
+
+                final boolean finalShow = show;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SystemClock.sleep(2000);
+                        if(finalShow == true){
+                            snackbar.show();
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
 
         if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||
                 localUser.getAddress().getBairro().equals("") || localUser.getAddress().getCidade().equals("")){
@@ -161,7 +205,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                     .show();
         }
 
-        MainActivity.mainActivity = this;
+        loadNewPosts();
     }
 
     @Override
@@ -170,15 +214,13 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         BaseActivity.posts = new ArrayList<Post>();
     }
 
-    public static MainActivity getInstance(){
-        return MainActivity.mainActivity;
+    public PostAdapter startAdapter(){
+        BaseActivity.posts = new ArrayList<Post>();
+        postAdapter = new PostAdapter(this, BaseActivity.posts);
+        postAdapter.setRecyclerViewOnClickListener(this);
+
+        return postAdapter;
     }
-
-//    public synchronized void mudarImage(String msg){
-//        TextView textView = (TextView) findViewById(R.id.textView9);
-//        textView.setText(msg);
-//    }
-
 
     public void share(View view){
         TextView textView_title = (TextView)findViewById(R.id.textView_title);
@@ -194,96 +236,57 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         startActivity(sendIntent);
     }
 
-    public void up(Boolean b){
-//        Toast.makeText(getBaseContext(),"Dar um up maroto: "+post.getUps(), Toast.LENGTH_SHORT).show();
-        ImageButton imageButtonUp = (ImageButton)findViewById(R.id.buttonUpCard);
-        if(b == true){
-            imageButtonUp.setColorFilter(Color.argb(255, 255, 171, 0));
-        }else {
-            imageButtonUp.setColorFilter(Color.argb(255, 102, 102, 102));
+    public void favorite(View view) {
+        likeButton.setLiked(true);
+    }
+
+    public void loadFromFirebase(int num, View view){
+        if(Network.hasNetwork(getBaseContext())){
+            postsReference.limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    int last = numPostsByTime;
+                    for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                        post = singleSnapshot.getValue(Post.class);
+
+                        Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
+                        if (last == numPostsByTime){
+                            lastPositionId = post.getId();
+                            Log.d("TAG", "postID: "+lastPositionId);
+                            last--;
+                        }else{
+                            recyclerView.scrollToPosition(0);
+                            if(!BaseActivity.posts.contains(post)){
+                                post.downloadImages(post.getPictures().get(0), postAdapter, post);
+                            }
+                            Log.d("testando", "entrou");
+                            postAdapter.addTopListItem(post);
+                        }
+                    }
+                    ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar3);
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("oops", databaseError.getMessage());
+                }
+            });
+        }else{
+            Snackbar.make(recyclerView, "Sinto Muito! não há conexão com a internet.", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Settings", new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            startActivity(intent);
+                        }
+
+                    }).setActionTextColor(getResources().getColor(R.color.colorPrimary)).show();
         }
     }
 
-/*    public void negociar(View view){
-//        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("remoteUserId", "YnJlbmRvbkBnbWFpbC5jb20=");
-        intent.putExtra("adId", "-Kz7OnP9IF00E0jPBxTh");
-        startActivity(intent);
-//        ChatControl.startConversation("remoteUserId", "productId");
-    }*/
-
-    public void favorite(View view) {
-//        favorite = (ImageButton) findViewById(R.id.favorite);
-//        favorite.setColorFilter(Color.argb(255, 68, 68, 68));
-        likeButton.setLiked(true);
-//        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
-    }
-
-//    public void loadFromFirebase(int num){
-//        postsReference.limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                int last = numPostsByTime;
-//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//                    post = singleSnapshot.getValue(Post.class);
-//
-//                    Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
-//                    if (last == numPostsByTime){
-//                        lastPositionId = post.getId();
-//                        Log.d("TAG", "postID: "+lastPositionId);
-//                        last--;
-//                    }else{
-//                        recyclerView.scrollToPosition(0);
-//                        if(!posts.contains(post)){
-//                            post.downloadImages(post.getPictures().get(0), postAdapter, post);
-//                        }
-//                        Log.d("testando", "entrou");
-//                        postAdapter.addTopListItem(post);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.e("oops", databaseError.getMessage());
-//            }
-//        });
-//    }
-
-    public void loadFromFirebase(int num){
-        postsReference.limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int last = numPostsByTime;
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    post = singleSnapshot.getValue(Post.class);
-
-                    Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
-                    if (last == numPostsByTime){
-                        lastPositionId = post.getId();
-                        Log.d("TAG", "postID: "+lastPositionId);
-                        last--;
-                    }else{
-                        recyclerView.scrollToPosition(0);
-                        if(!BaseActivity.posts.contains(post)){
-                            post.downloadImages(post.getPictures().get(0), postAdapter, post);
-                        }
-                        Log.d("testando", "entrou");
-                        postAdapter.addTopListItem(post);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("oops", databaseError.getMessage());
-            }
-        });
-    }
-
-    public void loadMoreFromFirebase(final int num, final String position){
-        if(position != null){
+    public void loadMoreFromFirebase(final int num, final String position, View view){
+        if(position != null && Network.hasNetwork(getBaseContext())){
             postsReference.orderByKey().endAt(lastPositionId).limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -324,6 +327,16 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                     Log.e("oops", databaseError.getMessage());
                 }
             });
+        }else{
+            Snackbar.make(recyclerView, "Sinto Muito! não há conexão com a internet.", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Settings", new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            startActivity(intent);
+                        }
+
+                    }).setActionTextColor(getResources().getColor(R.color.colorPrimary)).show();
         }
     }
 
@@ -339,7 +352,13 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                String id = dataSnapshot.child("id").getValue(String.class);
+                Post p = dataSnapshot.getValue(Post.class);
+                int position = postAdapter.searchListItem(id);
+                p.setImageCover(BaseActivity.posts.get(position).getImageCover());
 
+
+                postAdapter.setListItem(p, position);
             }
 
             @Override

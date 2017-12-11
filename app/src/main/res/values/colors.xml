@@ -6,17 +6,42 @@
     <!--<color name="colorAccent">#FF4081</color>-->
 <!--</resources>-->
 <resources>
-    <color name="colorPrimary">#ffab00</color>
-    <color name="primaryLightColor">#ffdd4b</color>
-    <!--<color name="primaryLightColor">#89458d</color>-->
-    <color name="colorPrimaryDark">#c67c00</color>
-    <!--<color name="colorPrimaryDark">#19001d</color>-->
-    <color name="colorAccent">#00948c</color>
-    <!--<color name="secondaryLightColor">#ffdd4b</color>-->
-    <!--<color name="secondaryDarkColor">#c67c00</color>-->
+
+
+    <color name="colorPrimary">#ff9700</color>
+    <color name="primaryLightColor">#ffc847</color>
+    <color name="colorPrimaryDark">#c66800</color>
+    <color name="colorAccent">#5a185f</color>
+    <color name="colorAccentLight">#89458d</color>
+    <color name="colorAccentDark">#2e0035</color>
+    <color name="SecondaryColor">#2bb0a4</color>
+    <color name="secondaryLightColor">#69e2d5</color>
+    <color name="secondaryDarkColor">#008075</color>
+
+    <!--<color name="colorPrimary">#ff9700</color>-->
+    <!--<color name="primaryLightColor">#ffc847</color>-->
+    <!--<color name="colorPrimaryDark">#c66800</color>-->
+    <!--<color name="colorAccent">#2bb0a4</color>-->
+    <!--<color name="colorAccentLight">#69e2d5</color>-->
+    <!--<color name="colorAccentDark">#008075</color>-->
+    <!--<color name="SecondaryColor">#5a185f</color>-->
+    <!--<color name="secondaryLightColor">#89458d</color>-->
+    <!--<color name="secondaryDarkColor">#2e0035</color>-->
+
+    <!--<color name="colorPrimary">#2bb0a4</color>-->
+    <!--<color name="primaryLightColor">#69e2d5</color>-->
+    <!--<color name="colorPrimaryDark">#008075</color>-->
+    <!--<color name="colorAccent">#ff9700</color>-->
+    <!--<color name="colorAccentLight">#ffc847</color>-->
+    <!--<color name="colorAccentDark">#c66800</color>-->
+    <!--<color name="SecondaryColor">#5a185f</color>-->
+    <!--<color name="secondaryLightColor">#89458d</color>-->
+    <!--<color name="secondaryDarkColor">#2e0035</color>-->
+
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
-    <color name="backgroundDarker">#f0f0f0</color>
-    <color name="colorAccent2">#5a185f</color>
+
+    <!--//outras cores-->
     <color name="goldYellow">#f2ed00</color>
+    <color name="backgroundDarker">#f0f0f0</color>
 </resources>

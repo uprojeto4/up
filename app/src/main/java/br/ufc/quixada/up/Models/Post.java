@@ -59,7 +59,6 @@ import static br.ufc.quixada.up.R.layout.post;
     private String id;
     private ArrayList<String> upsList = new ArrayList<String>();
     private byte[] imageCover;
-    private MainActivity activity;
 
     Post postTemp;
 
@@ -170,9 +169,6 @@ import static br.ufc.quixada.up.R.layout.post;
     }
 
     public void up(final String uid, final String id){
-
-//        final Activity main = mainActivity;
-
         DatabaseReference postRef = FirebaseConfig.getDatabase().child("posts").child(id);
         postRef.runTransaction(new Transaction.Handler() {
 
@@ -180,7 +176,6 @@ import static br.ufc.quixada.up.R.layout.post;
             public Transaction.Result doTransaction(MutableData mutableData) {
 
                 Post post = mutableData.getValue(Post.class);
-//                System.out.println("test " + post);
                 if (post == null) {
                     return Transaction.success(mutableData);
                 }
@@ -189,15 +184,9 @@ import static br.ufc.quixada.up.R.layout.post;
                 if (post.getUpsList().contains(uid)) {
                 // Unstar the post and remove self from stars
                     aux.remove(uid);
-                    System.out.println("posts: "+post.getUpsList());
-                    MainActivity.getInstance().up(false);
-
                 } else {
                 // Star the post and add self to stars
                     aux.add(uid);
-                    System.out.println("posts3 enois: "+post.getUpsList());
-                    MainActivity.getInstance().up(true);
-
                 }
                 post.setUpsList(aux);
                 post.setUps();
@@ -205,6 +194,7 @@ import static br.ufc.quixada.up.R.layout.post;
                 // Set value and report transaction success
                 mutableData.setValue(post);
 //                mutableData.child("upsList").setValue(post.getUpsList());
+//                mutableData.child("ups").setValue(post.getUps());
                 return Transaction.success(mutableData);
             }
 
@@ -212,7 +202,6 @@ import static br.ufc.quixada.up.R.layout.post;
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                 // Transaction completed
                 Log.d("TAG", "postTransaction:onComplete:" + databaseError);
-                Log.d("TAG", "postTransaction:onComplete:" + dataSnapshot.child("ups").getValue());
             }
         });
     }
@@ -250,10 +239,6 @@ import static br.ufc.quixada.up.R.layout.post;
             return dimensoes;
 //            file = Bitmap.createScaledBitmap(file, 680, 680, false);
         }
-    }
-
-    public void setActivity (MainActivity activity){
-        this.activity = activity;
     }
 
     public void upload(final ArrayList<Image> images) {
