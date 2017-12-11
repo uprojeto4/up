@@ -1,5 +1,7 @@
 package br.ufc.quixada.up.Activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -9,10 +11,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -57,20 +64,25 @@ import br.ufc.quixada.up.Utils.FirebasePreferences;
 
 public class MainActivity extends BaseActivity implements RecyclerViewOnClickListener{
 
-    static ArrayList<Post> posts = new ArrayList<Post>();
-    ArrayList<Post> listAux = new ArrayList<Post>();
-    private RecyclerView recyclerView;
-    DatabaseReference postsReference = FirebaseConfig.getDatabase().child("posts");;
-    PostAdapter postAdapter;
+    DatabaseReference postsReference = FirebaseConfig.getDatabase().child("posts");
+
     Post post;
+    RecyclerView recyclerView;
+    PostAdapter postAdapter;
+
+    public static Post searchPost;
+    String searchTerm;
+    public static ArrayList<Post> searchPosts = new ArrayList<Post>();
+
     private int numPostsByTime = 3;
     private String lastPositionId;
     private boolean lastPost = false;
-    public static String localUserId;
-    static  MainActivity mainActivity;
-//    LikeButton likeButton;
 
     LikeButton likeButton;
+
+    public static boolean isLogged;
+
+    static  MainActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -84,8 +96,23 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), NovoAnuncioActivity.class);
-                startActivity(intent);
+                if(isLogged){
+                    Intent intent = new Intent(getApplicationContext(), NovoAnuncioActivity.class);
+                    startActivity(intent);
+                }else{
+                    new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.no_address_dialog_title)
+                        .setMessage(MainActivity.this.getString(R.string.faca_login))
+                        .setPositiveButton(MainActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //                            finish();
+                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton(MainActivity.this.getString(R.string.nao), null)
+                        .show();
+                }
             }
         });
 
@@ -107,25 +134,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 
         localUserId = localUser.getId();
 
-        if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||
-                localUser.getAddress().getBairro().equals("") || localUser.getAddress().getCidade().equals("")){
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.no_address_dialog_title)
-                    .setMessage(MainActivity.this.getString(R.string.insert_address_message))
-                    .setPositiveButton(MainActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-//                            finish();
-                            Intent intent = new Intent(MainActivity.this, EditPerfilActivity.class);
-                            startActivity(intent);
-                        }
-                    }).setNegativeButton(MainActivity.this.getString(R.string.nao), null)
-                    .show();
-        }
-
-
-//        firebasePreferences = new FirebasePreferences(MainActivity.this);
-//        Toast.makeText(this, firebasePreferences.getId()+" - "+firebasePreferences.getUserName()+" - "+firebasePreferences.getUserEmail(), Toast.LENGTH_LONG).show();
 
         likeButton = (LikeButton) findViewById(R.id.heart_button);
 
@@ -149,7 +157,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 
                 LinearLayoutManager llm  = (LinearLayoutManager)recyclerView.getLayoutManager();
                 PostAdapter pa = (PostAdapter)recyclerView.getAdapter();
-                if(posts.size() == llm.findLastCompletelyVisibleItemPosition()+1 && lastPost == false){
+                if(BaseActivity.posts.size() == llm.findLastCompletelyVisibleItemPosition()+1 && lastPost == false){
                     Toast.makeText(MainActivity.this, "Carregando ...", Toast.LENGTH_SHORT).show();
                     loadMoreFromFirebase(numPostsByTime, lastPositionId);
                 }
@@ -157,22 +165,138 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
             }
         });
 
-        postAdapter = new PostAdapter(this, posts);
+        postAdapter = new PostAdapter(this, BaseActivity.posts);
         postAdapter.setRecyclerViewOnClickListener(this);
         recyclerView.setAdapter(postAdapter);
 
-//        anuncioTela();
-//        MainActivity.mainActivity = this;
+        if (localUser.getEmail() != null){
+            isLogged = true;
+            if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||
+                    localUser.getAddress().getBairro().equals("") || localUser.getAddress().getCidade().equals("") ||
+                    localUser.getAddress().getLogradouro().equals("null") || localUser.getAddress().getNumero().equals("null") ||
+                    localUser.getAddress().getBairro().equals("null") || localUser.getAddress().getCidade().equals("null")){
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.no_address_dialog_title)
+                        .setMessage(MainActivity.this.getString(R.string.insert_address_message))
+                        .setPositiveButton(MainActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+    //                            finish();
+                                Intent intent = new Intent(MainActivity.this, EditPerfilActivity.class);
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton(MainActivity.this.getString(R.string.nao), null)
+                        .show();
+            }
+        } else{
+            isLogged = false;
+        }
+
+
+        MainActivity.mainActivity = this;
+
+//        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null){
+            Log.d("currentUser if", currentUser+"");
+        }else {
+            Log.d("currentUser else", currentUser + "");
+        }
+//        updateProfile();
+    }
+
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        handleIntent(intent);
+//    }
+
+//    private void handleIntent(Intent intent) {
+//
+//        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//            String query = intent.getStringExtra(SearchManager.QUERY);
+//        }
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_search, menu);
+
+        final MenuItem searchItem = menu.findItem(R.id.search);
+
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                searchTerm = query;
+                postsReference.orderByChild("title").equalTo(query).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("resultados", dataSnapshot+"");
+                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                            searchPost = singleSnapshot.getValue(Post.class);
+                            searchPosts.add(searchPost);
+                        }
+                        Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
+                        intent.putExtra("searchTerm", searchTerm);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+//                postsReference.orderByChild("title").equalTo(newText).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        Log.d("resultados", dataSnapshot+"");
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BaseActivity.posts = new ArrayList<Post>();
+        MainActivity.searchPosts = new ArrayList<Post>();
+    }
+
+    public static MainActivity getInstance(){
+        return MainActivity.mainActivity;
     }
 
 //    public synchronized void mudarImage(String msg){
 //        TextView textView = (TextView) findViewById(R.id.textView9);
 //        textView.setText(msg);
 //    }
-//
-//    public static MainActivity getInstance(){
-//        return MainActivity.mainActivity;
-//    }
+
 
     public void share(View view){
         TextView textView_title = (TextView)findViewById(R.id.textView_title);
@@ -188,22 +312,16 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         startActivity(sendIntent);
     }
 
-    public void up(View view){
-        Toast.makeText(getBaseContext(),"Dar um up maroto: "+post.getUps(), Toast.LENGTH_SHORT).show();
+    public void up(Boolean b){
+//        Toast.makeText(getBaseContext(),"Dar um up maroto: "+post.getUps(), Toast.LENGTH_SHORT).show();
         ImageButton imageButtonUp = (ImageButton)findViewById(R.id.buttonUpCard);
-//        imageButtonUp.setColorFilter(Color.argb(255, 255, 171, 0));
-
-//        post.up(localUser.getId());
+        if(b == true){
+            imageButtonUp.setColorFilter(Color.argb(255, 255, 171, 0));
+        }else {
+            imageButtonUp.setColorFilter(Color.argb(255, 102, 102, 102));
+        }
     }
 
-/*    public void negociar(View view){
-//        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("remoteUserId", "YnJlbmRvbkBnbWFpbC5jb20=");
-        intent.putExtra("adId", "-Kz7OnP9IF00E0jPBxTh");
-        startActivity(intent);
-//        ChatControl.startConversation("remoteUserId", "productId");
-    }*/
 
     public void favorite(View view) {
 //        favorite = (ImageButton) findViewById(R.id.favorite);
@@ -211,6 +329,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         likeButton.setLiked(true);
 //        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
     }
+
 
     public void loadFromFirebase(int num){
         postsReference.limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -227,7 +346,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                         last--;
                     }else{
                         recyclerView.scrollToPosition(0);
-                        if(!posts.contains(post)){
+                        if(!BaseActivity.posts.contains(post)){
                             post.downloadImages(post.getPictures().get(0), postAdapter, post);
                         }
                         Log.d("testando", "entrou");
@@ -263,7 +382,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                         Log.d("TAG", "post: " + post.getTitle() + " - " + post.getId());
                         if (dataSnapshot.getChildrenCount() == numPostsByTime) {
                             if (last > 1) {
-                                if (!posts.contains(post)) {
+                                if (!BaseActivity.posts.contains(post)) {
                                     post.downloadImages(post.getPictures().get(0), postAdapter, post);
                                 }
                                 Log.d("testando", "entrou");

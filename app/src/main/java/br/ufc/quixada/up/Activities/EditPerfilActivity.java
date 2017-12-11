@@ -194,12 +194,27 @@ public class EditPerfilActivity extends PerfilActivity {
         nome.setText(PerfilActivity.nome);
 //        email.setText(PerfilActivity.email);
 
-        logradouroEt.setText(localUser.getAddress().getLogradouro());
-        numeroEt.setText(localUser.getAddress().getNumero());
-        complementoEt.setText(localUser.getAddress().getComplemento());
-        bairroEt.setText(localUser.getAddress().getBairro());
-        cidadeEt.setText(localUser.getAddress().getCidade());
-        estadoEt.setText(localUser.getAddress().getEstado());
+        if (PerfilActivity.endereco.getLogradouro().equals("") || PerfilActivity.endereco.getNumero().equals("") ||
+                PerfilActivity.endereco.getBairro().equals("") || PerfilActivity.endereco.getCidade().equals("") ||
+                PerfilActivity.endereco.getLogradouro().equals("null") || PerfilActivity.endereco.getNumero().equals("null") ||
+                PerfilActivity.endereco.getBairro().equals("null") || PerfilActivity.endereco.getCidade().equals("null")){
+//            enderecoLocalUser.setText("Usuário não forneceu endereço");
+            logradouroEt.setText("");
+            numeroEt.setText("");
+            complementoEt.setText("");
+            bairroEt.setText("");
+            cidadeEt.setText("");
+            estadoEt.setText("");
+        } else{
+
+            logradouroEt.setText(localUser.getAddress().getLogradouro());
+            numeroEt.setText(localUser.getAddress().getNumero());
+            complementoEt.setText(localUser.getAddress().getComplemento());
+            bairroEt.setText(localUser.getAddress().getBairro());
+            cidadeEt.setText(localUser.getAddress().getCidade());
+            estadoEt.setText(localUser.getAddress().getEstado());
+        }
+
 
         profilePictureRef = storage.getReference().child("UsersProfilePictures/"+PerfilActivity.id+"/"+localUser.getFotoPerfil());
 
@@ -527,6 +542,7 @@ public class EditPerfilActivity extends PerfilActivity {
                 firebasePreferences = new FirebasePreferences(EditPerfilActivity.this);
                 firebasePreferences.SaveUserPreferences(localUser.getId(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
                         localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
+                finish();
 //                openHome();
 //                Toast.makeText(getBaseContext(), "Bem Vindo, "+ localUser.getNome() +"! :)", Toast.LENGTH_LONG).show();
 //                updateProfile();

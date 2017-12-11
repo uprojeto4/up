@@ -1,8 +1,13 @@
 package br.ufc.quixada.up.Adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +22,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.like.LikeButton;
+import com.nguyenhoanglam.imagepicker.model.Image;
+
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -27,9 +40,15 @@ import java.util.Locale;
 
 import br.ufc.quixada.up.Activities.BaseActivity;
 import br.ufc.quixada.up.Activities.ChatActivity;
+import br.ufc.quixada.up.Activities.EditPerfilActivity;
+import br.ufc.quixada.up.Activities.LoginActivity;
+import br.ufc.quixada.up.Activities.MainActivity;
+import br.ufc.quixada.up.Constant;
+import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
 import br.ufc.quixada.up.Models.Post;
+import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 
 import static br.ufc.quixada.up.R.layout.post;
@@ -52,6 +71,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     FirebaseStorage firebaseStorage;
     FirebaseAuth user = FirebaseAuth.getInstance();
 
+    PostViewHolder vh1;
+
+
+
+    View v1;
+
 
     public PostAdapter(Context c, ArrayList<Post> p){
         context = c;
@@ -67,7 +92,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
+    public void onBindViewHolder(final PostViewHolder holder, int position) {
+
+        vh1 = holder;
 
         Post post = posts.get(position);
 
@@ -89,6 +116,56 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.subtitle.setText(post.getSubtitle());
         holder.price.setText("R$ " + price);
         holder.post = post;
+        holder.likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                    likeButton.onClick(view);
+                if (MainActivity.isLogged){
+//                        post.addOnWishList(user.getCurrentUser().getUid(), post.getId());
+                    DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(user.getCurrentUser().getUid());
+                    postRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                            Log.d("single", dataSnapshot+"");
+                            User u = dataSnapshot.getValue(User.class);
+                            ArrayList<String> aux = u.getListaDesejos();
+                            if (u.getListaDesejos().contains(holder.post.getId())){
+//                                    likeButton.setLiked(false);
+                                holder.likeButton.setLiked(false);
+                                u.getListaDesejos().remove(u.getListaDesejos().indexOf(holder.post.getId()));
+                                u.save();
+                            } else{
+                                holder.likeButton.setLiked(true);
+                                aux.add(holder.post.getId());
+//                                    likeButton.setLiked(true);
+                                u.setListaDesejos(aux);
+                                u.save();
+                            }
+//                }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                } else{
+                    new AlertDialog.Builder(view.getContext())
+                            .setTitle(R.string.no_address_dialog_title)
+                            .setMessage(view.getContext().getString(R.string.faca_login))
+                            .setPositiveButton(view.getContext().getString(R.string.sim), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //                            finish();
+                                    Intent intent = new Intent(v1.getContext(), LoginActivity.class);
+                                    context.startActivity(intent);
+                                }
+                            }).setNegativeButton(view.getContext().getString(R.string.nao), null)
+                            .show();
+                }
+            }
+        });
 
         if (holder.post.getUserId().equals(BaseActivity.localUserId)) {
             holder.openChatButton.setVisibility(View.GONE);
@@ -109,6 +186,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView subtitle;
         TextView price;
         ImageView image;
+        LikeButton likeButton;
+
         private Button openChatButton;
         private Button markAsSelled;
         private ImageButton upButton;
@@ -120,6 +199,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             subtitle = (TextView) itemView.findViewById(R.id.textView_describ);
             price = (TextView) itemView.findViewById(R.id.textView_price);
             image = (ImageView) itemView.findViewById(R.id.imageView3);
+            likeButton = (LikeButton) itemView.findViewById(R.id.heart_button);
+
 
             itemView.setOnClickListener(this);
 
@@ -129,14 +210,30 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                    intent.putExtra("remoteUserId", post.getUserId());
-                    intent.putExtra("adId", post.getId());
-                    intent.putExtra("adTitle", post.getTitle());
-                    intent.putExtra("submitDate", post.getDataCadastro());
-                    intent.putExtra("negotiationType", Constant.NEGOTIATION_TYPE_BUY);
-                    intent.putExtra("callerId", Constant.CHAT_CALLER_POST_ADAPTER);
-                    context.startActivity(intent);
+                    v1 = v;
+                    if (MainActivity.isLogged){
+                        Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                        intent.putExtra("remoteUserId", post.getUserId());
+                        intent.putExtra("adId", post.getId());
+                        intent.putExtra("adTitle", post.getTitle());
+                        intent.putExtra("submitDate", post.getDataCadastro());
+                        intent.putExtra("negotiationType", Constant.NEGOTIATION_TYPE_BUY);
+                        intent.putExtra("callerId", Constant.CHAT_CALLER_POST_ADAPTER);
+                        context.startActivity(intent);
+                    } else{
+                        new AlertDialog.Builder(v.getContext())
+                            .setTitle(R.string.no_address_dialog_title)
+                            .setMessage(v.getContext().getString(R.string.faca_login))
+                            .setPositiveButton(v.getContext().getString(R.string.sim), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //                            finish();
+                                    Intent intent = new Intent(v1.getContext(), LoginActivity.class);
+                                    context.startActivity(intent);
+                                }
+                            }).setNegativeButton(v.getContext().getString(R.string.nao), null)
+                            .show();
+                    }
                 }
             });
 
@@ -163,6 +260,56 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
                 }
             });
+
+//            likeButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+////                    likeButton.onClick(view);
+//                    likeButton.setLiked(true);
+//                    if (MainActivity.isLogged){
+////                        post.addOnWishList(user.getCurrentUser().getUid(), post.getId());
+//                        DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(user.getCurrentUser().getUid());
+//                        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+////                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                                Log.d("single", dataSnapshot+"");
+//                                User u = dataSnapshot.getValue(User.class);
+//                                ArrayList<String> aux = u.getListaDesejos();
+//                                if (u.getListaDesejos().contains(post.getId())){
+////                                    likeButton.setLiked(false);
+//                                    u.getListaDesejos().remove(u.getListaDesejos().indexOf(post.getId()));
+//                                    u.save();
+//                                } else{
+//                                    aux.add(post.getId());
+////                                    likeButton.setLiked(true);
+//                                    u.setListaDesejos(aux);
+//                                    u.save();
+//                                }
+////                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//
+//                            }
+//                        });
+//                    } else{
+//                        new AlertDialog.Builder(view.getContext())
+//                                .setTitle(R.string.no_address_dialog_title)
+//                                .setMessage(view.getContext().getString(R.string.faca_login))
+//                                .setPositiveButton(view.getContext().getString(R.string.sim), new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        //                            finish();
+//                                        Intent intent = new Intent(v1.getContext(), LoginActivity.class);
+//                                        context.startActivity(intent);
+//                                    }
+//                                }).setNegativeButton(view.getContext().getString(R.string.nao), null)
+//                                .show();
+//                    }
+//                }
+//            });
         }
 
         @Override

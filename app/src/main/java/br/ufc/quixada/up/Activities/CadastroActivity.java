@@ -142,12 +142,14 @@ public class CadastroActivity extends AppCompatActivity {
                        databaseReference.child("users").child(localUser.getId()).child("device_token").setValue(FirebaseInstanceId.getInstance().getToken()).addOnSuccessListener(new OnSuccessListener<Void>() {
                            @Override
                            public void onSuccess(Void aVoid) {
+                               MainActivity.isLogged = true;
                                Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                startActivity(intent);
                                Toast.makeText(getBaseContext(), "Bem Vindo, "+ localUser.getNome() +"! :)", Toast.LENGTH_LONG).show();
                            }
                        });
+
                    } else{
                        String erro = "";
 

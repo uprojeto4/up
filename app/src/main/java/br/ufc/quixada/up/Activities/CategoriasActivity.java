@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.widget.Toast;
 
 import br.ufc.quixada.up.Models.User;
@@ -59,10 +60,21 @@ public class CategoriasActivity extends BaseActivity {
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(linearLayoutManager);
 
-            adapter = new CategoriasAdapter(arrayListCategorias);
+            adapter = new CategoriasAdapter(arrayListCategorias, this);
             recyclerView.setAdapter(adapter);
             recyclerView.setHasFixedSize(true);
         }
+
+        if(user != null){
+            updateUserInfo();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit_perfil, menu);
+        return true;
     }
 
     private void generateCategories() {

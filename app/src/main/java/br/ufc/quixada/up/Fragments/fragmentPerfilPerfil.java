@@ -21,6 +21,11 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -39,8 +44,11 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 
+import br.ufc.quixada.up.Activities.LoginActivity;
 import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.Activities.PerfilActivity;
 import br.ufc.quixada.up.Activities.PerfilPublicoActivity;
@@ -84,6 +92,9 @@ public class fragmentPerfilPerfil extends Fragment {
     public String address;
     public String addressMap;
 
+//    public static ProfilePictureView profilePictureView;
+
+//    ImageView profilePictureIV;
 
 
 //    Geocoder geocoder = new Geocoder(getActivity());
@@ -141,64 +152,188 @@ public class fragmentPerfilPerfil extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        profilePictureView = (ProfilePictureView) getView().findViewById(R.id.friendProfilePicture);
 
-        if(MainActivity.localUserId.equals(PerfilPublicoActivity.anuncianteId) || PerfilPublicoActivity.anuncianteId == null ){
-            profilePictureRef = storage.child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
+//        profilePictureIV = (ImageView) getView().findViewById(R.id.profile_image);
+//        getFacebookProfilePicture();
 
-            downloadProfilePicture();
+        if (MainActivity.localUserId != null ){
 
-            nome = (TextView) getView().findViewById(R.id.user_profile_name);
-            nome.setText(PerfilActivity.nome);
+            if(MainActivity.localUserId.equals(PerfilPublicoActivity.anuncianteId) || PerfilPublicoActivity.anuncianteId == null ){
+                profilePictureRef = storage.child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
 
-            TextView enderecoLocalUser;
+                downloadProfilePicture();
 
-            enderecoLocalUser = (TextView) getView().findViewById(R.id.user_profile_adress);
+                nome = (TextView) getView().findViewById(R.id.user_profile_name);
+                nome.setText(PerfilActivity.nome);
 
-            tvNumVendas = (TextView) getView().findViewById(R.id.numVendas);
-            tvAvVendas = (TextView) getView().findViewById(R.id.avVendas);
+                TextView enderecoLocalUser;
 
-            tvNumCompras = (TextView) getView().findViewById(R.id.numCompras);
-            tvAvCompras = (TextView) getView().findViewById(R.id.avCompras);
+                enderecoLocalUser = (TextView) getView().findViewById(R.id.user_profile_adress);
 
+                tvNumVendas = (TextView) getView().findViewById(R.id.numVendas);
+                tvAvVendas = (TextView) getView().findViewById(R.id.avVendas);
 
-            tvNumVendas.setText(""+PerfilActivity.numVendas);
-
-            DecimalFormat numberFormat = new DecimalFormat("#.0");
-            tvAvVendas.setText(""+numberFormat.format(PerfilActivity.avVendedor));
-
-            tvNumCompras.setText(""+PerfilActivity.numCompras);
-            tvAvCompras.setText(""+PerfilActivity.avComprador);
-
-            address = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getComplemento() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
-
-            if (PerfilActivity.endereco.getLogradouro().equals("") || PerfilActivity.endereco.getNumero().equals("") ||
-                    PerfilActivity.endereco.getBairro().equals("") || PerfilActivity.endereco.getCidade().equals("")){
-                enderecoLocalUser.setText("Usuário não forneceu endereço");
-            }else if(PerfilActivity.endereco.getComplemento().equals("")){
-                enderecoLocalUser.setText(PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado());
-            }else{
-                enderecoLocalUser.setText(address);
-            }
-            addressMap = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
-
-            Log.d("enderecoAnunciante map", addressMap);
+                tvNumCompras = (TextView) getView().findViewById(R.id.numCompras);
+                tvAvCompras = (TextView) getView().findViewById(R.id.avCompras);
 
 
+                tvNumVendas.setText(""+PerfilActivity.numVendas);
 
-            enderecoLocalUser.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new GetCoordinate().execute(addressMap.replaceAll("\\s+","+"));
+                DecimalFormat numberFormat = new DecimalFormat("#.0");
+                if(PerfilActivity.avVendedor == 0){
+                    tvAvVendas.setText(""+PerfilActivity.avVendedor);
+                }else{
+                    tvAvVendas.setText(""+numberFormat.format(PerfilActivity.avVendedor));
                 }
-            });
-        } else if(MainActivity.localUserId == null || MainActivity.localUserId != PerfilPublicoActivity.anuncianteId ){
+    //            tvAvVendas.setText(""+numberFormat.format(PerfilActivity.avVendedor));
 
+                tvNumCompras.setText(""+PerfilActivity.numCompras);
+
+                if(PerfilActivity.avComprador == 0){
+                    tvAvCompras.setText(""+PerfilActivity.avComprador);
+                }else{
+                    tvAvCompras.setText(""+numberFormat.format(PerfilActivity.avComprador));
+                }
+    //            tvAvCompras.setText(""+PerfilActivity.avComprador);
+
+                address = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getComplemento() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
+
+                if (PerfilActivity.endereco.getLogradouro().equals("") || PerfilActivity.endereco.getNumero().equals("") ||
+                        PerfilActivity.endereco.getBairro().equals("") || PerfilActivity.endereco.getCidade().equals("") ||
+                        PerfilActivity.endereco.getLogradouro().equals("null") || PerfilActivity.endereco.getNumero().equals("null") ||
+                        PerfilActivity.endereco.getBairro().equals("null") || PerfilActivity.endereco.getCidade().equals("null")){
+                    enderecoLocalUser.setText("Usuário não forneceu endereço");
+                }else if(PerfilActivity.endereco.getComplemento().equals("")){
+                    enderecoLocalUser.setText(PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado());
+                }else{
+                    enderecoLocalUser.setText(address);
+                }
+                addressMap = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
+
+                Log.d("enderecoAnunciante map", addressMap);
+
+
+
+                enderecoLocalUser.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new GetCoordinate().execute(addressMap.replaceAll("\\s+","+"));
+                    }
+                });
+            } else if(MainActivity.localUserId == null || MainActivity.localUserId != PerfilPublicoActivity.anuncianteId ){
+
+
+                Log.d("Entrou aqui", "enttrou mesmo");
+
+                nome = (TextView) getView().findViewById(R.id.user_profile_name);
+
+    //            TextView enderecoAnunciante;
+
+                enderecoAnunciante = (TextView) getView().findViewById(R.id.user_profile_adress);
+
+                tvNumVendas = (TextView) getView().findViewById(R.id.numVendas);
+                tvAvVendas = (TextView) getView().findViewById(R.id.avVendas);
+
+                tvNumCompras = (TextView) getView().findViewById(R.id.numCompras);
+                tvAvCompras = (TextView) getView().findViewById(R.id.avCompras);
+
+    //
+    //            tvNumVendas.setText(""+PerfilActivity.numVendas);
+    //            tvAvVendas.setText(""+PerfilActivity.avVendedor);
+    //
+    //            tvNumCompras.setText(""+PerfilActivity.numCompras);
+    //            tvAvCompras.setText(""+PerfilActivity.avComprador);
+
+                Query getUserData = databaseReference.child("users").orderByChild("id").equalTo(PerfilPublicoActivity.anuncianteId);
+                getUserData.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                            User usuarioAnunciante = singleSnapshot.getValue(User.class);
+                            Log.d("nome_anunciane", ""+usuarioAnunciante.getNome());
+
+                            anuncianteFoto = usuarioAnunciante.getFotoPerfil();
+
+                            profilePictureRef = storage.child("UsersProfilePictures/"+usuarioAnunciante.getId()+"/"+usuarioAnunciante.getFotoPerfil());
+
+                            downloadProfilePicture();
+
+                            nome.setText(usuarioAnunciante.getNome());
+                            anuncianteNome = usuarioAnunciante.getNome();
+
+                            tvNumVendas.setText(""+usuarioAnunciante.getNumVendas());
+    //                        tvAvVendas.setText(""+usuarioAnunciante.getAvVendedor());
+                            DecimalFormat numberFormat = new DecimalFormat("#.0");
+                            if(usuarioAnunciante.getAvVendedor() == 0){
+                                tvAvVendas.setText(""+usuarioAnunciante.getAvVendedor());
+                            }else{
+                                tvAvVendas.setText(""+numberFormat.format(usuarioAnunciante.getAvVendedor()));
+                            }
+
+                            tvNumCompras.setText(""+usuarioAnunciante.getNumCompras());
+
+                            if(usuarioAnunciante.getAvComprador() == 0){
+                                tvAvCompras.setText(""+usuarioAnunciante.getAvComprador());
+                            }else{
+                                tvAvCompras.setText(""+numberFormat.format(usuarioAnunciante.getAvComprador()));
+                            }
+    //                        tvAvCompras.setText(""+usuarioAnunciante.getAvComprador());
+
+                            address = usuarioAnunciante.getAddress().getLogradouro() + ", " + usuarioAnunciante.getAddress().getNumero() + ", " + usuarioAnunciante.getAddress().getComplemento() + ", " + usuarioAnunciante.getAddress().getBairro() + ", " + usuarioAnunciante.getAddress().getCidade() + " - " + usuarioAnunciante.getAddress().getEstado();
+
+                            if (usuarioAnunciante.getAddress().getLogradouro().equals("") || usuarioAnunciante.getAddress().getNumero().equals("") ||
+                                    usuarioAnunciante.getAddress().getBairro().equals("") || usuarioAnunciante.getAddress().getCidade().equals("")){
+                                enderecoAnunciante.setText("Usuário não forneceu endereço");
+                            }else if(usuarioAnunciante.getAddress().getComplemento().equals("")){
+                                enderecoAnunciante.setText(usuarioAnunciante.getAddress().getLogradouro() + ", " + usuarioAnunciante.getAddress().getNumero() + ", " + usuarioAnunciante.getAddress().getBairro() + ", " + usuarioAnunciante.getAddress().getCidade() + " - " + usuarioAnunciante.getAddress().getEstado());
+                            }else{
+                                enderecoAnunciante.setText(address);
+                            }
+                            addressMap = usuarioAnunciante.getAddress().getLogradouro() + ", " + usuarioAnunciante.getAddress().getNumero() + ", " + usuarioAnunciante.getAddress().getBairro() + ", " + usuarioAnunciante.getAddress().getCidade() + " - " + usuarioAnunciante.getAddress().getEstado();
+
+                            Log.d("enderecoAnunciante map", addressMap);
+
+
+
+                            enderecoAnunciante.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    new GetCoordinate().execute(addressMap.replaceAll("\\s+","+"));
+                                }
+                            });
+
+
+    //                        idAnunciante = usuarioAnunciante.getId();
+    //                        anuncianteNome.setText(usuarioAnunciante.getNome());
+    //                        avaliacaoVendedor.setText(""+usuarioAnunciante.getAvVendedor());
+
+                            if (usuarioAnunciante.getNumVendas() == 0){
+    //                            tituloUsuario.setText("Novato");
+                            } else if (usuarioAnunciante.getNumVendas() <= 10){
+    //                            tituloUsuario.setText("Iniciante");
+                            } else if (usuarioAnunciante.getNumVendas() > 10){
+    //                            tituloUsuario.setText("Sênior");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+    //            Log.d("IdAnunciante", "entrou aqui");
+    //            Log.d("IdAnunciante", MainActivity.localUserId);
+            }
+        } else{
 
             Log.d("Entrou aqui", "enttrou mesmo");
 
             nome = (TextView) getView().findViewById(R.id.user_profile_name);
 
-//            TextView enderecoAnunciante;
 
             enderecoAnunciante = (TextView) getView().findViewById(R.id.user_profile_adress);
 
@@ -208,12 +343,6 @@ public class fragmentPerfilPerfil extends Fragment {
             tvNumCompras = (TextView) getView().findViewById(R.id.numCompras);
             tvAvCompras = (TextView) getView().findViewById(R.id.avCompras);
 
-//
-//            tvNumVendas.setText(""+PerfilActivity.numVendas);
-//            tvAvVendas.setText(""+PerfilActivity.avVendedor);
-//
-//            tvNumCompras.setText(""+PerfilActivity.numCompras);
-//            tvAvCompras.setText(""+PerfilActivity.avComprador);
 
             Query getUserData = databaseReference.child("users").orderByChild("id").equalTo(PerfilPublicoActivity.anuncianteId);
             getUserData.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -233,12 +362,22 @@ public class fragmentPerfilPerfil extends Fragment {
                         anuncianteNome = usuarioAnunciante.getNome();
 
                         tvNumVendas.setText(""+usuarioAnunciante.getNumVendas());
-//                        tvAvVendas.setText(""+usuarioAnunciante.getAvVendedor());
+                        //                        tvAvVendas.setText(""+usuarioAnunciante.getAvVendedor());
                         DecimalFormat numberFormat = new DecimalFormat("#.0");
-                        tvAvVendas.setText(""+numberFormat.format(usuarioAnunciante.getAvVendedor()));
+                        if(usuarioAnunciante.getAvVendedor() == 0){
+                            tvAvVendas.setText(""+usuarioAnunciante.getAvVendedor());
+                        }else{
+                            tvAvVendas.setText(""+numberFormat.format(usuarioAnunciante.getAvVendedor()));
+                        }
 
                         tvNumCompras.setText(""+usuarioAnunciante.getNumCompras());
-                        tvAvCompras.setText(""+usuarioAnunciante.getAvComprador());
+
+                        if(usuarioAnunciante.getAvComprador() == 0){
+                            tvAvCompras.setText(""+usuarioAnunciante.getAvComprador());
+                        }else{
+                            tvAvCompras.setText(""+numberFormat.format(usuarioAnunciante.getAvComprador()));
+                        }
+                        //                        tvAvCompras.setText(""+usuarioAnunciante.getAvComprador());
 
                         address = usuarioAnunciante.getAddress().getLogradouro() + ", " + usuarioAnunciante.getAddress().getNumero() + ", " + usuarioAnunciante.getAddress().getComplemento() + ", " + usuarioAnunciante.getAddress().getBairro() + ", " + usuarioAnunciante.getAddress().getCidade() + " - " + usuarioAnunciante.getAddress().getEstado();
 
@@ -264,16 +403,16 @@ public class fragmentPerfilPerfil extends Fragment {
                         });
 
 
-//                        idAnunciante = usuarioAnunciante.getId();
-//                        anuncianteNome.setText(usuarioAnunciante.getNome());
-//                        avaliacaoVendedor.setText(""+usuarioAnunciante.getAvVendedor());
+                        //                        idAnunciante = usuarioAnunciante.getId();
+                        //                        anuncianteNome.setText(usuarioAnunciante.getNome());
+                        //                        avaliacaoVendedor.setText(""+usuarioAnunciante.getAvVendedor());
 
                         if (usuarioAnunciante.getNumVendas() == 0){
-//                            tituloUsuario.setText("Novato");
+                            //                            tituloUsuario.setText("Novato");
                         } else if (usuarioAnunciante.getNumVendas() <= 10){
-//                            tituloUsuario.setText("Iniciante");
+                            //                            tituloUsuario.setText("Iniciante");
                         } else if (usuarioAnunciante.getNumVendas() > 10){
-//                            tituloUsuario.setText("Sênior");
+                            //                            tituloUsuario.setText("Sênior");
                         }
                     }
                 }
@@ -284,13 +423,52 @@ public class fragmentPerfilPerfil extends Fragment {
                 }
             });
 
-
-//            Log.d("IdAnunciante", "entrou aqui");
-//            Log.d("IdAnunciante", MainActivity.localUserId);
         }
 
 
+
     }
+
+//    public void getFacebookProfilePicture(){
+////        profilePictureView.setProfileId(userID);
+////        try{
+////            URL imageURL = new URL("https://graph.facebook.com/" + userID + "/picture?type=large");
+////            Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+////            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+////            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+////            //transforma o stream em um array de bytes
+////            byte[] image;
+////            image = stream.toByteArray();
+////            //método que aplica a imagem nos lugares desejsdos
+////            applyImage(image);
+////        }catch (MalformedURLException e){
+////            e.printStackTrace();
+////        } catch (IOException e){
+////            e.printStackTrace();
+////        }
+////
+////        return bitmap;
+////        Bundle params = new Bundle();
+////        params.putString("fields", "id,email,gender,cover,picture.type(large)");
+////        new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
+////                new GraphRequest.Callback() {
+////                    @Override
+////                    public void onCompleted(GraphResponse response) {
+////                        if (response != null) {
+////                            try {
+////                                JSONObject data = response.getJSONObject();
+////                                if (data.has("picture")) {
+////                                    String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
+////                                    Bitmap profilePic= BitmapFactory.decodeStream(new URL(profilePicUrl).openConnection().getInputStream());
+////                                    profilePictureIV;(profilePic);
+////                                }
+////                            } catch (Exception e) {
+////                                e.printStackTrace();
+////                            }
+////                        }
+////                    }
+////                }).executeAsync();
+//    }
 
     private class GetCoordinate extends AsyncTask<String, Void, String>{
 
@@ -396,90 +574,6 @@ public class fragmentPerfilPerfil extends Fragment {
             Log.e("Main", "IOE exception");
         }
 
-
-
-        // Create a storage reference from our app
-
-//        final StorageReference storageRef = storage.getReferenceFromUrl("gs://up-compra-venda.appspot.com/UsersProfilePictures/"+PerfilActivity.id);
-//
-////        gs://up-compra-venda.appspot.com/UsersProfilePictures/YnJlbmRvbmdpcmFvQGdtYWlsLmNvbQ==/1509810338632_1.jpg
-//
-//        storageRef.child(PerfilActivity.fotoPerfil).getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                // Use the bytes to display the image
-//                String path= "/data/data/br.ufc.quixada.up/cache/"+storageRef.child(PerfilActivity.fotoPerfil).getName();
-//                try {
-//                    FileOutputStream fos = new FileOutputStream(path);
-//                    fos.write(bytes);
-//                    Log.d("path ", path);
-//
-//                    bitmap = BitmapFactory.decodeFile(path);
-////                    Toast.makeText(getActivity(),localFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
-//
-////                    Log.d("Caminho", localFile.getPath());
-//
-//                    //transforma o bitmap em stream
-//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                    bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
-//                    //transforma o stream em um array de bytes
-//                    image = stream.toByteArray();
-//                    applyImage(image);
-//
-//                    fos.close();
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                    new AlertDialog.Builder(getActivity())
-//                            .setTitle(R.string.no_address_dialog_title)
-//                            .setMessage(getActivity().getString(R.string.insert_address_message))
-//                            .setPositiveButton(getActivity().getString(R.string.sim), new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-////                            finish();
-//                                    Intent intent = new Intent(getActivity(), EditPerfilActivity.class);
-//                                    startActivity(intent);
-//                                }
-//                            }).setNegativeButton(getActivity().getString(R.string.nao), null)
-//                            .show();
-////                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-////                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-//                }
-//
-////                pd.dismiss();
-//
-//            }
-//
-//        }).addOnFailureListener(new OnFailureListener() {
-//
-//            @Override
-//
-//            public void onFailure(@NonNull Exception exception) {
-//
-//                // Handle any errors
-//
-////                pd.dismiss();
-//
-////                Toast.makeText(getActivity(), exception.toString()+"!!!", Toast.LENGTH_SHORT).show();
-//                new AlertDialog.Builder(getActivity())
-//                        .setTitle(R.string.no_address_dialog_title)
-//                        .setMessage(getActivity().getString(R.string.insert_profile_picture_message))
-//                        .setPositiveButton(getActivity().getString(R.string.sim), new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-////                            finish();
-//                                Intent intent = new Intent(getActivity(), EditPerfilActivity.class);
-//                                startActivity(intent);
-//                            }
-//                        }).setNegativeButton(getActivity().getString(R.string.nao), null)
-//                        .show();
-//
-//            }
-//
-//        });
 
 
     }

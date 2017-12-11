@@ -1,5 +1,7 @@
 package br.ufc.quixada.up.Activities;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -10,7 +12,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -107,9 +111,77 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
 //                Toast.makeText(getApplicationContext(), "Opçao Default ", Toast.LENGTH_SHORT).show();
             }
         });
+
+        if(user != null){
+            updateUserInfo();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit_perfil, menu);
+        return true;
     }
 
     public void manageNegotiations() {
+//<<<<<<< qualificacoes-Brendon
+//        if (userId != null){
+
+            dbReference.child("negotiations").child(userId).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    if (dataSnapshot.getChildrenCount() != 0) {
+                        final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
+                        final String negotiationKey = dataSnapshot.getKey();
+
+    //                    manageNegotiationsVisibility(Constant.SHOW_BUY_NEGOTIATIONS);
+
+                        dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
+                                String remoteUserId = dataSnapshot.child("userId").getValue(String.class);
+
+                                dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
+                                        if (negociacao.getVendorId().equals(userId)) {
+                                            sellAdapter.addNegociacao(negotiationKey, negociacao);
+                                        } else {
+                                            buyAdapter.addNegociacao(negotiationKey, negociacao);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+    //
+                @Override
+                public void onChildChanged(final DataSnapshot dataSnapshot, String s) {
+
+                    final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
+                    dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot postDataSnapshot) {
+                            negociacao.setTitle(postDataSnapshot.child("title").getValue(String.class));
+                            String remoteUserId = postDataSnapshot.child("userId").getValue(String.class);
+//=======
 
         dbReference.child("negotiations").child(userId).addChildEventListener(new ChildEventListener() {
             @Override
@@ -126,15 +198,34 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
                         negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
 
                         dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+//>>>>>>> sprint-final
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
+//<<<<<<< qualificacoes-Brendon
+                                @Override
+                                public void onDataChange(DataSnapshot userDataSnapshot) {
+                                    negociacao.setVendorName(userDataSnapshot.child("nome").getValue(String.class));
+                                    final int index;
+                                    System.out.println(negociacao.getUnreadMessagesCounter());
+                                    if (negociacao.getVendorId().equals(userId)) {
+                                        index = sellAdapter.getIndexOfKey(dataSnapshot.getKey());
+                                        sellAdapter.updateNegociacao(index, negociacao);
+                                    } else {
+                                        index = buyAdapter.getIndexOfKey(dataSnapshot.getKey());
+                                        buyAdapter.updateNegociacao(index, negociacao);
+                                    }
+                                    if ((!isChatActivityOpened && !negociacao.getLastMessageSenderId().equals(userId)) || (isChatActivityOpened && !dataSnapshot.getKey().equals(currentOpenedChatNegotiationKey))) {
+                                        vibrate();
+                                    }
+//=======
                                 negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
                                 if (negociacao.getVendorId().equals(userId)) {
                                     sellAdapter.addNegociacao(negotiationKey, negociacao);
                                 } else {
                                     buyAdapter.addNegociacao(negotiationKey, negociacao);
+//>>>>>>> sprint-final
                                 }
                             }
 
@@ -148,6 +239,16 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
+//<<<<<<< qualificacoes-Brendon
+                        }
+                    });
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+//=======
                     }
                 });
             }
@@ -203,17 +304,33 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
             }
+//>>>>>>> sprint-final
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+
+//        }else{
+//            new AlertDialog.Builder(this)
+//                    .setTitle(R.string.no_address_dialog_title)
+//                    .setMessage(NegociacoesActivity.this.getString(R.string.faca_login))
+//                    .setPositiveButton(NegociacoesActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            //                            finish();
+//                            Intent intent = new Intent(NegociacoesActivity.this, LoginActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    }).setNegativeButton(NegociacoesActivity.this.getString(R.string.nao), null)
+//                    .show();
+//        }
     }
 //            @Override
 //            public void onChildAdded(DataSnapshot dataSnapshot, String s) {

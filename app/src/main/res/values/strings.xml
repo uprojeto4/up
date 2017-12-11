@@ -30,6 +30,9 @@
     <string name="text_view_categoria_label">Categoria</string>
     <string name="spinner_categoria_selecionar">Selecione&#8230;</string>
 
+    <string name="facebook_app_id">1782125192089064</string>
+    <string name="fb_login_protocol_scheme">fb1782125192089064</string>
+
     <string-array name="categorias">
         <item>Culinária</item>
         <item>Educação</item>
@@ -114,6 +117,7 @@
     <string name="insert_address_message">Informações de endereço não cadastradas, informá-las ajuda a aumentar
         as chances de negociações. Gostaria de adicioná-las agora?</string>
 
+    <string name="faca_login">Apenas usuários logados podem executar essa ação, gostaria de fazer login agora?</string>
 
     <string name="insert_profile_picture_message">Parece que você não forneceu uma foto de perfil, gostaria de adicioná-la agora?</string>
 
@@ -147,5 +151,9 @@
     <string name="vendedor">Vendedor:</string>
 
     <string name="anuncio_cadastrado_em">Anúncio cadastrado em</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
+
+    <string name="searchNotFound">Desculpe, não encontramos nenhum anúncio com esse título
+        :(\n\ntente buscar com outros termos</string>
 
 </resources>

@@ -118,8 +118,8 @@
                     android:layout_weight="0"
                     android:adjustViewBounds="false"
                     android:elevation="2dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/image_test_1" />
+                    android:scaleType="centerCrop" />
+
 
 
             </LinearLayout>
@@ -143,22 +143,30 @@
                     <!--android:orientation="horizontal">-->
 
                     <!--&lt;!&ndash;<ImageButton&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:id="@+id/favorite"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:backgroundTint="@color/cardview_light_background"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:onClick="unfavorite"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:tint="@color/imagepicker_colorAccent"&ndash;&gt;-->
-                        <!--&lt;!&ndash;app:srcCompat="@drawable/ic_favorite_black_24dp" />&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/favorite"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:backgroundTint="@color/cardview_light_background"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:onClick="unfavorite"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:tint="@color/imagepicker_colorAccent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:srcCompat="@drawable/ic_favorite_black_24dp" />&ndash;&gt;-->
+
+                    <!--<ImageButton-->
+                        <!--android:id="@+id/buttonUpCard"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:backgroundTint="@color/cardview_light_background"-->
+                        <!--android:tint="#666666"-->
+                        <!--app:srcCompat="@drawable/ic_up_icone_02" />-->
 
                     <!--<com.like.LikeButton-->
-                        <!--app:icon_type="heart"-->
-                        <!--app:icon_size="18dp"-->
                         <!--android:id="@+id/heart_button"-->
-                        <!--app:liked="true"-->
-                        <!--android:onClick="favorite"-->
                         <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"/>-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:onClick="favorite"-->
+                        <!--app:icon_size="18dp"-->
+                        <!--app:icon_type="heart"-->
+                        <!--app:liked="false" />-->
 
                     <!--<ImageButton-->
                         <!--android:id="@+id/share"-->

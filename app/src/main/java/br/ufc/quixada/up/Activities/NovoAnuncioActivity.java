@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -129,6 +130,11 @@ public class NovoAnuncioActivity extends BaseActivity {
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.setAdapter(imageAdapter);
 
+        if(user != null){
+            updateUserInfo();
+//            loadFromFirebase(numPostsByTime);
+        }
+
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.UP | ItemTouchHelper.DOWN) {
 
             @Override
@@ -218,6 +224,13 @@ public class NovoAnuncioActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit_perfil, menu);
+        return true;
     }
 
     //configura e obtem imagens usando a library imagePicker
