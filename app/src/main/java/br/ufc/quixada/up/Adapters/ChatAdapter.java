@@ -10,14 +10,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Models.Message;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.DateTimeControl;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
-
-    private static final int SENT_MESSAGE = 1;
-    private static final int RECEIVED_MESSAGE = 2;
 
     private List<Message> mDataSet;
     private String userId;
@@ -29,12 +27,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public ChatAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v;
-
-        if (viewType == RECEIVED_MESSAGE) {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_received, parent, false);
-        } else {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_received, parent, false);
+        if (viewType == Constant.RECEIVED_CONTIGUOUS_MESSAGE) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_received_contiguous, parent, false);
+        } else if (viewType == Constant.SENT_MESSAGE) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_sent, parent, false);
+        } else if (viewType == Constant.SENT_CONTIGUOUS_MESSAGE) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_sent_contiguous, parent, false);
         }
         return new ViewHolder(v);
     }
@@ -42,16 +41,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         if (mDataSet.get(position).getUserId().equals(userId)) {
-            return SENT_MESSAGE;
+            return Constant.SENT_MESSAGE;
         } else {
-            return RECEIVED_MESSAGE;
+            return Constant.RECEIVED_MESSAGE;
         }
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Message message = mDataSet.get(position);
-        holder.mTextView.setText(message.getText());
+        holder.messageTextView.setText(message.getText());
+        holder.timestampTextView.setText(DateTimeControl.generateChatTimestamp(message.getDateTime()));
     }
 
     @Override
@@ -72,12 +72,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView mTextView;
+        TextView messageTextView;
+        TextView timestampTextView;
 
         ViewHolder(View v) {
             super(v);
-            mTextView = (TextView) itemView.findViewById(R.id.messageText);
-
+            messageTextView = (TextView) itemView.findViewById(R.id.messageText);
+            timestampTextView = (TextView) itemView.findViewById(R.id.messageTimestamp);
         }
     }
 }

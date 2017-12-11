@@ -52,6 +52,7 @@
                 android:id="@+id/textViewTituloNegociacao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:maxLines="1"
                 android:text="adTitle"
                 android:textColor="@color/colorAccent2"
@@ -67,6 +68,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="0dp"
             android:layout_marginTop="4dp"
+            android:ellipsize="end"
             android:maxLines="1"
             android:text="vendorName"
             android:textSize="14sp"
@@ -125,20 +127,33 @@
 
         <TextView
             android:id="@+id/lastMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="lastMessage"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/responseIcon"
+            app:layout_constraintRight_toLeftOf="@+id/lastMessageTime"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNegocianteChat"
+            app:layout_constraintVertical_bias="0.666" />
+
+        <TextView
+            android:id="@+id/lastMessageTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
             android:maxLines="1"
-            android:text="lastMessage"
+            android:text="lastMsgTime"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/guidelineTextDivider"
-            app:layout_constraintTop_toBottomOf="@+id/textViewNegocianteChat"
-            app:layout_constraintLeft_toRightOf="@+id/responseIcon"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintVertical_bias="0.666"
-            app:layout_constraintHorizontal_bias="0.0" />
+            app:layout_constraintRight_toRightOf="@+id/button4" />
 
         <ImageButton
             android:id="@+id/button4"

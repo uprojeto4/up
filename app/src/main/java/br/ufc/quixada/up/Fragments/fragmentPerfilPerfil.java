@@ -629,30 +629,26 @@ public class fragmentPerfilPerfil extends Fragment {
 //                Log.d("EntrouAquiOtario", "não é igual");
 //            }
 
-        } else{
+        } else {
             Log.d("EntrouAquiOtario", "não esta null");
 
-            if (PerfilActivity.anuncianteId == MainActivity.localUserId){
+            if (PerfilActivity.anuncianteId == MainActivity.localUserId) {
                 Log.d("EntrouAquiOtario", "entrou aqui tb");
                 test = profilePictureRef.getName().equals(PerfilActivity.fotoPerfil);
 
-                profilePictureRef = storage.child("UsersProfilePictures/"+PerfilActivity.id+"/"+PerfilActivity.fotoPerfil);
-                if (!test){
+                profilePictureRef = storage.child("UsersProfilePictures/" + PerfilActivity.id + "/" + PerfilActivity.fotoPerfil);
+                if (!test) {
                     downloadProfilePicture();
-                }else{
+                } else {
                     //nada
                 }
             } else {
                 Log.d("EntrouAquiOtario", "não é igual");
-                profilePictureRef = storage.child("UsersProfilePictures/"+PerfilPublicoActivity.anuncianteId+"/"+anuncianteFoto);
+                profilePictureRef = storage.child("UsersProfilePictures/" + PerfilPublicoActivity.anuncianteId + "/" + anuncianteFoto);
                 downloadProfilePicture();
             }
 
-
         }
-
-
-
 
     }
 }

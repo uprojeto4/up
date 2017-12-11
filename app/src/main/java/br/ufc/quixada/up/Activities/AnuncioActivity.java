@@ -44,6 +44,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
@@ -57,11 +58,12 @@ public class AnuncioActivity extends BaseActivity {
     private int positionSearch;
 
     private DatabaseReference databaseReference;
-
+    TextView title;
+    TextView subtitle;
+    TextView price;
+    Spinner qtd;
     TextView anuncianteNome;
-
     TextView avaliacaoVendedor;
-
     TextView tituloUsuario;
 
     CircleImageView anuncianteFoto;
@@ -71,10 +73,14 @@ public class AnuncioActivity extends BaseActivity {
     String fotoPerfilAnunciante;
     StorageReference anuncianteFotoRef;
 
-
+    String idAnunciante;
+    String nomeAnunciante;
+    Post post;
+    int callerId;
+    String postId;
+    FloatingActionButton fab;
 
 //    User usuarioAnunciante;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,13 +90,6 @@ public class AnuncioActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabNegotiate);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                ChatControl.startConversation("remoteUserId", "productId");
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -184,6 +183,36 @@ public class AnuncioActivity extends BaseActivity {
         ArrayAdapter qtdAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, qtdList);
         qtd.setAdapter(qtdAdapter);
 
+        title = (TextView)findViewById(R.id.textView_title);
+        subtitle = (TextView)findViewById(R.id.textView_describ);
+        price = (TextView)findViewById(R.id.textView_price);
+        anuncianteNome = (TextView) findViewById(R.id.anuncianteNome);
+        avaliacaoVendedor = (TextView) findViewById(R.id.avVendedor);
+        tituloUsuario = (TextView) findViewById(R.id.tituloUsuario);
+        qtd = (Spinner) findViewById(R.id.spinner);
+        fab = (FloatingActionButton) findViewById(R.id.fabNegotiate);
+
+        if (intent != null){
+            position = intent.getIntExtra("position", -1);
+            callerId = intent.getIntExtra("callerId", -1);
+            postId = intent.getStringExtra("postId");
+            start();
+        }
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getBaseContext(), ChatActivity.class);
+                intent.putExtra("remoteUserId", post.getUserId());
+                intent.putExtra("adId", post.getId());
+                intent.putExtra("adTitle", post.getTitle());
+                intent.putExtra("negotiationType", 0);
+                intent.putExtra("submitDate", post.getDataCadastro());
+                intent.putExtra("callerId", Constant.CHAT_CALLER_NEGOTIATION_ADAPTER);
+                startActivity(intent);
+            }
+        });
+
         anuncianteNome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,7 +221,7 @@ public class AnuncioActivity extends BaseActivity {
                     Intent intent = new Intent(AnuncioActivity.this, PerfilActivity.class);
                     intent.putExtra("idAnunciante", idAnunciante);
                     startActivity(intent);
-                }else{
+                } else {
                     Intent intent = new Intent(AnuncioActivity.this, PerfilPublicoActivity.class);
                     intent.putExtra("idAnunciante", idAnunciante);
                     intent.putExtra("nomeAnunciante", nomeAnunciante);
@@ -200,28 +229,44 @@ public class AnuncioActivity extends BaseActivity {
                 }
             }
         });
+
     }
 
     public void start(){
-//        Log.d("posts", BaseActivity.posts+"");
+//        Toast.makeText(this, "opa é nois"+post.getTitle(), Toast.LENGTH_SHORT).show();
+//      Post post = BaseActivity.posts.get(position);
+        if (callerId == Constant.POST_CALLER_MAIN_ACTIVITY) {
+            Post post = BaseActivity.posts.get(position);
+            title.setText(post.getTitle());
+            subtitle.setText(post.getSubtitle());
+            price.setText("R$ "+post.getPrice());
+            if (localUserId.equals(post.getUserId())) {
+                fab.setVisibility(View.GONE);
+            }
+            getData();
+        } else if (callerId == Constant.POST_CALLER_CHAT_ACTIVITY){
+            databaseReference.child("posts").child(postId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    post = dataSnapshot.getValue(Post.class);
+                    title.setText(post.getTitle());
+                    subtitle.setText(post.getSubtitle());
+                    price.setText("R$ "+post.getPrice());
+                    if (localUserId.equals(post.getUserId())) {
+                        fab.setVisibility(View.GONE);
+                    }
+                    getData();
+                }
 
-        Post post = BaseActivity.posts.get(position);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
+                }
+            });
+        }
+    }
 
-        TextView title = (TextView)findViewById(R.id.textView_title);
-        TextView subtitle = (TextView)findViewById(R.id.textView_describ);
-        TextView price = (TextView)findViewById(R.id.textView_price);
-        Spinner qtd = (Spinner) findViewById(R.id.spinner);
-
-        anuncianteNome = (TextView) findViewById(R.id.anuncianteNome);
-        avaliacaoVendedor = (TextView) findViewById(R.id.avVendedor);
-        tituloUsuario = (TextView) findViewById(R.id.tituloUsuario);
-
-        title.setText(post.getTitle());
-        subtitle.setText(post.getSubtitle());
-        price.setText("R$ "+post.getPrice());
-
-
+    public void getData() {
         Query getUserData = databaseReference.child("users").orderByChild("id").equalTo(post.getUserId());
         getUserData.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -270,24 +315,6 @@ public class AnuncioActivity extends BaseActivity {
 
         ArrayAdapter qtdAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, qtdList);
         qtd.setAdapter(qtdAdapter);
-
-        anuncianteNome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (idAnunciante.equals(localUser.getId())){
-                    Log.d("EntrouAquiOtario", "entrou neste intent");
-                    Intent intent = new Intent(AnuncioActivity.this, PerfilActivity.class);
-                    intent.putExtra("idAnunciante", idAnunciante);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(AnuncioActivity.this, PerfilPublicoActivity.class);
-                    intent.putExtra("idAnunciante", idAnunciante);
-                    intent.putExtra("nomeAnunciante", nomeAnunciante);
-                    startActivity(intent);
-                }
-            }
-        });
-
     }
 
     public void downloadAnuncianteFoto(){

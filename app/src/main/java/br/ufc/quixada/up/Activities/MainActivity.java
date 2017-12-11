@@ -52,6 +52,7 @@ import java.util.ArrayList;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
+import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Models.Message;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Adapters.PostAdapter;
@@ -442,7 +443,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
     public void onClickListener(View view, int position) {
         Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
         intent.putExtra("position", position);
-        Log.d("posicao", position+"");
+        intent.putExtra("callerId", Constant.POST_CALLER_MAIN_ACTIVITY);
         startActivity(intent);
     }
 }

@@ -27,6 +27,7 @@ import br.ufc.quixada.up.Models.Address;
 import br.ufc.quixada.up.R;
 
 import br.ufc.quixada.up.Adapters.PerfilFragmentPagerAdapter;
+import br.ufc.quixada.up.Utils.ChatControl;
 
 import static br.ufc.quixada.up.R.id.nav_view;
 
@@ -166,6 +167,11 @@ public class PerfilActivity extends BaseActivity {
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
 //        Intent intent = getIntent();
@@ -191,6 +197,11 @@ public class PerfilActivity extends BaseActivity {
         }
 //        Toast.makeText(this,"foto do local user on pause activity "+fotoPerfil, Toast.LENGTH_LONG).show();
 
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
     }
 
     @Override
