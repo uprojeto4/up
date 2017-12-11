@@ -117,7 +117,7 @@
                     app:icon_size="18dp"
                     android:id="@+id/heart_button"
                     app:liked="false"
-                    android:onClick="unfavorite"
+                    android:onClick="favorite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

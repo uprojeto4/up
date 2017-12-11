@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
@@ -227,6 +228,34 @@ import static br.ufc.quixada.up.R.layout.post;
             }
         });
     }
+
+//    public void addOnWishList (String uid, final String pid){
+//        Log.d("uid", uid);
+//        DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(uid);
+//        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+////                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                Log.d("single", dataSnapshot+"");
+//                    User u = dataSnapshot.getValue(User.class);
+//                    ArrayList<String> aux = u.getListaDesejos();
+//                    if (u.getListaDesejos().contains(pid)){
+//                        u.getListaDesejos().remove(u.getListaDesejos().indexOf(pid));
+//                        u.save();
+//                    } else{
+//                        aux.add(pid);
+//                        u.setListaDesejos(aux);
+//                        u.save();
+//                    }
+////                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     public int[] scaleImage(double width, double height){
 

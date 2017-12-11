@@ -169,8 +169,11 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         recyclerView.setAdapter(postAdapter);
 
         if (localUser.getEmail() != null){
+            isLogged = true;
             if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||
-                    localUser.getAddress().getBairro().equals("") || localUser.getAddress().getCidade().equals("")){
+                    localUser.getAddress().getBairro().equals("") || localUser.getAddress().getCidade().equals("") ||
+                    localUser.getAddress().getLogradouro().equals("null") || localUser.getAddress().getNumero().equals("null") ||
+                    localUser.getAddress().getBairro().equals("null") || localUser.getAddress().getCidade().equals("null")){
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.no_address_dialog_title)
                         .setMessage(MainActivity.this.getString(R.string.insert_address_message))

@@ -23,6 +23,7 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -468,7 +469,8 @@ public class BaseActivity extends AppCompatActivity
     public void signOut(){
         auth = FirebaseConfig.getAuth();
         auth.signOut();
-        localUser = null;
+        LoginManager.getInstance().logOut();
+//        localUser = null;
         firebasePreferences.clearUserPreferences();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);

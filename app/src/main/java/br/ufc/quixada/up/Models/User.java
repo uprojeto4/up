@@ -45,6 +45,8 @@ public class User {
     private float avComprador = 0;
     private int numCompras = 0;
 
+    private ArrayList<String> listaDesejos = new ArrayList<String>();
+
 
 //    public String addressString;
 
@@ -52,7 +54,7 @@ public class User {
 
     private static User instance;
 
-    private User() {
+    public User() {
     }
 
     public void save() {
@@ -72,6 +74,14 @@ public class User {
 //        return userHashMap;
 //    }
 
+
+    public ArrayList<String> getListaDesejos() {
+        return listaDesejos;
+    }
+
+    public void setListaDesejos(ArrayList<String> listaDesejos) {
+        this.listaDesejos = listaDesejos;
+    }
 
     public int getQtdAvVendedor() {
         return qtdAvVendedor;

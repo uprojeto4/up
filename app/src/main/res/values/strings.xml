@@ -30,6 +30,9 @@
     <string name="text_view_categoria_label">Categoria</string>
     <string name="spinner_categoria_selecionar">Selecione&#8230;</string>
 
+    <string name="facebook_app_id">1782125192089064</string>
+    <string name="fb_login_protocol_scheme">fb1782125192089064</string>
+
     <string-array name="categorias">
         <item>Culinária</item>
         <item>Educação</item>

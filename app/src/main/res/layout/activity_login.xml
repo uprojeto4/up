@@ -26,10 +26,10 @@
             <ImageView
                 android:id="@+id/imageView7"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
+                android:layout_height="197dp"
+                android:layout_weight="39.88"
                 android:adjustViewBounds="true"
-                android:padding="50dp"
+                android:padding="40dp"
                 app:srcCompat="@mipmap/logo_transparente" />
 
             <LinearLayout
@@ -120,7 +120,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:gravity="bottom"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <!--<TextView-->
                 <!--android:id="@+id/textView8"-->
@@ -130,6 +130,19 @@
                 <!--android:text="Pular login"-->
                 <!--android:textAlignment="center"-->
                 <!--android:textColor="@color/colorAccent" />-->
+
+
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/button_facebook_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:onClick="facebookLogin"
+                    tools:text="Entre com o Facebook" />
+
                 <Button
                     android:id="@+id/skiplogin"
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"

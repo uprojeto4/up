@@ -21,6 +21,11 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -39,8 +44,11 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 
+import br.ufc.quixada.up.Activities.LoginActivity;
 import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.Activities.PerfilActivity;
 import br.ufc.quixada.up.Activities.PerfilPublicoActivity;
@@ -84,6 +92,9 @@ public class fragmentPerfilPerfil extends Fragment {
     public String address;
     public String addressMap;
 
+//    public static ProfilePictureView profilePictureView;
+
+//    ImageView profilePictureIV;
 
 
 //    Geocoder geocoder = new Geocoder(getActivity());
@@ -141,6 +152,10 @@ public class fragmentPerfilPerfil extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        profilePictureView = (ProfilePictureView) getView().findViewById(R.id.friendProfilePicture);
+
+//        profilePictureIV = (ImageView) getView().findViewById(R.id.profile_image);
+//        getFacebookProfilePicture();
 
         if (MainActivity.localUserId != null ){
 
@@ -185,7 +200,9 @@ public class fragmentPerfilPerfil extends Fragment {
                 address = PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getComplemento() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado();
 
                 if (PerfilActivity.endereco.getLogradouro().equals("") || PerfilActivity.endereco.getNumero().equals("") ||
-                        PerfilActivity.endereco.getBairro().equals("") || PerfilActivity.endereco.getCidade().equals("")){
+                        PerfilActivity.endereco.getBairro().equals("") || PerfilActivity.endereco.getCidade().equals("") ||
+                        PerfilActivity.endereco.getLogradouro().equals("null") || PerfilActivity.endereco.getNumero().equals("null") ||
+                        PerfilActivity.endereco.getBairro().equals("null") || PerfilActivity.endereco.getCidade().equals("null")){
                     enderecoLocalUser.setText("Usuário não forneceu endereço");
                 }else if(PerfilActivity.endereco.getComplemento().equals("")){
                     enderecoLocalUser.setText(PerfilActivity.endereco.getLogradouro() + ", " + PerfilActivity.endereco.getNumero() + ", " + PerfilActivity.endereco.getBairro() + ", " + PerfilActivity.endereco.getCidade() + " - " + PerfilActivity.endereco.getEstado());
@@ -411,6 +428,47 @@ public class fragmentPerfilPerfil extends Fragment {
 
 
     }
+
+//    public void getFacebookProfilePicture(){
+////        profilePictureView.setProfileId(userID);
+////        try{
+////            URL imageURL = new URL("https://graph.facebook.com/" + userID + "/picture?type=large");
+////            Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+////            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+////            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+////            //transforma o stream em um array de bytes
+////            byte[] image;
+////            image = stream.toByteArray();
+////            //método que aplica a imagem nos lugares desejsdos
+////            applyImage(image);
+////        }catch (MalformedURLException e){
+////            e.printStackTrace();
+////        } catch (IOException e){
+////            e.printStackTrace();
+////        }
+////
+////        return bitmap;
+////        Bundle params = new Bundle();
+////        params.putString("fields", "id,email,gender,cover,picture.type(large)");
+////        new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
+////                new GraphRequest.Callback() {
+////                    @Override
+////                    public void onCompleted(GraphResponse response) {
+////                        if (response != null) {
+////                            try {
+////                                JSONObject data = response.getJSONObject();
+////                                if (data.has("picture")) {
+////                                    String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
+////                                    Bitmap profilePic= BitmapFactory.decodeStream(new URL(profilePicUrl).openConnection().getInputStream());
+////                                    profilePictureIV;(profilePic);
+////                                }
+////                            } catch (Exception e) {
+////                                e.printStackTrace();
+////                            }
+////                        }
+////                    }
+////                }).executeAsync();
+//    }
 
     private class GetCoordinate extends AsyncTask<String, Void, String>{
 

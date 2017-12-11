@@ -137,6 +137,7 @@ public class CadastroActivity extends AppCompatActivity {
                        preferences.SaveUserPreferences(userId, localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
                                localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
 
+                       MainActivity.isLogged = true;
                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                        startActivity(intent);

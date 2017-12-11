@@ -186,7 +186,9 @@ public class PerfilActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
 //        fotoPerfil = localUser.getFotoPerfil();
-        localUser.setFotoPerfil(fotoPerfil);
+        if (localUser.getFotoPerfil() != null){
+            localUser.setFotoPerfil(fotoPerfil);
+        }
 //        Toast.makeText(this,"foto do local user on pause activity "+fotoPerfil, Toast.LENGTH_LONG).show();
 
     }
