@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -54,6 +55,7 @@ import br.ufc.quixada.up.Adapters.NovoAnuncioRecyclerViewImageAdapter;
 import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.DateTimeControl;
 import br.ufc.quixada.up.Utils.InputMask;
 import br.ufc.quixada.up.Utils.RecyclerViewPhotoSeparator;
 
@@ -127,6 +129,11 @@ public class NovoAnuncioActivity extends BaseActivity {
         recyclerView.addItemDecoration(itemDecoration);
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.setAdapter(imageAdapter);
+
+        if(user != null){
+            updateUserInfo();
+//            loadFromFirebase(numPostsByTime);
+        }
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.UP | ItemTouchHelper.DOWN) {
 
@@ -217,6 +224,13 @@ public class NovoAnuncioActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit_perfil, menu);
+        return true;
     }
 
     //configura e obtem imagens usando a library imagePicker
@@ -346,6 +360,7 @@ public class NovoAnuncioActivity extends BaseActivity {
                 post.setQtd(Integer.parseInt(qtd));
                 post.setCategoria(spinnerCategoriasAnuncio.getSelectedItem().toString());
                 post.setUserId(localUser.getId());
+                post.setDataCadastro(DateTimeControl.getCurrentDateTime());
         //        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
 
                 post.upload(images);

@@ -8,7 +8,7 @@ public class Message {
 
     private String text;
     private String userId;
-    private String dateTime;
+    private long dateTime;
 
     public Message() { }
 
@@ -34,11 +34,11 @@ public class Message {
         this.userId = userId;
     }
 
-    public String getDateTime() {
+    public long getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(String dateTime) {
+    public void setDateTime(long dateTime) {
         this.dateTime = dateTime;
     }
 

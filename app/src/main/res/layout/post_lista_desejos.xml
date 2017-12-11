@@ -124,71 +124,71 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/horizontal_card_controls"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:id="@+id/horizontal_card_controls"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_gravity="bottom"-->
+                <!--android:orientation="vertical">-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:drawable/divider_horizontal_bright"
-                    android:orientation="horizontal"></LinearLayout>
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="1dp"-->
+                    <!--android:background="@android:drawable/divider_horizontal_bright"-->
+                    <!--android:orientation="horizontal"></LinearLayout>-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:orientation="horizontal">-->
+
+                    <!--&lt;!&ndash;<ImageButton&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/favorite"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:backgroundTint="@color/cardview_light_background"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:onClick="unfavorite"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:tint="@color/imagepicker_colorAccent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:srcCompat="@drawable/ic_favorite_black_24dp" />&ndash;&gt;-->
+
+                    <!--<com.like.LikeButton-->
+                        <!--app:icon_type="heart"-->
+                        <!--app:icon_size="18dp"-->
+                        <!--android:id="@+id/heart_button"-->
+                        <!--app:liked="true"-->
+                        <!--android:onClick="favorite"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"/>-->
 
                     <!--<ImageButton-->
-                        <!--android:id="@+id/favorite"-->
+                        <!--android:id="@+id/share"-->
                         <!--android:layout_width="wrap_content"-->
                         <!--android:layout_height="match_parent"-->
                         <!--android:backgroundTint="@color/cardview_light_background"-->
-                        <!--android:onClick="unfavorite"-->
-                        <!--android:tint="@color/imagepicker_colorAccent"-->
-                        <!--app:srcCompat="@drawable/ic_favorite_black_24dp" />-->
+                        <!--android:onClick="share"-->
+                        <!--android:tint="#444444"-->
+                        <!--app:srcCompat="@drawable/ic_menu_share" />-->
 
-                    <com.like.LikeButton
-                        app:icon_type="heart"
-                        app:icon_size="18dp"
-                        android:id="@+id/heart_button"
-                        app:liked="true"
-                        android:onClick="favorite"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:orientation="vertical">-->
 
-                    <ImageButton
-                        android:id="@+id/share"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:backgroundTint="@color/cardview_light_background"
-                        android:onClick="share"
-                        android:tint="#444444"
-                        app:srcCompat="@drawable/ic_menu_share" />
+                        <!--<Button-->
+                            <!--android:id="@+id/button3"-->
+                            <!--style="@style/Widget.AppCompat.Button.Borderless.Colored"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_gravity="right"-->
+                            <!--android:layout_weight="1"-->
+                            <!--android:elevation="0dp"-->
+                            <!--android:onClick="negociar"-->
+                            <!--android:text="@string/button_comprar" />-->
+                    <!--</LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <Button
-                            android:id="@+id/button3"
-                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="right"
-                            android:layout_weight="1"
-                            android:elevation="0dp"
-                            android:onClick="negociar"
-                            android:text="@string/button_comprar" />
-                    </LinearLayout>
-
-                </LinearLayout>
-            </LinearLayout>
+                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

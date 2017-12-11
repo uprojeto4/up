@@ -27,6 +27,7 @@ import br.ufc.quixada.up.Models.Address;
 import br.ufc.quixada.up.R;
 
 import br.ufc.quixada.up.Adapters.PerfilFragmentPagerAdapter;
+import br.ufc.quixada.up.Utils.ChatControl;
 
 import static br.ufc.quixada.up.R.id.nav_view;
 
@@ -36,6 +37,9 @@ public class PerfilActivity extends BaseActivity {
     public static ViewPager perfilViewPager;
 
     public String profilePictureName;
+
+    public static String anuncianteId;
+
 
 //    FirebaseStorage storage = FirebaseStorage.getInstance();
 //    public StorageReference storageRef;
@@ -79,6 +83,9 @@ public class PerfilActivity extends BaseActivity {
 
         Intent intent = getIntent();
         fragmentASerAberta = intent.getIntExtra("fragment", 0);
+
+        Intent intent2 = getIntent();
+        anuncianteId = intent2.getStringExtra("idAnunciante");
 
         Log.d("extra", " "+fragmentASerAberta);
 
@@ -160,11 +167,17 @@ public class PerfilActivity extends BaseActivity {
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
 //        Intent intent = getIntent();
 //        fragmentASerAberta = intent.getIntExtra("fragment", 0);
 //        perfilTabLayout.setupWithViewPager(perfilViewPager);
+
 
         fotoPerfil = localUser.getFotoPerfil();
         localUser.setFotoPerfil(fotoPerfil);
@@ -179,9 +192,16 @@ public class PerfilActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
 //        fotoPerfil = localUser.getFotoPerfil();
-        localUser.setFotoPerfil(fotoPerfil);
+        if (localUser.getFotoPerfil() != null){
+            localUser.setFotoPerfil(fotoPerfil);
+        }
 //        Toast.makeText(this,"foto do local user on pause activity "+fotoPerfil, Toast.LENGTH_LONG).show();
 
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
     }
 
     @Override

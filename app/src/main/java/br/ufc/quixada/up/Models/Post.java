@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
@@ -36,8 +37,10 @@ import java.util.List;
 
 import br.ufc.quixada.up.Activities.MainActivity;
 import br.ufc.quixada.up.Adapters.PostAdapter;
+import br.ufc.quixada.up.Adapters.SearchResultsAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.DateTimeControl;
 import br.ufc.quixada.up.TesteActivity;
 
 import static br.ufc.quixada.up.R.layout.post;
@@ -61,6 +64,7 @@ import static br.ufc.quixada.up.R.layout.post;
     private byte[] imageCover;
 
     Post postTemp;
+    private long dataCadastro;
 
 //    private List<String> upsList;
 
@@ -164,6 +168,14 @@ import static br.ufc.quixada.up.R.layout.post;
         return this.imageCover;
     }
 
+    public long getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(long dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
     public int getDefaultImage(){
         return R.drawable.default_img;
     }
@@ -205,6 +217,34 @@ import static br.ufc.quixada.up.R.layout.post;
             }
         });
     }
+
+//    public void addOnWishList (String uid, final String pid){
+//        Log.d("uid", uid);
+//        DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(uid);
+//        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+////                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                Log.d("single", dataSnapshot+"");
+//                    User u = dataSnapshot.getValue(User.class);
+//                    ArrayList<String> aux = u.getListaDesejos();
+//                    if (u.getListaDesejos().contains(pid)){
+//                        u.getListaDesejos().remove(u.getListaDesejos().indexOf(pid));
+//                        u.save();
+//                    } else{
+//                        aux.add(pid);
+//                        u.setListaDesejos(aux);
+//                        u.save();
+//                    }
+////                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     public int[] scaleImage(double width, double height){
 
@@ -395,6 +435,58 @@ import static br.ufc.quixada.up.R.layout.post;
                 public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
                     Log.d("Entrou2", "entrou2");
                     postAdapter.notifyDataSetChanged();
+//                    Log.d("TAG", " "+task.getResult().getTotalByteCount());
+//                    MainActivity.getInstance().mudarImage(postTemp.getPictures().get(0));
+                }
+            });
+        } catch (IOException e){
+            e.printStackTrace();
+            //manipular exceções
+            Log.e("Main", "IOE exception");
+        }
+    }
+
+    public void downloadImagesForSearchResult(String path, final SearchResultsAdapter searchResultsAdapter, final Post post){
+        StorageReference storageReference = FirebaseConfig.getStorage();
+        StorageReference imageRef;
+
+        this.postTemp = post;
+
+        //recupera apenas a primeira imagem
+        imageRef = storageReference.child("PostsPictures/" + getId() + "/" + path);
+
+        try{
+            //cria o arquivo temporário local onde a imagem será armazenada
+            final File localFile = File.createTempFile("jpg", "image");
+            imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                //monitora o sucesso do download
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    //transforma a imagem baixada em um bitmap
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    Log.d("TAG", ""+localFile);
+                    //transforma o bitmap em stream
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    //transforma o stream em um array de bytes
+//                    byte[] picture = stream.toByteArray();
+                    postTemp.setImageCover(stream.toByteArray());
+                    //método que aplica a imagem nos lugares desejsdos
+//                    applyImage(pictureCover);
+                    Log.d("TAG","Imagem baixada com sucesso! ");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                //monitora a falha do downlaod
+                public void onFailure(@NonNull Exception e) {
+//                    Toast.makeText(context,"Imagem não foi baixada", Toast.LENGTH_SHORT).show();
+                    Log.d("TAG","Imagem não foi baixada! "+e);
+                }
+            }).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                    Log.d("Entrou2", "entrou2");
+                    searchResultsAdapter.notifyDataSetChanged();
 //                    Log.d("TAG", " "+task.getResult().getTotalByteCount());
 //                    MainActivity.getInstance().mudarImage(postTemp.getPictures().get(0));
                 }

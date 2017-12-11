@@ -32,11 +32,20 @@ public class User {
 
     private Address address = new Address();
 
+    private int qtdAvVendedor = 0;
+    private int somaAvVendedor = 0;
+
+    private int qtdAvComprador = 0;
+    private int somaAvComprador = 0;
+
+
     private float avVendedor = 0;
     private int numVendas = 0;
 
     private float avComprador = 0;
     private int numCompras = 0;
+
+    private ArrayList<String> listaDesejos = new ArrayList<String>();
 
 
 //    public String addressString;
@@ -45,7 +54,7 @@ public class User {
 
     private static User instance;
 
-    private User() {
+    public User() {
     }
 
     public void save() {
@@ -65,6 +74,46 @@ public class User {
 //        return userHashMap;
 //    }
 
+
+    public ArrayList<String> getListaDesejos() {
+        return listaDesejos;
+    }
+
+    public void setListaDesejos(ArrayList<String> listaDesejos) {
+        this.listaDesejos = listaDesejos;
+    }
+
+    public int getQtdAvVendedor() {
+        return qtdAvVendedor;
+    }
+
+    public void setQtdAvVendedor(int qtdAvVendedor) {
+        this.qtdAvVendedor = qtdAvVendedor;
+    }
+
+    public int getSomaAvVendedor() {
+        return somaAvVendedor;
+    }
+
+    public void setSomaAvVendedor(int somaAvVendedor) {
+        this.somaAvVendedor = somaAvVendedor;
+    }
+
+    public int getQtdAvComprador() {
+        return qtdAvComprador;
+    }
+
+    public void setQtdAvComprador(int qtdAvComprador) {
+        this.qtdAvComprador = qtdAvComprador;
+    }
+
+    public int getSomaAvComprador() {
+        return somaAvComprador;
+    }
+
+    public void setSomaAvComprador(int somaAvComprador) {
+        this.somaAvComprador = somaAvComprador;
+    }
 
     public float getAvComprador() {
         return avComprador;
@@ -158,58 +207,63 @@ public class User {
 
     public void addressStringToObject(String addressString){
 
-        String onlyMidlle = addressString.substring(8, addressString.length()-1);
-        String[] pairs = onlyMidlle.split(",");
-        for (int i=0; i<pairs.length; i++) {
-            String pair = pairs[i];
-            String[] keyValue = pair.split("=");
-//            Log.d("chave_valor", " " + keyValue[0]);
-//            addressMap.put(keyValue[0], (keyValue[1]));
+        if (addressString != null){
 
-            keyValue[0].replaceAll(" ","");
+            String onlyMidlle = addressString.substring(8, addressString.length()-1);
+            String[] pairs = onlyMidlle.split(",");
+            for (int i=0; i<pairs.length; i++) {
+                String pair = pairs[i];
+                String[] keyValue = pair.split("=");
+    //            Log.d("chave_valor", " " + keyValue[0]);
+    //            addressMap.put(keyValue[0], (keyValue[1]));
 
-            if (keyValue[0].equals("logradouro")){
-                if (keyValue[1].equals(null)){
-                    address.setLogradouro(" ");
-                }else {
-                    address.setLogradouro(keyValue[1].substring(1, keyValue[1].length()-1));
+                keyValue[0].replaceAll(" ","");
+
+                if (keyValue[0].equals("logradouro")){
+                    if (keyValue[1].equals(null)){
+                        address.setLogradouro(" ");
+                    }else {
+                        address.setLogradouro(keyValue[1].substring(1, keyValue[1].length()-1));
+                    }
+                } else if(keyValue[0].equals(" numero")){
+                    Log.d("chave_valor2", " " + keyValue[1]);
+                    if (keyValue[1].equals(null)){
+                        address.setNumero(" ");
+                    }else {
+                        address.setNumero(keyValue[1].substring(1, keyValue[1].length()-1));
+                    }
+                } else if(keyValue[0].equals(" complemento")){
+                    if (keyValue[1].equals(null)){
+                        address.setComplemento(" ");
+                    }else {
+                        address.setComplemento(keyValue[1].substring(1, keyValue[1].length()-1));
+                    }
+                } else if(keyValue[0].equals(" bairro")){
+                    if (keyValue[1].equals(null)){
+                        address.setBairro(" ");
+                    }else {
+                        address.setBairro(keyValue[1].substring(1, keyValue[1].length()-1));
+                    }
+                } else if(keyValue[0].equals(" cidade")){
+                    if (keyValue[1].equals(null)){
+                        address.setCidade(" ");
+                    }else {
+                        address.setCidade(keyValue[1].substring(1, keyValue[1].length()-1));
+                    }
+                } else if(keyValue[0].equals(" estado")){
+                    if (keyValue[1].equals(null)){
+                        address.setEstado(" ");
+                    }else {
+                        address.setEstado(keyValue[1].substring(1, keyValue[1].length()-1));
+                    }
                 }
-            } else if(keyValue[0].equals(" numero")){
-                Log.d("chave_valor2", " " + keyValue[1]);
-                if (keyValue[1].equals(null)){
-                    address.setNumero(" ");
-                }else {
-                    address.setNumero(keyValue[1].substring(1, keyValue[1].length()-1));
-                }
-            } else if(keyValue[0].equals(" complemento")){
-                if (keyValue[1].equals(null)){
-                    address.setComplemento(" ");
-                }else {
-                    address.setComplemento(keyValue[1].substring(1, keyValue[1].length()-1));
-                }
-            } else if(keyValue[0].equals(" bairro")){
-                if (keyValue[1].equals(null)){
-                    address.setBairro(" ");
-                }else {
-                    address.setBairro(keyValue[1].substring(1, keyValue[1].length()-1));
-                }
-            } else if(keyValue[0].equals(" cidade")){
-                if (keyValue[1].equals(null)){
-                    address.setCidade(" ");
-                }else {
-                    address.setCidade(keyValue[1].substring(1, keyValue[1].length()-1));
-                }
-            } else if(keyValue[0].equals(" estado")){
-                if (keyValue[1].equals(null)){
-                    address.setEstado(" ");
-                }else {
-                    address.setEstado(keyValue[1].substring(1, keyValue[1].length()-1));
-                }
+
             }
+            Log.d("endereco_teste", address.getLogradouro() + ", " + address.getNumero() + ", " + address.getComplemento() + ", " + address.getBairro() + ", " +
+                    address.getCidade() + " - " + address.getEstado());
 
         }
-        Log.d("endereco_teste", address.getLogradouro() + ", " + address.getNumero() + ", " + address.getComplemento() + ", " + address.getBairro() + ", " +
-                address.getCidade() + " - " + address.getEstado());
+
 
     }
 
