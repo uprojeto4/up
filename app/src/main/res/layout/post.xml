@@ -80,7 +80,7 @@
                     android:layout_weight="1"
                     android:paddingTop="8dp"
                     android:text="R$ 10,45 KG"
-                    android:textColor="@color/colorAccent2"
+                    android:textColor="@color/SecondaryColor"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 

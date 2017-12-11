@@ -108,6 +108,10 @@ public class AnuncioActivity extends BaseActivity {
 
     }
 
+//<<<<<<< mainActivity4
+    public void start(){
+        Post post = BaseActivity.posts.get(position);
+//=======
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit_perfil, menu);
@@ -117,6 +121,7 @@ public class AnuncioActivity extends BaseActivity {
     public void startFromSearch(){
         post = MainActivity.searchPosts.get(positionSearch);
 
+//>>>>>>> sprint-final
 
         TextView title = (TextView)findViewById(R.id.textView_title);
         TextView subtitle = (TextView)findViewById(R.id.textView_describ);

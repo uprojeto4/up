@@ -31,6 +31,10 @@ public class SplashScreenActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebasePreferences firebasePreferences;
 
+    DatabaseReference postsReference = FirebaseConfig.getDatabase().child("posts");
+    Post post;
+    int numPostsToLoad = 5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +57,39 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
             }
         }, SPLASH_TIME_OUT);
+
+//        postsReference.limitToLast(numPostsToLoad).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+////                int last = numPostsByTime;
+//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                    post = singleSnapshot.getValue(Post.class);
+//                    BaseActivity.posts.add(post);
+////                    if (last == numPostsByTime){
+////                        lastPositionId = post.getId();
+////                        Log.d("TAG", "postID: "+lastPositionId);
+////                        last--;
+////                    }else{
+////                        if(!BaseActivity.posts.contains(post)){
+////                            post.downloadImages(post.getPictures().get(0), postAdapter, post);
+////                        }
+////                        Log.d("testando", "entrou");
+////                        postAdapter.addTopListItem(post);
+////                    }
+//                }
+//                if(user != null){
+//                    openHome();
+//                    Toast.makeText(getBaseContext(), "Bem vindo de volta "+ firebasePreferences.getUserName() +"! :)", Toast.LENGTH_SHORT).show();
+//                }else {
+//                    openLogin();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.e("oops", databaseError.getMessage());
+//            }
+//        });
 
     }
 
