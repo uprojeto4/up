@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 
 admin.initializeApp(functions.config().firebase);
 
-exports.sendNewMessageNotification = functions.database.ref('/negotiations/{user_id}/{negotiation_id}').onWrite(event => {
+exports.sendNewMessageNotification = functions.database.ref('/negotiations/{user_id}/{negotiation_id}/unreadMessagesCounter').onWrite(event => {
 	
 	// obtem o id do usuario e do anuncio onde ocorreram mudancas na negociacao
     const user_id = event.params.user_id;
@@ -20,6 +20,7 @@ exports.sendNewMessageNotification = functions.database.ref('/negotiations/{user
 			const ad_id = negotiationResult.val().adId;
 			const lastMessage = negotiationResult.val().lastMessage;
 			const lastMessageSenderId = negotiationResult.val().lastMessageSenderId;
+			const unreadMessages = negotiationResult.val().unreadMessagesCounter;
 			const remoteUserId = negotiationResult.val().remoteUserId;
 			const vendorId = negotiationResult.val().vendorId;
 			
@@ -29,9 +30,9 @@ exports.sendNewMessageNotification = functions.database.ref('/negotiations/{user
 				negotiationType = 1;
 			}
 			
-			if (user_id == lastMessageSenderId) {
+			if (user_id == lastMessageSenderId || unreadMessages == 0) {
 				
-				return null;
+				return console.log("Bypassing notification to user " + user_id);
 				
 			} else {
 				
@@ -60,12 +61,16 @@ exports.sendNewMessageNotification = functions.database.ref('/negotiations/{user
 									title: `Nova mensagem em ${adTitle}`,
 									body: `${userName}: ${lastMessage}`,
 									icon: "default",
-									click_action: "br.ufc.quixada.up_TARGET_NOTIFICATION"
+									click_action: "br.ufc.quixada.up_TARGET_NOTIFICATION",
+									tag: ad_id,
+									sound: "default"
 								},
 								data: {
 									adId: ad_id,
 									remoteUserId: remoteUserId,
-									negotiationType: negotiationType.toString()
+									negotiationType: negotiationType.toString(),
+									unreadMessages: unreadMessages.toString(),
+									adTitle: adTitle;
 								}
 							};
 						

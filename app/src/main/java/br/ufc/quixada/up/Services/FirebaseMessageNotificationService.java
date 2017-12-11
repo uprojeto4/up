@@ -1,5 +1,6 @@
 package br.ufc.quixada.up.Services;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -28,18 +29,20 @@ public class FirebaseMessageNotificationService extends FirebaseMessagingService
         String adId = remoteMessage.getData().get("adId");
         String remoteUserId = remoteMessage.getData().get("remoteUserId");
         int negotiationType = Integer.parseInt(remoteMessage.getData().get("negotiationType"));
-        System.out.println("adId: " + adId + "remoteUserId: " + remoteUserId + "negotiationType: " + negotiationType);
+        String adTitle = remoteMessage.getData().get("adTitle");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                                             .setSmallIcon(R.mipmap.ic_launcher)
                                             .setContentTitle(notificationTitle)
-                                            .setContentText(notificationMessage);
+                                            .setContentText(notificationMessage)
+                                            .setDefaults(Notification.DEFAULT_ALL)
+                                            .setPriority(Notification.PRIORITY_HIGH);
 
         Intent resultIntent = new Intent(clickAction);
         resultIntent.putExtra("adId", adId);
+        resultIntent.putExtra("adTitle", adTitle);
         resultIntent.putExtra("remoteUserId", remoteUserId);
         resultIntent.putExtra("negotiationType", negotiationType);
-
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(resultPendingIntent);

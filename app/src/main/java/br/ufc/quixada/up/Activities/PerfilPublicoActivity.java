@@ -48,7 +48,6 @@ public class PerfilPublicoActivity extends BaseActivity {
         super.onResume();
         Intent intent = getIntent();
         anuncianteId = intent.getStringExtra("idAnunciante");
-
         getSupportActionBar().setTitle(intent.getStringExtra("nomeAnunciante"));
 
     }

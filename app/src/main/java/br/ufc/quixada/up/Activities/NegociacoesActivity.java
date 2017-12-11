@@ -114,7 +114,6 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
         dbReference.child("negotiations").child(userId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
                 final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
                 final String negotiationKey = dataSnapshot.getKey();
                 final String remoteUserId = negociacao.getRemoteUserId();
@@ -167,18 +166,21 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
-                        String remoteUserId = dataSnapshot.child("userId").getValue(String.class);
 
-                        dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        dbReference.child("users").child(negociacao.getRemoteUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
                                 negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
                                 if (negociacao.getVendorId().equals(userId)) {
-                                    sellAdapter.addNegociacao(negotiationKey, negociacao);
+                                    sellAdapter.updateNegociacao(sellAdapter.getIndexOfKey(negotiationKey), negociacao);
                                 } else {
-                                    buyAdapter.addNegociacao(negotiationKey, negociacao);
+                                    buyAdapter.updateNegociacao(buyAdapter.getIndexOfKey(negotiationKey), negociacao);
+                                }
+
+                                if ((!isChatActivityOpened && !negociacao.getLastMessageSenderId().equals(userId)) || (isChatActivityOpened && !negotiationKey.equals(currentOpenedChatNegotiationKey))) {
+                                    vibrate();
                                 }
                             }
 
@@ -213,7 +215,6 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
             }
         });
     }
-
 //            @Override
 //            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 //                if (dataSnapshot.getChildrenCount() != 0) {

@@ -18,6 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.Activities.BaseActivity;
+import br.ufc.quixada.up.Activities.NegociacoesActivity;
+import br.ufc.quixada.up.Activities.PerfilActivity;
+import br.ufc.quixada.up.Activities.PerfilPublicoActivity;
 import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Post;
@@ -48,9 +51,10 @@ public class fragmentPerfilAnuncios extends Fragment{
         linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewMeusAnuncios.setLayoutManager(linearLayoutManager);
-        userId = BaseActivity.localUserId;
 
-        postsReference.orderByChild("userId").equalTo(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        System.out.println("fragment " + PerfilPublicoActivity.anuncianteId);
+
+        postsReference.orderByChild("userId").equalTo(PerfilPublicoActivity.anuncianteId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 

@@ -19,6 +19,7 @@ import br.ufc.quixada.up.Activities.ChatActivity;
 import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.DateTimeControl;
 
 public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.NegociacaoViewHolder> {
 
@@ -47,8 +48,8 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
 
         negociacaoViewHolder.negociacao = negotiationSet.get(position);
         negociacaoViewHolder.textViewTituloNegociacao.setText(negociacaoViewHolder.negociacao.getTitle());
-//        negociacaoViewHolder.textViewdataInicioNegociacao.setText(DateTimeControl.formatMillisToDate(negociacaoViewHolder.negociacao.getStartDate()));
         negociacaoViewHolder.textViewLastMessage.setText(negociacaoViewHolder.negociacao.getLastMessage());
+        negociacaoViewHolder.textViewLastmessageTime.setText(DateTimeControl.generateChatTimestamp(negociacaoViewHolder.negociacao.getLastMessageTime()));
         negociacaoViewHolder.textViewMensagensNaoLidasNegociacao.setText(String.valueOf(negociacaoViewHolder.negociacao.getUnreadMessagesCounter()));
         negociacaoViewHolder.negotiationKey = negotiationKeys.get(position);
         if (negociacaoViewHolder.negociacao.getUnreadMessagesCounter() == 0) {
@@ -141,6 +142,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
         LinearLayout linearLayoutMensagensNaoLidasNegociacao;
         TextView textViewMensagensNaoLidasNegociacao;
         TextView textViewLastMessage;
+        TextView textViewLastmessageTime;
         ImageView responseIcon;
         String negotiationKey;
         int negotiationType;
@@ -156,6 +158,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
             linearLayoutMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.linearLayoutMensagensNaoLidasNegociacao);
             textViewMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.textViewMensagensNaoLidasNegociacao);
             textViewLastMessage = itemLayoutView.findViewById(R.id.lastMessage);
+            textViewLastmessageTime = itemLayoutView.findViewById(R.id.lastMessageTime);
             responseIcon = itemLayoutView.findViewById(R.id.responseIcon);
 
             itemLayoutView.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +172,7 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
                     intent.putExtra("negotiationKey", negotiationKey);
                     intent.putExtra("negotiationType", negotiationType);
                     intent.putExtra("submitDate", negociacao.getStartDate());
+                    intent.putExtra("callerId", Constant.CHAT_CALLER_NEGOTIATION_ADAPTER);
                     context.startActivity(intent);
                 }
             });

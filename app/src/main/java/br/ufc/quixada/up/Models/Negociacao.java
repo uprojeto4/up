@@ -18,6 +18,7 @@ public class Negociacao {
     private String lastMessage;
     private String lastMessageSenderId;
     private long startDate;
+    private long lastMessageTime;
     private String messagesId;
     private int status;
 
@@ -31,6 +32,7 @@ public class Negociacao {
         this.lastMessage = lastMessage;
         this.lastMessageSenderId = lastMessageSenderId;
         this.startDate = DateTimeControl.getCurrentDateTime();
+        this.lastMessageTime = DateTimeControl.getCurrentDateTime();
         this.status = Constant.OPENED_NEGOTIATION;
     }
 
@@ -120,5 +122,13 @@ public class Negociacao {
 
     public void setVendorId(String vendorId) {
         this.vendorId = vendorId;
+    }
+
+    public long getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(long lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
     }
 }
