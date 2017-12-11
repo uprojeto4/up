@@ -68,8 +68,6 @@ public class AnuncioActivity extends BaseActivity {
 
     CircleImageView anuncianteFoto;
 
-    String idAnunciante;
-    String nomeAnunciante;
     String fotoPerfilAnunciante;
     StorageReference anuncianteFotoRef;
 
@@ -117,7 +115,7 @@ public class AnuncioActivity extends BaseActivity {
     }
 
     public void startFromSearch(){
-        Post post = MainActivity.searchPosts.get(positionSearch);
+        post = MainActivity.searchPosts.get(positionSearch);
 
 
         TextView title = (TextView)findViewById(R.id.textView_title);
@@ -192,6 +190,7 @@ public class AnuncioActivity extends BaseActivity {
         qtd = (Spinner) findViewById(R.id.spinner);
         fab = (FloatingActionButton) findViewById(R.id.fabNegotiate);
 
+        Intent intent = getIntent();
         if (intent != null){
             position = intent.getIntExtra("position", -1);
             callerId = intent.getIntExtra("callerId", -1);

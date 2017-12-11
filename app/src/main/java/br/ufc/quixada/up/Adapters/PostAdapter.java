@@ -40,12 +40,10 @@ import java.util.Locale;
 
 import br.ufc.quixada.up.Activities.BaseActivity;
 import br.ufc.quixada.up.Activities.ChatActivity;
-import br.ufc.quixada.up.Activities.EditPerfilActivity;
 import br.ufc.quixada.up.Activities.LoginActivity;
 import br.ufc.quixada.up.Activities.MainActivity;
-import br.ufc.quixada.up.Constant;
-import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Constant;
+import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Models.User;

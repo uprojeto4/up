@@ -322,12 +322,16 @@ public class BaseActivity extends AppCompatActivity
             Intent intent = new Intent(this, ConfiguracoesActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_sair) {
-            databaseReference.child("users").child(localUser.getId()).child("device_token").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    signOut();
-                }
-            });
+            if(!user.isAnonymous()){
+                databaseReference.child("users").child(localUser.getId()).child("device_token").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        signOut();
+                    }
+                });
+            }else{
+                signOut();
+            }
         }
 
 //        try {

@@ -125,63 +125,6 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
     }
 
     public void manageNegotiations() {
-//<<<<<<< qualificacoes-Brendon
-//        if (userId != null){
-
-            dbReference.child("negotiations").child(userId).addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    if (dataSnapshot.getChildrenCount() != 0) {
-                        final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
-                        final String negotiationKey = dataSnapshot.getKey();
-
-    //                    manageNegotiationsVisibility(Constant.SHOW_BUY_NEGOTIATIONS);
-
-                        dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
-                                String remoteUserId = dataSnapshot.child("userId").getValue(String.class);
-
-                                dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
-                                        if (negociacao.getVendorId().equals(userId)) {
-                                            sellAdapter.addNegociacao(negotiationKey, negociacao);
-                                        } else {
-                                            buyAdapter.addNegociacao(negotiationKey, negociacao);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                }
-    //
-                @Override
-                public void onChildChanged(final DataSnapshot dataSnapshot, String s) {
-
-                    final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
-                    dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
-
-                        @Override
-                        public void onDataChange(DataSnapshot postDataSnapshot) {
-                            negociacao.setTitle(postDataSnapshot.child("title").getValue(String.class));
-                            String remoteUserId = postDataSnapshot.child("userId").getValue(String.class);
-//=======
 
         dbReference.child("negotiations").child(userId).addChildEventListener(new ChildEventListener() {
             @Override
@@ -198,34 +141,15 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
                         negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
 
                         dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-//>>>>>>> sprint-final
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-//<<<<<<< qualificacoes-Brendon
-                                @Override
-                                public void onDataChange(DataSnapshot userDataSnapshot) {
-                                    negociacao.setVendorName(userDataSnapshot.child("nome").getValue(String.class));
-                                    final int index;
-                                    System.out.println(negociacao.getUnreadMessagesCounter());
-                                    if (negociacao.getVendorId().equals(userId)) {
-                                        index = sellAdapter.getIndexOfKey(dataSnapshot.getKey());
-                                        sellAdapter.updateNegociacao(index, negociacao);
-                                    } else {
-                                        index = buyAdapter.getIndexOfKey(dataSnapshot.getKey());
-                                        buyAdapter.updateNegociacao(index, negociacao);
-                                    }
-                                    if ((!isChatActivityOpened && !negociacao.getLastMessageSenderId().equals(userId)) || (isChatActivityOpened && !dataSnapshot.getKey().equals(currentOpenedChatNegotiationKey))) {
-                                        vibrate();
-                                    }
-//=======
                                 negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
                                 if (negociacao.getVendorId().equals(userId)) {
                                     sellAdapter.addNegociacao(negotiationKey, negociacao);
                                 } else {
                                     buyAdapter.addNegociacao(negotiationKey, negociacao);
-//>>>>>>> sprint-final
                                 }
                             }
 
@@ -239,16 +163,6 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
-//<<<<<<< qualificacoes-Brendon
-                        }
-                    });
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-//=======
                     }
                 });
             }
@@ -262,7 +176,7 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
 //                    manageNegotiationsVisibility(Constant.SHOW_BUY_NEGOTIATIONS);
 //
                 dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
-//
+                    //
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -304,137 +218,18 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
             }
-//>>>>>>> sprint-final
 
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
-
-//        }else{
-//            new AlertDialog.Builder(this)
-//                    .setTitle(R.string.no_address_dialog_title)
-//                    .setMessage(NegociacoesActivity.this.getString(R.string.faca_login))
-//                    .setPositiveButton(NegociacoesActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            //                            finish();
-//                            Intent intent = new Intent(NegociacoesActivity.this, LoginActivity.class);
-//                            startActivity(intent);
-//                        }
-//                    }).setNegativeButton(NegociacoesActivity.this.getString(R.string.nao), null)
-//                    .show();
-//        }
+            }
+        });
     }
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                if (dataSnapshot.getChildrenCount() != 0) {
-//                    final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
-//                    final String negotiationKey = dataSnapshot.getKey();
-//
-////                    manageNegotiationsVisibility(Constant.SHOW_BUY_NEGOTIATIONS);
-//
-//                    dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//                        @Override
-//                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                            negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
-//                            String remoteUserId = dataSnapshot.child("userId").getValue(String.class);
-//
-//                            dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//                                @Override
-//                                public void onDataChange(DataSnapshot dataSnapshot) {
-//                                    System.out.println("venda: " + dataSnapshot);
-//                                    negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
-//                                    if (negociacao.getVendorId().equals(userId)) {
-//                                        sellAdapter.addNegociacao(negotiationKey, negociacao);
-//                                    } else {
-//                                        buyAdapter.addNegociacao(negotiationKey, negociacao);
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(DatabaseError databaseError) {
-//
-//                                }
-//                            });
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override
-//            public void onChildChanged(final DataSnapshot dataSnapshot, String s) {
-//
-//                final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
-//                dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//                    @Override
-//                    public void onDataChange(DataSnapshot postDataSnapshot) {
-//                        negociacao.setTitle(postDataSnapshot.child("title").getValue(String.class));
-//                        String remoteUserId = postDataSnapshot.child("userId").getValue(String.class);
-//
-//                        dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//                            @Override
-//                            public void onDataChange(DataSnapshot userDataSnapshot) {
-//                                negociacao.setVendorName(userDataSnapshot.child("nome").getValue(String.class));
-//                                final int index;
-//                                System.out.println(negociacao.getUnreadMessagesCounter());
-//                                if (negociacao.getVendorId().equals(userId)) {
-//                                    index = sellAdapter.getIndexOfKey(dataSnapshot.getKey());
-//                                    sellAdapter.updateNegociacao(index, negociacao);
-//                                } else {
-//                                    index = buyAdapter.getIndexOfKey(dataSnapshot.getKey());
-//                                    buyAdapter.updateNegociacao(index, negociacao);
-//                                }
-//                                if ((!isChatActivityOpened && !negociacao.getLastMessageSenderId().equals(userId)) || (isChatActivityOpened && !dataSnapshot.getKey().equals(currentOpenedChatNegotiationKey))) {
-//                                    vibrate();
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
 
     public void manageNegotiationsVisibility(int control) {
         int position = tabLayout.getSelectedTabPosition();
