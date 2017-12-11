@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -51,6 +52,7 @@ public class BaseActivity extends AppCompatActivity
     TextView textViewEmail;
     ImageView imageViewPhoto;
     User localUser;
+    public static String localUserId;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -85,7 +87,7 @@ public class BaseActivity extends AppCompatActivity
         localUser.setNumCompras(firebasePreferences.getNumCompras());
         localUser.setAvComprador(firebasePreferences.getAvCompras());
 
-
+        localUserId = localUser.getId();
     }
 
 //    public void updateLocalUser(){
@@ -234,7 +236,12 @@ public class BaseActivity extends AppCompatActivity
             Intent intent = new Intent(this, ConfiguracoesActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_sair) {
-            signOut();
+            databaseReference.child("users").child(localUser.getId()).child("device_token").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    signOut();
+                }
+            });
         }
 
 //        try {

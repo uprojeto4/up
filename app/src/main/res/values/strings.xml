@@ -6,6 +6,8 @@
 
     <string name="action_settings">Configurações</string>
 
+    <string name="action_finalizar_negociacao">Finalizar Negociação</string>
+
     <string name="navigation_drawer_inicio">Início</string>
     <string name="navigation_drawer_novo_anuncio">Novo anúncio</string>
     <string name="navigation_drawer_negociacoes">Negociações</string>
@@ -21,7 +23,7 @@
     <string name="title_activity_categorias">Categorias</string>
     <string name="title_activity_lista_desejos">Lista de desejos</string>
     <string name="title_activity_perfil">Meu perfil</string>
-    <string name="title_activity_configuracoes">ConfiguracoesActivity</string>
+    <string name="title_activity_configuracoes">Configurações</string>
     <string name="input_novo_anuncio_titulo">O que deseja anunciar?</string>
     <string name="input_novo_anuncio_descricao">Descreva seu anúncio</string>
     <string name="input_novo_anuncio_preco">Preço</string>
@@ -79,7 +81,7 @@
     <string name="erro_novo_anuncio_descricao">Seu anúncio precisa de uma descrição.</string>
     <string name="erro_novo_anuncio_preco">Seu anúncio precisa de um preço.</string>
     <string name="button_comprar">negociar</string>
-    <string name="title_activity_anuncio">AnuncioActivity</string>
+    <string name="title_activity_anuncio">Anúncio</string>
     <string name="price">Preço</string>
     <string name="available">Quantidade</string>
     <string name="perfil_botao_salvar_edicao">Salvar edição</string>
@@ -103,13 +105,13 @@
     <string name="input_edit_email_hint">Altere o seu email</string>
     <string name="input_edit_senha_hint">Altere a sua senha</string>
     <string name="input_edit_confirm_senha_hint">Confirme a sua nova senha</string>
-    <string name="title_activity_cadastro">CadastroActivity</string>
+    <string name="title_activity_cadastro">Cadastre-se</string>
     <string name="dafault_user_name">Visitante</string>
     <string name="dafault_exit_confirmation">Deseja realmente Sair?</string>
 
-    <string name="iniciada_em">Negociação iniciada em</string>
+    <string name="iniciada_em">Negociação iniciada em:</string>
     <string name="no_address_dialog_title">Ops... </string>
-    <string name="insert_address_message">Parece que você não forneceu suas informações de endereço, informá-las ajuda a aumentar
+    <string name="insert_address_message">Informações de endereço não cadastradas, informá-las ajuda a aumentar
         as chances de negociações. Gostaria de adicioná-las agora?</string>
 
 
@@ -130,14 +132,20 @@
     <string name="title_activity_maps_perfil">Map</string>
 
     <!--<string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">-->
-        <!--AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4-->
+    <!--AIzaSyBAYvcgfcJZWCW-dhdJXxw21JnJXrY98y4-->
     <!--</string>-->
 
     <string name="label_no_buy">Você ainda não iniciou nenhuma negociação.</string>
     <string name="label_no_sell">Ninguém iniciou uma negociação com você, ainda.</string>
-    
+
     <string name="label_no_messages">Ainda não há mensagens. Comece dizendo alguma coisa!</string>
 
     <string name="anunciado_por">Anunciado por</string>
+    <string name="title_activity_perfil_publico">PerfilPublicoActivity</string>
+    <string name="negociante">Negociante:</string>
+    <string name="comprador">Comprador:</string>
+    <string name="vendedor">Vendedor:</string>
+
+    <string name="anuncio_cadastrado_em">Anúncio cadastrado em</string>
 
 </resources>

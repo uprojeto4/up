@@ -2,6 +2,7 @@ package br.ufc.quixada.up.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -44,11 +45,13 @@ import java.util.ArrayList;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
+import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Models.Message;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.TesteActivity;
 import br.ufc.quixada.up.Utils.ChatControl;
 import br.ufc.quixada.up.Utils.FirebasePreferences;
 
@@ -57,15 +60,17 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
     static ArrayList<Post> posts = new ArrayList<Post>();
     ArrayList<Post> listAux = new ArrayList<Post>();
     private RecyclerView recyclerView;
-    DatabaseReference postsReference;
+    DatabaseReference postsReference = FirebaseConfig.getDatabase().child("posts");;
     PostAdapter postAdapter;
     Post post;
     private int numPostsByTime = 3;
     private String lastPositionId;
     private boolean lastPost = false;
+    public static String localUserId;
+    static  MainActivity mainActivity;
+//    LikeButton likeButton;
 
     LikeButton likeButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -97,9 +102,10 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 
         if(user != null){
             updateUserInfo();
-            loadFromFirebase(numPostsByTime, null);
+            loadFromFirebase(numPostsByTime);
         }
 
+        localUserId = localUser.getId();
 
         if (localUser.getAddress().getLogradouro().equals("") || localUser.getAddress().getNumero().equals("") ||
                 localUser.getAddress().getBairro().equals("") || localUser.getAddress().getCidade().equals("")){
@@ -145,7 +151,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                 PostAdapter pa = (PostAdapter)recyclerView.getAdapter();
                 if(posts.size() == llm.findLastCompletelyVisibleItemPosition()+1 && lastPost == false){
                     Toast.makeText(MainActivity.this, "Carregando ...", Toast.LENGTH_SHORT).show();
-                    loadFromFirebase(numPostsByTime, lastPositionId);
+                    loadMoreFromFirebase(numPostsByTime, lastPositionId);
                 }
 
             }
@@ -154,32 +160,24 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         postAdapter = new PostAdapter(this, posts);
         postAdapter.setRecyclerViewOnClickListener(this);
         recyclerView.setAdapter(postAdapter);
+
 //        anuncioTela();
+//        MainActivity.mainActivity = this;
     }
 
-//    public AdapterView.OnItemClickListener anuncioTela() {
-//        return (new AdapterView.OnItemClickListener(){
+//    public synchronized void mudarImage(String msg){
+//        TextView textView = (TextView) findViewById(R.id.textView9);
+//        textView.setText(msg);
+//    }
 //
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-//
-////                Toast.makeText(getBaseContext(),"Clicked item", Toast.LENGTH_LONG).show();
-////                Log.d("debug","teste");
-//
-//                Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+//    public static MainActivity getInstance(){
+//        return MainActivity.mainActivity;
 //    }
 
     public void share(View view){
-
-//        Uri imageUri1 = R.drawable.image_test_1;
-
         TextView textView_title = (TextView)findViewById(R.id.textView_title);
         TextView textView_describ = (TextView)findViewById(R.id.textView_describ);
         TextView textView_price = (TextView)findViewById(R.id.textView_price);
-
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
@@ -188,16 +186,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                             " - " + textView_price.getText());
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
-
-//        ArrayList<Uri> imageUris = new ArrayList<Uri>();
-//        imageUris.add(imageUri1); // Add your image URIs here
-//        imageUris.add(imageUri2);
-//
-//        Intent shareIntent = new Intent();
-//        shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-//        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
-//        shareIntent.setType("image/*");
-//        startActivity(Intent.createChooser(shareIntent, "Share images to.."));
     }
 
     public void up(View view){
@@ -224,185 +212,72 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 //        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
     }
 
-//    public void loadFromFirebase(int num){
-//        postsReference = FirebaseConfig.getDatabase().child("posts");
-////        ValueEventListener postListener = new ValueEventListener() {
-////            @Override
-////            public void onDataChange(DataSnapshot dataSnapshot) {
-////                try {
-////                    Log.w("TAG", "Entrei"+dataSnapshot);
-////
-////                } catch (Exception ex) {
-////                    Log.e("oops", ex.getMessage());
-////                }
-////            }
-////
-////            @Override
-////            public void onCancelled(DatabaseError databaseError) {
-////                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
-////            }
-////        };
-////        postsReference.addValueEventListener(postListener);
-//
-////        postsReference.addValueEventListener(new ValueEventListener() {
-////            @Override
-////            public void onDataChange(DataSnapshot dataSnapshot) {
-////                Log.d("TAG", "epaai: "+ dataSnapshot);
-////            }
-////
-////            @Override
-////            public void onCancelled(DatabaseError databaseError) {
-////
-////            }
-////        });
-//
-//        postsReference.limitToFirst(num).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                try {
-//                    for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//                        post = singleSnapshot.getValue(Post.class);
-//                        Log.d("TAG", "epaai: "+ post.getId());
-//                        posts.add(0, post);
-//                        postAdapter.notifyItemInserted(0);
-//                    }
-//                } catch (Exception ex) {
-//                    Log.e("oops", ex.getMessage());
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.e("oops", databaseError.getMessage());
-//            }
-//        });
-////        postsReference.addChildEventListener(new ChildEventListener() {
-////            @Override
-////            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-////                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-////                    try {
-////                        Post post = dataSnapshot.getValue(Post.class);
-////                        if(post.getPictures() != null){
-//////                            Toast.makeText(MainActivity.this, "eiiiiii", Toast.LENGTH_SHORT).show();
-////                            postAdapter.downloadImageCover(post);
-////                        }
-////                        posts.add(0, post);
-////                        postAdapter.notifyItemInserted(posts.size());
-//////                        postAdapter.notifyDataSetChanged();
-////                        recyclerView.scrollToPosition(0);
-////                    } catch (Exception ex) {
-////                        Log.e("oops", ex.getMessage());
-////                    }
-////
-////                }
-////            }
-////
-////            @Override
-////            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//////                try {
-//////                    Post post = dataSnapshot.getValue(Post.class);
-//////                    if(post.getPictures() != null){
-//////                        postAdapter.downloadImageCover(post);
-//////                    }
-//////                    postAdapter.notifyItemChanged(posts.indexOf(post));
-////////                    postAdapter.notifyDataSetChanged();
-//////////                    recyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
-//////                } catch (Exception ex) {
-//////                    Log.e("oops", ex.getMessage());
-//////                }
-////            }
-////
-////            @Override
-////            public void onChildRemoved(DataSnapshot dataSnapshot) {
-////
-////            }
-////
-////            @Override
-////            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-////
-////            }
-////
-////            @Override
-////            public void onCancelled(DatabaseError databaseError) {
-////
-////            }
-////        });
-//
-//    }
+    public void loadFromFirebase(int num){
+        postsReference.limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int last = numPostsByTime;
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    post = singleSnapshot.getValue(Post.class);
 
-    public void loadFromFirebase(final int num, final String position){
-        postsReference = FirebaseConfig.getDatabase().child("posts");
+                    Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
+                    if (last == numPostsByTime){
+                        lastPositionId = post.getId();
+                        Log.d("TAG", "postID: "+lastPositionId);
+                        last--;
+                    }else{
+                        recyclerView.scrollToPosition(0);
+                        if(!posts.contains(post)){
+                            post.downloadImages(post.getPictures().get(0), postAdapter, post);
+                        }
+                        Log.d("testando", "entrou");
+                        postAdapter.addTopListItem(post);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("oops", databaseError.getMessage());
+            }
+        });
+    }
+
+    public void loadMoreFromFirebase(final int num, final String position){
         if(position != null){
-            postsReference.orderByKey().endAt(lastPositionId).limitToFirst(num).addListenerForSingleValueEvent(new ValueEventListener() {
+            postsReference.orderByKey().endAt(lastPositionId).limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<Post> listAux = new ArrayList<Post>();
 //                    Log.e("TAG", "novo: "+dataSnapshot.getChildrenCount()+" - "+recyclerView.getScrollY());
                     int last = numPostsByTime;
-                    try {
-                        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                            post = singleSnapshot.getValue(Post.class);
-                            Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
-//                            Log.d("TAG", "epaai: "+ post.getId());
-//                            if(dataSnapshot.getChildrenCount() == numPostsByTime){
-//                                if (last > 1){
-//                                    postAdapter.addBottomListItem(post);
-//                                    last--;
-//                                }else{
-//                                    lastPositionId = post.getId();
-//                                }
-//                            }else{
-//                                postAdapter.addBottomListItem(post);
-//                                lastPost = true;
-//                            }
-
-                            if (last == numPostsByTime){
-                                lastPositionId = post.getId();
-                                last--;
-                            }else{
-                                postAdapter.addListItem(post, posts.size());
-                            }
-                        }
-                    } catch (Exception ex) {
-                        Log.e("oops", ex.getMessage());
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e("oops", databaseError.getMessage());
-                }
-            });
-        }else{
-            postsReference.limitToLast(num).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    int last = numPostsByTime;
-                    try {
-                        for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                            post = singleSnapshot.getValue(Post.class);
-                            Log.d("TAG", "post: "+post.getTitle()+" - "+post.getId());
-                            if (last == numPostsByTime){
-                                lastPositionId = post.getId();
-                                Log.d("TAG", "postID: "+lastPositionId);
-                                last--;
-                            }else{
-                                recyclerView.scrollToPosition(0);
-                                postAdapter.addTopListItem(post);
-//                                last--;
-                            }
-//                            if (last == numPostsByTime){
-//                                lastPositionId = post.getId();
-//                                last--;
-//                            }else{
-//                                recyclerView.scrollToPosition(0);
-//                                postAdapter.addTopListItem(post);
-//                            }
-                        }
-                    } catch (Exception ex) {
-                        Log.e("oops", ex.getMessage());
+                    for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                            post = singleSnapshot.getValue(Post.class);
+                        listAux.add(singleSnapshot.getValue(Post.class));
                     }
 
+                    for (int i=listAux.size(); i>0; i--) {
+                        Log.d("TAG", i + "");
+
+                        post = listAux.get(i - 1);
+                        Log.d("TAG", "post: " + post.getTitle() + " - " + post.getId());
+                        if (dataSnapshot.getChildrenCount() == numPostsByTime) {
+                            if (last > 1) {
+                                if (!posts.contains(post)) {
+                                    post.downloadImages(post.getPictures().get(0), postAdapter, post);
+                                }
+                                Log.d("testando", "entrou");
+                                postAdapter.addBottomListItem(post);
+                                last--;
+                            } else {
+                                lastPositionId = post.getId();
+                                Log.d("TAG", "postID: " + lastPositionId);
+                            }
+                        } else {
+                            postAdapter.addBottomListItem(post);
+                            lastPost = true;
+                        }
+                    }
                 }
 
                 @Override
@@ -411,21 +286,16 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                 }
             });
         }
+    }
 
+    public void loadNewPosts(){
         postsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-////                    try {
-////                        Post post = dataSnapshot.getValue(Post.class);
-////                        posts.add(0, post);
-////                        postAdapter.notifyItemInserted(posts.size());
-////                        recyclerView.scrollToPosition(0);
-////                    } catch (Exception ex) {
-////                        Log.e("oops", ex.getMessage());
-////                    }
-//                    Toast.makeText(MainActivity.this, "New Posts", Toast.LENGTH_SHORT).show();
+//                if(!posts.contains(dataSnapshot)){
+//                    post.downloadImages(post.getPictures().get(0), postAdapter, posts.indexOf(post));
 //                }
+                Log.d("lepo", "entrou");
             }
 
             @Override
@@ -454,6 +324,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
     public void onClickListener(View view, int position) {
         Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
         intent.putExtra("position", position);
+        intent.putExtra("callerId", Constant.POST_CALLER_MAIN_ACTIVITY);
         startActivity(intent);
     }
 }

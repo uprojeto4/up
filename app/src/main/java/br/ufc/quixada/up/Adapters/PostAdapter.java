@@ -3,9 +3,6 @@ package br.ufc.quixada.up.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,29 +12,22 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.nguyenhoanglam.imagepicker.model.Image;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import br.ufc.quixada.up.Activities.BaseActivity;
 import br.ufc.quixada.up.Activities.ChatActivity;
-import br.ufc.quixada.up.Activities.MainActivity;
+import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
@@ -58,7 +48,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     StorageReference imageRef;
     Bitmap bitmap;
     byte[] pictureCover;
-    ImageView imageView;
+//    ImageView imageView;
     FirebaseStorage firebaseStorage;
     FirebaseAuth user = FirebaseAuth.getInstance();
 
@@ -81,17 +71,32 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         Post post = posts.get(position);
 
+        Log.d("entrou", "netrou");
+
         DecimalFormat formatoMoeda = new DecimalFormat("##,###,###,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
         formatoMoeda.setMinimumFractionDigits(2);
         formatoMoeda.setParseBigDecimal (true);
         String price = formatoMoeda.format(post.getPrice());
 
-        holder.image.setImageResource(post.getDefaultImage());
-        imageView = holder.image;
+//        holder.image.setImageResource(post.getDefaultImage());
+//        imageView = holder.image;
+        Log.d("imageCOver", post.getImageCover()+"");
+        if(post.getImageCover()!= null){
+            applyImage(post.getImageCover(), holder.image);
+            Log.d("chamou","applyImage");
+        }
         holder.title.setText(post.getTitle());
         holder.subtitle.setText(post.getSubtitle());
         holder.price.setText("R$ " + price);
         holder.post = post;
+
+        if (holder.post.getUserId().equals(BaseActivity.localUserId)) {
+            holder.openChatButton.setVisibility(View.GONE);
+            holder.markAsSelled.setVisibility(View.VISIBLE);
+        } else {
+            holder.openChatButton.setVisibility(View.VISIBLE);
+            holder.markAsSelled.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -105,6 +110,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView price;
         ImageView image;
         private Button openChatButton;
+        private Button markAsSelled;
         private ImageButton upButton;
         private Post post;
 
@@ -127,9 +133,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     intent.putExtra("remoteUserId", post.getUserId());
                     intent.putExtra("adId", post.getId());
                     intent.putExtra("adTitle", post.getTitle());
+                    intent.putExtra("submitDate", post.getDataCadastro());
+                    intent.putExtra("negotiationType", Constant.NEGOTIATION_TYPE_BUY);
+                    intent.putExtra("callerId", Constant.CHAT_CALLER_POST_ADAPTER);
                     context.startActivity(intent);
                 }
             });
+
+            markAsSelled = (Button) itemView.findViewById(R.id.buttonMarcarComoVendidoPost);
 
             upButton = (ImageButton) itemView.findViewById(R.id.buttonUpCard);
 
@@ -181,7 +192,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         notifyItemInserted(position);
     }
 
-    public void applyImage(byte[] bytes){
+    public void applyImage(byte[] bytes, ImageView imageView){
         //options para o glide
         RequestOptions requestOptions = new RequestOptions();
         //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue

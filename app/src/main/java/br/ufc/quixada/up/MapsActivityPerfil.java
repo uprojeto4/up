@@ -2,6 +2,7 @@ package br.ufc.quixada.up;
 
 import android.*;
 import android.Manifest;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -20,6 +21,9 @@ import br.ufc.quixada.up.Activities.NovoAnuncioActivity;
 public class MapsActivityPerfil extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    Double lat;
+    Double lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +70,13 @@ public class MapsActivityPerfil extends FragmentActivity implements OnMapReadyCa
 
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        LatLng sydney = new LatLng(-34, 151);
+        Intent intent = getIntent();
+        lat = intent.getDoubleExtra("Lat", 0);
+        lng = intent.getDoubleExtra("Long", 0);
+
+        LatLng sydney = new LatLng(lat, lng);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Endereço de "+intent.getStringExtra("nomeUsuario")));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 }

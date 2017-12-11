@@ -8,17 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import br.ufc.quixada.up.Activities.NegociacoesActivity;
-import br.ufc.quixada.up.Adapters.NegociacoesAdapter;
+import br.ufc.quixada.up.Interfaces.NegotiationFragmentDisplay;
 import br.ufc.quixada.up.R;
 
-public class ComprasFragment extends Fragment {
+public class ComprasFragment extends Fragment implements NegotiationFragmentDisplay {
 
-    RecyclerView recyclerViewBuyChatList;
-    LinearLayoutManager linearLayoutManager;
-    private LinearLayout noBuy;
+    private RecyclerView recyclerViewBuyChatList;
+    private LinearLayoutManager linearLayoutManager;
+//    public LinearLayout noBuy;
     private NegociacoesActivity negociacoesActivity;
 
     @Nullable
@@ -35,13 +34,23 @@ public class ComprasFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewBuyChatList.setLayoutManager(linearLayoutManager);
-
-//        NegociacoesAdapter negociacoesAdapter = negociacoesActivity.negociacoesAdapter;
+//        noBuy = rootView.findViewById(R.id.noBuyLayout);
 
         recyclerViewBuyChatList.setAdapter(negociacoesActivity.buyAdapter);
 
-        noBuy = rootView.findViewById(R.id.noBuy);
-
         return rootView;
+    }
+
+    public void manageNegotiationsVisibility(int control) {
+//        if (control == Constant.HIDE_BUY_NEGOTIATIONS) {
+//            noBuy.setVisibility(View.VISIBLE);
+//            recyclerViewBuyChatList.setVisibility(View.GONE);
+//        } else if (control == Constant.SHOW_BUY_NEGOTIATIONS) {
+//            System.out.println(noBuy);
+//            System.out.println(recyclerViewBuyChatList);
+//            noBuy.setVisibility(View.GONE);
+//            recyclerViewBuyChatList.setVisibility(View.VISIBLE);
+//        }
+        System.out.println("ComprasFragment manageNegotiationsVisibility " + control);
     }
 }

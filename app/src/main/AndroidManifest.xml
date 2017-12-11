@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -50,7 +50,7 @@
         <activity
             android:name=".Activities.NegociacoesActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- android:label="@string/title_activity_negociacoes" -->
         <!-- <activity -->
         <!-- android:name=".BaseActivity" -->
@@ -114,11 +114,15 @@
             android:name=".Activities.ChatActivity"
             android:parentActivityName=".Activities.NegociacoesActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="br.ufc.quixada.up_TARGET_NOTIFICATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.ufc.quixada.up.Activities.NegociacoesActivity" />
         </activity>
-        <activity android:name=".Activities.NegociacaoActivity" />
+        <!--<activity android:name=".Activities.NegociacoesActivity" />-->
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -134,6 +138,21 @@
         <activity
             android:name=".MapsActivityPerfil"
             android:label="@string/title_activity_maps_perfil"></activity>
+
+        <activity
+            android:name=".Activities.PerfilPublicoActivity"
+            android:label="@string/title_activity_perfil_publico"
+            android:parentActivityName=".Activities.ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity android:name=".TesteActivity"></activity>
+
+        <service android:name=".Services.FirebaseMessageNotificationService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

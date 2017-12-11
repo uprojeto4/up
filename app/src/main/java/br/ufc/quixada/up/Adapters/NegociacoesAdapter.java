@@ -3,6 +3,8 @@ package br.ufc.quixada.up.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +16,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.Activities.ChatActivity;
-import br.ufc.quixada.up.Constant;
+import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
+import br.ufc.quixada.up.Utils.DateTimeControl;
 
 public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.NegociacaoViewHolder> {
 
@@ -45,17 +48,32 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
 
         negociacaoViewHolder.negociacao = negotiationSet.get(position);
         negociacaoViewHolder.textViewTituloNegociacao.setText(negociacaoViewHolder.negociacao.getTitle());
-        negociacaoViewHolder.textViewNomeVendedorNegociacao.setText(negociacaoViewHolder.negociacao.getVendorName());
-        negociacaoViewHolder.textViewdataInicioNegociacao.setText(negociacaoViewHolder.negociacao.getStartDate());
         negociacaoViewHolder.textViewLastMessage.setText(negociacaoViewHolder.negociacao.getLastMessage());
+        negociacaoViewHolder.textViewLastmessageTime.setText(DateTimeControl.generateChatTimestamp(negociacaoViewHolder.negociacao.getLastMessageTime()));
         negociacaoViewHolder.textViewMensagensNaoLidasNegociacao.setText(String.valueOf(negociacaoViewHolder.negociacao.getUnreadMessagesCounter()));
-
+        negociacaoViewHolder.negotiationKey = negotiationKeys.get(position);
         if (negociacaoViewHolder.negociacao.getUnreadMessagesCounter() == 0) {
-            negociacaoViewHolder.linearLayoutMensagensNaoLidasNegociacao.setVisibility(View.INVISIBLE);
+            negociacaoViewHolder.linearLayoutMensagensNaoLidasNegociacao.setVisibility(View.GONE);
+        } else {
+            negociacaoViewHolder.linearLayoutMensagensNaoLidasNegociacao.setVisibility(View.VISIBLE);
+        }
+
+        if (negociacaoViewHolder.negociacao.getVendorId().equals(userId)) {
+            negociacaoViewHolder.textViewNomeVendedorNegociacao.setText("Comprador: " + negociacaoViewHolder.negociacao.getVendorName());
+            negociacaoViewHolder.negotiationType = Constant.NEGOTIATION_TYPE_SELL;
+        } else {
+            negociacaoViewHolder.textViewNomeVendedorNegociacao.setText("Vendedor: " + negociacaoViewHolder.negociacao.getVendorName());
+            negociacaoViewHolder.negotiationType = Constant.NEGOTIATION_TYPE_BUY;
         }
 
         if (negociacaoViewHolder.negociacao.getLastMessageSenderId().equals(userId)) {
-            negociacaoViewHolder.replyIcon.setVisibility(View.VISIBLE);
+            negociacaoViewHolder.responseIcon.setRotation(0);
+            negociacaoViewHolder.responseIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_response_24dp));
+            negociacaoViewHolder.textViewLastMessage.setTextColor(Color.parseColor("#808080"));
+        } else {
+            negociacaoViewHolder.responseIcon.setRotation(180);
+            negociacaoViewHolder.responseIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_reply_24dp));
+            negociacaoViewHolder.textViewLastMessage.setTextColor(Color.parseColor("#FF00948C"));
         }
     }
 
@@ -76,7 +94,6 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
     }
 
     public int getIndexOfKey(String key){
-        System.out.println("negotiation keys list: " + negotiationKeys);
         return negotiationKeys.indexOf(key);
     }
 
@@ -123,10 +140,12 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
         TextView textViewTituloNegociacao;
         TextView textViewNomeVendedorNegociacao;
         LinearLayout linearLayoutMensagensNaoLidasNegociacao;
-        TextView textViewdataInicioNegociacao;
         TextView textViewMensagensNaoLidasNegociacao;
         TextView textViewLastMessage;
-        ImageView replyIcon;
+        TextView textViewLastmessageTime;
+        ImageView responseIcon;
+        String negotiationKey;
+        int negotiationType;
 
         private Negociacao negociacao;
 
@@ -135,12 +154,12 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
             super(itemLayoutView);
 
             textViewTituloNegociacao = itemLayoutView.findViewById(R.id.textViewTituloNegociacao);
-            textViewNomeVendedorNegociacao = itemLayoutView.findViewById(R.id.textViewNomeVendedorNegociacao);
-            textViewdataInicioNegociacao = itemLayoutView.findViewById(R.id.dataInicioNegociacao);
+            textViewNomeVendedorNegociacao = itemLayoutView.findViewById(R.id.textViewNegocianteChat);
             linearLayoutMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.linearLayoutMensagensNaoLidasNegociacao);
             textViewMensagensNaoLidasNegociacao = itemLayoutView.findViewById(R.id.textViewMensagensNaoLidasNegociacao);
             textViewLastMessage = itemLayoutView.findViewById(R.id.lastMessage);
-            replyIcon = itemLayoutView.findViewById(R.id.replyIcon);
+            textViewLastmessageTime = itemLayoutView.findViewById(R.id.lastMessageTime);
+            responseIcon = itemLayoutView.findViewById(R.id.responseIcon);
 
             itemLayoutView.setOnClickListener(new View.OnClickListener() {
 
@@ -150,6 +169,10 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
                     intent.putExtra("remoteUserId", negociacao.getRemoteUserId());
                     intent.putExtra("adId", negociacao.getAdId());
                     intent.putExtra("adTitle", negociacao.getTitle());
+                    intent.putExtra("negotiationKey", negotiationKey);
+                    intent.putExtra("negotiationType", negotiationType);
+                    intent.putExtra("submitDate", negociacao.getStartDate());
+                    intent.putExtra("callerId", Constant.CHAT_CALLER_NEGOTIATION_ADAPTER);
                     context.startActivity(intent);
                 }
             });
