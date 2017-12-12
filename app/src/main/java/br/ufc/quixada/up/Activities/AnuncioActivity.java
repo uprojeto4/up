@@ -92,6 +92,16 @@ public class AnuncioActivity extends BaseActivity {
 
 
         Intent intent = getIntent();
+
+        title = (TextView)findViewById(R.id.textView_title);
+        subtitle = (TextView)findViewById(R.id.textView_describ);
+        price = (TextView)findViewById(R.id.textView_price);
+        anuncianteNome = (TextView) findViewById(R.id.anuncianteNome);
+        avaliacaoVendedor = (TextView) findViewById(R.id.avVendedor);
+        tituloUsuario = (TextView) findViewById(R.id.tituloUsuario);
+        qtd = (Spinner) findViewById(R.id.spinner);
+        fab = (FloatingActionButton) findViewById(R.id.fabNegotiate);
+
         if(intent != null){
             if (intent.hasExtra("position")){
                 position = intent.getIntExtra("position", -1);
@@ -101,31 +111,25 @@ public class AnuncioActivity extends BaseActivity {
                 startFromSearch();
             }
         }
-//        getActionBar().setTitle("Anúncio");
+
+        setListeners();
 
         anuncianteNome = (TextView) findViewById(R.id.anuncianteNome);
         anuncianteFoto = (CircleImageView) findViewById(R.id.profile_image);
 
     }
-
-//<<<<<<< mainActivity4
-    public void start(){
-        Post post = BaseActivity.posts.get(position);
-//=======
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit_perfil, menu);
         return true;
     }
 
-    public void startFromSearch(){
-        post = MainActivity.searchPosts.get(positionSearch);
+    public void startFromSearch() {
+        Post post = MainActivity.searchPosts.get(positionSearch);
 
-//>>>>>>> sprint-final
-
-        TextView title = (TextView)findViewById(R.id.textView_title);
-        TextView subtitle = (TextView)findViewById(R.id.textView_describ);
-        TextView price = (TextView)findViewById(R.id.textView_price);
+        TextView title = (TextView) findViewById(R.id.textView_title);
+        TextView subtitle = (TextView) findViewById(R.id.textView_describ);
+        TextView price = (TextView) findViewById(R.id.textView_price);
         Spinner qtd = (Spinner) findViewById(R.id.spinner);
 
         anuncianteNome = (TextView) findViewById(R.id.anuncianteNome);
@@ -134,37 +138,37 @@ public class AnuncioActivity extends BaseActivity {
 
         title.setText(post.getTitle());
         subtitle.setText(post.getSubtitle());
-        price.setText("R$ "+post.getPrice());
+        price.setText("R$ " + post.getPrice());
 
 
         Query getUserData = databaseReference.child("users").orderByChild("id").equalTo(post.getUserId());
         getUserData.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     User usuarioAnunciante = singleSnapshot.getValue(User.class);
-                    Log.d("nome_anunciane", ""+usuarioAnunciante.getNome());
+                    Log.d("nome_anunciane", "" + usuarioAnunciante.getNome());
                     idAnunciante = usuarioAnunciante.getId();
                     nomeAnunciante = usuarioAnunciante.getNome();
                     fotoPerfilAnunciante = usuarioAnunciante.getFotoPerfil();
-                    anuncianteFotoRef = storage.getReference().child("UsersProfilePictures/"+idAnunciante+"/"+fotoPerfilAnunciante);
+                    anuncianteFotoRef = storage.getReference().child("UsersProfilePictures/" + idAnunciante + "/" + fotoPerfilAnunciante);
                     downloadAnuncianteFoto();
                     anuncianteNome.setText(usuarioAnunciante.getNome());
                     DecimalFormat numberFormat = new DecimalFormat("#.0");
 
-                    if(usuarioAnunciante.getAvVendedor() == 0){
-                        avaliacaoVendedor.setText(""+usuarioAnunciante.getAvVendedor());
-                    }else{
-                        avaliacaoVendedor.setText(""+numberFormat.format(usuarioAnunciante.getAvVendedor()));
+                    if (usuarioAnunciante.getAvVendedor() == 0) {
+                        avaliacaoVendedor.setText("" + usuarioAnunciante.getAvVendedor());
+                    } else {
+                        avaliacaoVendedor.setText("" + numberFormat.format(usuarioAnunciante.getAvVendedor()));
                     }
                     anuncianteNome.setText(usuarioAnunciante.getNome());
-                    avaliacaoVendedor.setText(""+usuarioAnunciante.getAvVendedor());
+                    avaliacaoVendedor.setText("" + usuarioAnunciante.getAvVendedor());
 
-                    if (usuarioAnunciante.getNumVendas() == 0){
+                    if (usuarioAnunciante.getNumVendas() == 0) {
                         tituloUsuario.setText("Novato");
-                    } else if (usuarioAnunciante.getNumVendas() <= 10){
+                    } else if (usuarioAnunciante.getNumVendas() <= 10) {
                         tituloUsuario.setText("Iniciante");
-                    } else if (usuarioAnunciante.getNumVendas() > 10){
+                    } else if (usuarioAnunciante.getNumVendas() > 10) {
                         tituloUsuario.setText("Sênior");
                     }
                 }
@@ -179,30 +183,15 @@ public class AnuncioActivity extends BaseActivity {
         Log.d("id_usuario", post.getUserId());
 
         ArrayList<Integer> qtdList = new ArrayList<Integer>();
-        for (int i = 0; i < post.getQtd(); i++){
-            qtdList.add(i+1);
+        for (int i = 0; i < post.getQtd(); i++) {
+            qtdList.add(i + 1);
         }
 
         ArrayAdapter qtdAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, qtdList);
         qtd.setAdapter(qtdAdapter);
+    }
 
-        title = (TextView)findViewById(R.id.textView_title);
-        subtitle = (TextView)findViewById(R.id.textView_describ);
-        price = (TextView)findViewById(R.id.textView_price);
-        anuncianteNome = (TextView) findViewById(R.id.anuncianteNome);
-        avaliacaoVendedor = (TextView) findViewById(R.id.avVendedor);
-        tituloUsuario = (TextView) findViewById(R.id.tituloUsuario);
-        qtd = (Spinner) findViewById(R.id.spinner);
-        fab = (FloatingActionButton) findViewById(R.id.fabNegotiate);
-
-        Intent intent = getIntent();
-        if (intent != null){
-            position = intent.getIntExtra("position", -1);
-            callerId = intent.getIntExtra("callerId", -1);
-            postId = intent.getStringExtra("postId");
-            start();
-        }
-
+    public void setListeners(){
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -220,7 +209,7 @@ public class AnuncioActivity extends BaseActivity {
         anuncianteNome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (idAnunciante.equals(localUser.getId())){
+                if (idAnunciante.equals(localUser.getId())) {
                     Log.d("EntrouAquiOtario", "entrou neste intent");
                     Intent intent = new Intent(AnuncioActivity.this, PerfilActivity.class);
                     intent.putExtra("idAnunciante", idAnunciante);
@@ -233,14 +222,12 @@ public class AnuncioActivity extends BaseActivity {
                 }
             }
         });
-
     }
 
     public void start(){
-//        Toast.makeText(this, "opa é nois"+post.getTitle(), Toast.LENGTH_SHORT).show();
-//      Post post = BaseActivity.posts.get(position);
+
         if (callerId == Constant.POST_CALLER_MAIN_ACTIVITY) {
-            Post post = BaseActivity.posts.get(position);
+            post = BaseActivity.posts.get(position);
             title.setText(post.getTitle());
             subtitle.setText(post.getSubtitle());
             price.setText("R$ "+post.getPrice());

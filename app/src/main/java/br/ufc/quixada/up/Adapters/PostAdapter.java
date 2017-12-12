@@ -64,9 +64,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     FirebaseAuth user = FirebaseAuth.getInstance();
 
     PostViewHolder vh1;
-
-
-
     View v1;
 
 
@@ -121,6 +118,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 if (MainActivity.isLogged){
 //                        post.addOnWishList(user.getCurrentUser().getUid(), post.getId());
                     DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(user.getCurrentUser().getUid());
+                            Log.d("TAG3", ""+user.getCurrentUser().getUid());
                     postRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
