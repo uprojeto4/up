@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 
     private int numPostsByTime = 3;
     private String lastPositionId;
-    private boolean lastPost = false;
+    protected boolean lastPost = false;
 
     LikeButton likeButton;
 
@@ -183,6 +183,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                lastPost = false;
                 boolean show = false;
                 final Snackbar snackbar = Snackbar.make(recyclerView, "Sinto Muito! não há conexão com a internet.", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Settings", new View.OnClickListener(){
@@ -261,18 +262,6 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
 //        updateProfile();
     }
 
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        handleIntent(intent);
-//    }
-
-//    private void handleIntent(Intent intent) {
-//
-//        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-//            String query = intent.getStringExtra(SearchManager.QUERY);
-//        }
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -345,6 +334,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         BaseActivity.posts = new ArrayList<Post>();
         MainActivity.searchPosts = new ArrayList<Post>();
     }
+
 
     public PostAdapter startAdapter(){
         BaseActivity.posts = new ArrayList<Post>();
@@ -448,6 +438,9 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                                 Log.d("TAG", "postID: " + lastPositionId);
                             }
                         } else {
+                            if (!BaseActivity.posts.contains(post)) {
+                                post.downloadImages(post.getPictures().get(0), postAdapter, post);
+                            }
                             postAdapter.addBottomListItem(post);
                             lastPost = true;
                         }

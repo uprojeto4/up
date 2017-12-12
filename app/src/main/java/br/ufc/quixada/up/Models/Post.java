@@ -49,7 +49,7 @@ import static br.ufc.quixada.up.R.layout.post;
  * Created by Isaac Bruno on 09/10/2017.
  */
 
-    public class Post {
+public class Post {
 
     private String title;
     private String subtitle;
@@ -62,19 +62,17 @@ import static br.ufc.quixada.up.R.layout.post;
     private String id;
     private ArrayList<String> upsList = new ArrayList<String>();
     private byte[] imageCover;
-
-    Post postTemp;
     private long dataCadastro;
 
-//    private List<String> upsList;
-
+    Post postTemp;
     int i;
 
+    public int getUps() {
+        return ups;
+    }
 
-
-    public void save(){
-        DatabaseReference databaseReference = FirebaseConfig.getDatabase();
-        databaseReference.child("posts").child(getId()).setValue(this);
+    private void setUps() {
+        this.ups = upsList.size();
     }
 
     public ArrayList<String> getUpsList() {
@@ -83,14 +81,6 @@ import static br.ufc.quixada.up.R.layout.post;
 
     public void setUpsList(ArrayList<String> upsList) {
         this.upsList = upsList;
-    }
-
-    public int getUps() {
-        return ups;
-    }
-
-    private void setUps() {
-        this.ups = upsList.size();
     }
 
     public Double getPrice() {
@@ -180,105 +170,24 @@ import static br.ufc.quixada.up.R.layout.post;
         return R.drawable.default_img;
     }
 
-    public void up(final String uid, final String id){
-        DatabaseReference postRef = FirebaseConfig.getDatabase().child("posts").child(id);
-        postRef.runTransaction(new Transaction.Handler() {
-
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-
-                Post post = mutableData.getValue(Post.class);
-                if (post == null) {
-                    return Transaction.success(mutableData);
-                }
-
-                ArrayList<String> aux = post.getUpsList();
-                if (post.getUpsList().contains(uid)) {
-                // Unstar the post and remove self from stars
-                    aux.remove(uid);
-                } else {
-                // Star the post and add self to stars
-                    aux.add(uid);
-                }
-                post.setUpsList(aux);
-                post.setUps();
-
-                // Set value and report transaction success
-                mutableData.setValue(post);
-//                mutableData.child("upsList").setValue(post.getUpsList());
-//                mutableData.child("ups").setValue(post.getUps());
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                // Transaction completed
-                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
-            }
-        });
+    @Override
+    public String toString() {
+        return "Post{" +
+                "title='" + title + '\'' +
+                ", subtitle='" + subtitle + '\'' +
+                ", price=" + price +
+                ", qtd=" + qtd +
+                ", categoria='" + categoria + '\'' +
+                ", ups=" + ups +
+                ", upsList=" + upsList +
+                '}';
     }
 
-//    public void addOnWishList (String uid, final String pid){
-//        Log.d("uid", uid);
-//        DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(uid);
-//        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-////                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//                Log.d("single", dataSnapshot+"");
-//                    User u = dataSnapshot.getValue(User.class);
-//                    ArrayList<String> aux = u.getListaDesejos();
-//                    if (u.getListaDesejos().contains(pid)){
-//                        u.getListaDesejos().remove(u.getListaDesejos().indexOf(pid));
-//                        u.save();
-//                    } else{
-//                        aux.add(pid);
-//                        u.setListaDesejos(aux);
-//                        u.save();
-//                    }
-////                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
 
-    public int[] scaleImage(double width, double height){
-
-        Double h;
-        Double w;
-        Double scale;
-        int[] dimensoes = {0,0};
-
-        if (width > height){
-            scale=new Double(68000/width);
-            w =new Double(680);
-            h = new Double(height*(scale/100));
-            Log.d("Widht_Height", ""+h);
-            Log.d("Widht_Height", ""+w);
-            dimensoes[0] = w.intValue();
-            dimensoes[1] = h.intValue();
-            return dimensoes;
-//            file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
-        }else if (height > width){
-            scale=new Double(68000/height);
-            h =new Double(680);
-            w = new Double(width*(scale/100));
-            Log.d("Widht_Height", ""+h);
-            Log.d("Widht_Height", ""+w);
-            dimensoes[0] = w.intValue();
-            dimensoes[1] = h.intValue();
-            return dimensoes;
-//            file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
-        }else{
-            dimensoes[0] = 680;
-            dimensoes[1] = 680;
-            return dimensoes;
-//            file = Bitmap.createScaledBitmap(file, 680, 680, false);
-        }
+    //Métodos especiais
+    public void save(){
+        DatabaseReference databaseReference = FirebaseConfig.getDatabase();
+        databaseReference.child("posts").child(getId()).setValue(this);
     }
 
     public void upload(final ArrayList<Image> images) {
@@ -498,16 +407,76 @@ import static br.ufc.quixada.up.R.layout.post;
         }
     }
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "title='" + title + '\'' +
-                ", subtitle='" + subtitle + '\'' +
-                ", price=" + price +
-                ", qtd=" + qtd +
-                ", categoria='" + categoria + '\'' +
-                ", ups=" + ups +
-                ", upsList=" + upsList +
-                '}';
+    public int[] scaleImage(double width, double height){
+
+        Double h;
+        Double w;
+        Double scale;
+        int[] dimensoes = {0,0};
+
+        if (width > height){
+            scale=new Double(68000/width);
+            w =new Double(680);
+            h = new Double(height*(scale/100));
+            Log.d("Widht_Height", ""+h);
+            Log.d("Widht_Height", ""+w);
+            dimensoes[0] = w.intValue();
+            dimensoes[1] = h.intValue();
+            return dimensoes;
+//            file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
+        }else if (height > width){
+            scale=new Double(68000/height);
+            h =new Double(680);
+            w = new Double(width*(scale/100));
+            Log.d("Widht_Height", ""+h);
+            Log.d("Widht_Height", ""+w);
+            dimensoes[0] = w.intValue();
+            dimensoes[1] = h.intValue();
+            return dimensoes;
+//            file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
+        }else{
+            dimensoes[0] = 680;
+            dimensoes[1] = 680;
+            return dimensoes;
+//            file = Bitmap.createScaledBitmap(file, 680, 680, false);
+        }
+    }
+
+    public void up(final String uid, final String id){
+        DatabaseReference postRef = FirebaseConfig.getDatabase().child("posts").child(id);
+        postRef.runTransaction(new Transaction.Handler() {
+
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+
+                Post post = mutableData.getValue(Post.class);
+                if (post == null) {
+                    return Transaction.success(mutableData);
+                }
+
+                ArrayList<String> aux = post.getUpsList();
+                if (post.getUpsList().contains(uid)) {
+                    // Unstar the post and remove self from stars
+                    aux.remove(uid);
+                } else {
+                    // Star the post and add self to stars
+                    aux.add(uid);
+                }
+                post.setUpsList(aux);
+                post.setUps();
+
+                // Set value and report transaction success
+                mutableData.setValue(post);
+//                mutableData.child("upsList").setValue(post.getUpsList());
+//                mutableData.child("ups").setValue(post.getUps());
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
+            }
+        });
     }
 }

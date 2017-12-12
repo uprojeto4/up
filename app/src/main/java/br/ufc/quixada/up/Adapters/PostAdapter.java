@@ -98,6 +98,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         if(post.getImageCover()!= null){
             applyImage(post.getImageCover(), holder.image);
             Log.d("chamou","applyImage");
+        }else{
+            holder.image.setImageResource(post.getDefaultImage());
         }
 
         if (post.getUpsList()!= null){
@@ -111,6 +113,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.subtitle.setText(post.getSubtitle());
         holder.price.setText("R$ " + price);
         holder.post = post;
+
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -247,56 +250,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     post.up(user.getCurrentUser().getUid(), post.getId());
                 }
             });
-
-//            likeButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-////                    likeButton.onClick(view);
-//                    likeButton.setLiked(true);
-//                    if (MainActivity.isLogged){
-////                        post.addOnWishList(user.getCurrentUser().getUid(), post.getId());
-//                        DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(user.getCurrentUser().getUid());
-//                        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-////                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//                                Log.d("single", dataSnapshot+"");
-//                                User u = dataSnapshot.getValue(User.class);
-//                                ArrayList<String> aux = u.getListaDesejos();
-//                                if (u.getListaDesejos().contains(post.getId())){
-////                                    likeButton.setLiked(false);
-//                                    u.getListaDesejos().remove(u.getListaDesejos().indexOf(post.getId()));
-//                                    u.save();
-//                                } else{
-//                                    aux.add(post.getId());
-////                                    likeButton.setLiked(true);
-//                                    u.setListaDesejos(aux);
-//                                    u.save();
-//                                }
-////                }
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//                    } else{
-//                        new AlertDialog.Builder(view.getContext())
-//                                .setTitle(R.string.no_address_dialog_title)
-//                                .setMessage(view.getContext().getString(R.string.faca_login))
-//                                .setPositiveButton(view.getContext().getString(R.string.sim), new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        //                            finish();
-//                                        Intent intent = new Intent(v1.getContext(), LoginActivity.class);
-//                                        context.startActivity(intent);
-//                                    }
-//                                }).setNegativeButton(view.getContext().getString(R.string.nao), null)
-//                                .show();
-//                    }
-//                }
-//            });
         }
 
         @Override
