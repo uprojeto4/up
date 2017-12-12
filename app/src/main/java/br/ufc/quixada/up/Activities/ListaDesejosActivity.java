@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -69,6 +70,7 @@ public class ListaDesejosActivity extends BaseActivity {
 
     ArrayList<String> filters = new ArrayList<>();
 
+    NavigationView navigationView;
 
 
 
@@ -86,7 +88,7 @@ public class ListaDesejosActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 //        likeButton = (LikeButton) findViewById(R.id.heart_button);
@@ -143,6 +145,13 @@ public class ListaDesejosActivity extends BaseActivity {
             updateUserInfo();
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_lista_desejos);
+        menuItem.setChecked(true);
     }
 
     @Override

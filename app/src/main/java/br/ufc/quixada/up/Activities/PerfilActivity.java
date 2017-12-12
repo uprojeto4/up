@@ -64,6 +64,8 @@ public class PerfilActivity extends BaseActivity {
 
     public int fragmentASerAberta;
 
+    NavigationView navigationView;
+
 //    public static String logradouro;
 //    public static String numero;
 //    public static String complemento;
@@ -104,7 +106,7 @@ public class PerfilActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(nav_view);
+        navigationView = (NavigationView) findViewById(nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -174,18 +176,18 @@ public class PerfilActivity extends BaseActivity {
     @Override
     public void onResume(){
         super.onResume();
-//        Intent intent = getIntent();
-//        fragmentASerAberta = intent.getIntExtra("fragment", 0);
-//        perfilTabLayout.setupWithViewPager(perfilViewPager);
 
+        if(fragmentASerAberta == 0){
+            MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_perfil);
+            menuItem.setChecked(true);
+        }else {
+            MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_meus_anuncios);
+            menuItem.setChecked(true);
+        }
 
         fotoPerfil = localUser.getFotoPerfil();
         localUser.setFotoPerfil(fotoPerfil);
         nome = localUser.getNome();
-//        Toast.makeText(this,"foto do local user on resume activity "+fotoPerfil, Toast.LENGTH_LONG).show();
-
-//        Log.d("FOTO PERFIL", fotoPerfil);
-//        fotoPerfil = firebasePreferences.getProfilePicture();
     }
 
     @Override

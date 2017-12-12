@@ -78,6 +78,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
     PostAdapter postAdapter;
+    NavigationView navigationView;
 
     public static Post searchPost;
     String searchTerm;
@@ -131,7 +132,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View nav_view =  navigationView.getHeaderView(0);
 
@@ -329,6 +330,13 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         });
 
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_inicio);
+        menuItem.setChecked(true);
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import br.ufc.quixada.up.Models.User;
@@ -26,6 +27,8 @@ public class CategoriasActivity extends BaseActivity {
     private int[] icones;
     private ArrayList<Category> arrayListCategorias;
     private CategoriasAdapter adapter;
+
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public class CategoriasActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         if(user != null) {
@@ -68,6 +71,13 @@ public class CategoriasActivity extends BaseActivity {
         if(user != null){
             updateUserInfo();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_categorias);
+        menuItem.setChecked(true);
     }
 
     @Override

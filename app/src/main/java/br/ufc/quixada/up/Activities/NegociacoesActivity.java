@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -52,6 +53,8 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
     ArrayList<String> filters = new ArrayList<>();
     private NegociacoesFragmentPagerAdapter negociacoesFragmentPagerAdapter;
 
+    NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +78,7 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         dbReference = FirebaseConfig.getDatabase();
@@ -115,6 +118,13 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
         if(user != null){
             updateUserInfo();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_negociacoes);
+        menuItem.setChecked(true);
     }
 
     @Override

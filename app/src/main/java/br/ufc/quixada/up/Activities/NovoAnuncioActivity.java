@@ -22,6 +22,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -80,6 +81,8 @@ public class NovoAnuncioActivity extends BaseActivity {
     private ArrayList<Image> images = new ArrayList<>();
     Locale locale = new Locale("pt", "BR");
 
+    NavigationView navigationView;
+
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     StorageReference storageReference;
     StorageReference imageRef;
@@ -105,7 +108,7 @@ public class NovoAnuncioActivity extends BaseActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -225,6 +228,14 @@ public class NovoAnuncioActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_anuncio);
+        menuItem.setChecked(true);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
