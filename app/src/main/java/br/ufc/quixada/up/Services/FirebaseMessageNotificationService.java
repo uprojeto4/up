@@ -32,11 +32,12 @@ public class FirebaseMessageNotificationService extends FirebaseMessagingService
         String adTitle = remoteMessage.getData().get("adTitle");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                                            .setSmallIcon(R.mipmap.ic_launcher)
+                                            .setSmallIcon(R.drawable.ic_notification)
                                             .setContentTitle(notificationTitle)
                                             .setContentText(notificationMessage)
                                             .setDefaults(Notification.DEFAULT_ALL)
-                                            .setPriority(Notification.PRIORITY_HIGH);
+                                            .setPriority(Notification.PRIORITY_HIGH)
+                                            .setAutoCancel(true);
 
         Intent resultIntent = new Intent(clickAction);
         resultIntent.putExtra("adId", adId);

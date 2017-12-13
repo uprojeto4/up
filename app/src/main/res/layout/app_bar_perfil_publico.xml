@@ -26,7 +26,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_perfil_publico"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal">
+
+        <include
+            layout="@layout/content_perfil_publico"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <!--<android.support.design.widget.FloatingActionButton-->
     <!--android:id="@+id/fab"-->
