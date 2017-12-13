@@ -15,7 +15,6 @@ public class PerfilPublicoActivity extends BaseActivity {
 
     private TabLayout perfilTabLayout;
     public static ViewPager perfilViewPager;
-
     public static String anuncianteId;
 
     public static boolean isActivityOpen;
@@ -26,7 +25,6 @@ public class PerfilPublicoActivity extends BaseActivity {
         setContentView(R.layout.activity_perfil_publico);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarPP);
         setSupportActionBar(toolbar);
-
 
         if (getSupportActionBar() != null) {
 

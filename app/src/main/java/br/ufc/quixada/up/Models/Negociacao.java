@@ -1,5 +1,28 @@
 package br.ufc.quixada.up.Models;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+
+import br.ufc.quixada.up.Adapters.NegociacoesAdapter;
+import br.ufc.quixada.up.Adapters.PostAdapter;
+import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Utils.DateTimeControl;
 
 /**
@@ -21,6 +44,9 @@ public class Negociacao {
     private long lastMessageTime;
     private String messagesId;
     private int status;
+    private byte[] imageCover;
+    private Negociacao negotiationTemp;
+    private DatabaseReference reference = FirebaseConfig.getDatabase();
 
     public Negociacao() { }
 
@@ -130,5 +156,59 @@ public class Negociacao {
 
     public void setLastMessageTime(long lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
+    }
+
+    public byte[] getImageCover() {
+        return imageCover;
+    }
+
+    public void setImageCover(byte[] imageCover) {
+        this.imageCover = imageCover;
+    }
+
+    public void downloadCover(final NegociacoesAdapter adapter, final Negociacao negociacao){
+
+        final StorageReference storageReference = FirebaseConfig.getStorage();
+        this.negotiationTemp = negociacao;
+
+        Log.d("imageNameTAG", "" + negociacao);
+
+        reference.child("posts").child(negociacao.getAdId()).child("pictures").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String fileName = dataSnapshot.child("0").getValue(String.class);
+                final StorageReference imageRef = storageReference.child("PostsPictures/" + negociacao.getAdId() + "/thumb_" + fileName);
+                try {
+                    final File localFile = File.createTempFile("jpg", "image");
+                    imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            negociacao.setImageCover(stream.toByteArray());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                } catch (IOException e){
+                    e.printStackTrace();
+                    Log.e("Main", "IOE exception");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

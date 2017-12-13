@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -88,6 +90,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         vh1 = holder;
 
         final Post post = posts.get(position);
+
+        final int pos = position;
 
 //        Log.d("entrou", "netrou");
 
@@ -208,6 +212,52 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         if (holder.post.getUserId().equals(BaseActivity.localUserId)) {
             holder.openChatButton.setVisibility(View.GONE);
             holder.markAsSelled.setVisibility(View.VISIBLE);
+            holder.markAsSelled.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    new AlertDialog.Builder(view.getContext())
+                            .setTitle(R.string.action_marcar_anuncio_vendido)
+                            .setMessage(R.string.texto_marcar_vendido_anuncio)
+                            .setPositiveButton(R.string.action_marcar_anuncio_vendido, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DatabaseReference post_node = FirebaseDatabase.getInstance().getReference().getRoot().child("posts").child(holder.post.getId());
+                                    post_node.setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(view.getContext(), "Anúncio finalizado", Toast.LENGTH_SHORT).show();
+                                            removeListItem(pos);
+                                        }
+                                    });
+                                }
+                            }).setNegativeButton(R.string.cancelar, null)
+                            .show();
+                }
+            });
+            holder.buttonDelete.setVisibility(View.VISIBLE);
+            holder.buttonDelete.setClickable(true);
+            holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    new AlertDialog.Builder(view.getContext())
+                            .setTitle(R.string.excluir_anuncio_dialog_title)
+                            .setMessage(R.string.excluir_anuncio_dialog_text)
+                            .setPositiveButton(R.string.excluir_anuncio_dialog_title, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DatabaseReference post_node = FirebaseDatabase.getInstance().getReference().getRoot().child("posts").child(holder.post.getId());
+                                    post_node.setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(view.getContext(), "Anúncio removido", Toast.LENGTH_SHORT).show();
+                                            removeListItem(pos);
+                                        }
+                                    });
+                                }
+                            }).setNegativeButton(R.string.cancelar, null)
+                            .show();
+                }
+            });
         } else {
             holder.openChatButton.setVisibility(View.VISIBLE);
             holder.markAsSelled.setVisibility(View.GONE);
@@ -225,6 +275,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView price;
         ImageView image;
         LikeButton likeButton;
+        ImageView buttonDelete;
 
         private Button openChatButton;
         private Button markAsSelled;
@@ -238,7 +289,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             price = (TextView) itemView.findViewById(R.id.textView_price);
             image = (ImageView) itemView.findViewById(R.id.imageView3);
             likeButton = (LikeButton) itemView.findViewById(R.id.heart_button);
-
+            buttonDelete = (ImageView) itemView.findViewById(R.id.buttonDelete);
 
             itemView.setOnClickListener(this);
 
@@ -326,6 +377,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         notifyItemChanged(position);
     }
 
+    public void removeListItem(int position) {
+        posts.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public int searchListItem(String id){
         for(Post i : posts) {
             if (id.equals(i.getId())) {
@@ -338,7 +394,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void applyImage(byte[] bytes, ImageView imageView){
         //options para o glide
         RequestOptions requestOptions = new RequestOptions();
-        //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
+        //não salva a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
         requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
         requestOptions.skipMemoryCache(true);
 

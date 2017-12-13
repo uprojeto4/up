@@ -7,6 +7,7 @@
     <string name="action_settings">Configurações</string>
 
     <string name="action_finalizar_negociacao">Finalizar Negociação</string>
+    <string name="action_marcar_anuncio_vendido">Marcar como vendido</string>
 
     <string name="navigation_drawer_inicio">Início</string>
     <string name="navigation_drawer_novo_anuncio">Novo anúncio</string>
@@ -68,6 +69,10 @@
     <string name="text_view_quantidade">Quantidade</string>
 
     <string name="alert_sair_sem_salvar_message">Se você sair, as informações que você inseriu serão perdidas.</string>
+
+    <string name="texto_marcar_vendido_anuncio">Ao marcar um anúncio como vendido, ele não aparecerá mais no Up. Deseja continuar?</string>
+    <string name="excluir_anuncio_dialog_title">Remover anúncio</string>
+    <string name="excluir_anuncio_dialog_text">Tem certeza de que deseja remover este anúncio?</string>
 
     <!--Ações comuns-->
     <string name="sim">Sim</string>
@@ -143,7 +148,7 @@
     <string name="label_no_buy">Você ainda não iniciou nenhuma negociação.</string>
     <string name="label_no_sell">Ninguém iniciou uma negociação com você, ainda.</string>
 
-    <string name="label_no_messages">Ainda não há mensagens. Comece dizendo alguma coisa!</string>
+    <string name="label_no_messages">Ainda não há mensagens.</string>
 
     <string name="anunciado_por">Anunciado por</string>
     <string name="title_activity_perfil_publico">PerfilPublicoActivity</string>
@@ -156,5 +161,7 @@
 
     <string name="searchNotFound">Desculpe, não encontramos nenhum anúncio com esse título
         :(\n\ntente buscar com outros termos</string>
+
+    <string name="negociacao_finalizada_message">Essa negociação foi finalizada. \nVocê não pode enviar ou receber mensagens, mas ainda pode acessar todo o histórico.</string>
 
 </resources>
