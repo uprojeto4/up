@@ -17,14 +17,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import br.ufc.quixada.up.Activities.BaseActivity;
-import br.ufc.quixada.up.Activities.NegociacoesActivity;
-import br.ufc.quixada.up.Activities.PerfilActivity;
 import br.ufc.quixada.up.Activities.PerfilPublicoActivity;
 import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Post;
-import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 
 /**
@@ -62,7 +58,7 @@ public class fragmentPerfilAnuncios extends Fragment{
                     post = singleSnapshot.getValue(Post.class);
 
                     if(!posts.contains(post)){
-                        post.downloadImages(post.getPictures().get(0), meusAnunciosAdapter, post);
+                        post.downloadImageCover(post.getPictures().get(0), meusAnunciosAdapter, post);
                     }
                     meusAnunciosAdapter.addTopListItem(post);
                 }

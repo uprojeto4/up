@@ -155,5 +155,6 @@
 
     <string name="searchNotFound">Desculpe, não encontramos nenhum anúncio com esse título
         :(\n\ntente buscar com outros termos</string>
+    <string name="title_activity_photo">PhotoActivity</string>
 
 </resources>

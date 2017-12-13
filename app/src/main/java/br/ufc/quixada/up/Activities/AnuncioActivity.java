@@ -6,27 +6,23 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,8 +30,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageReference;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -47,9 +41,8 @@ import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Models.User;
+import br.ufc.quixada.up.PhotoActivity;
 import br.ufc.quixada.up.R;
-import br.ufc.quixada.up.Utils.ChatControl;
-import br.ufc.quixada.up.Utils.FirebasePreferences;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AnuncioActivity extends BaseActivity {
@@ -65,6 +58,7 @@ public class AnuncioActivity extends BaseActivity {
     TextView anuncianteNome;
     TextView avaliacaoVendedor;
     TextView tituloUsuario;
+    ImageView imageView;
 
     CircleImageView anuncianteFoto;
 
@@ -77,6 +71,10 @@ public class AnuncioActivity extends BaseActivity {
     int callerId;
     String postId;
     FloatingActionButton fab;
+    public static ArrayList<byte[]> pictures;
+    ArrayList<ImageView> images;
+    GridLayout gridLayout;
+    int index;
 
 //    User usuarioAnunciante;
 
@@ -101,6 +99,7 @@ public class AnuncioActivity extends BaseActivity {
         tituloUsuario = (TextView) findViewById(R.id.tituloUsuario);
         qtd = (Spinner) findViewById(R.id.spinner);
         fab = (FloatingActionButton) findViewById(R.id.fabNegotiate);
+        imageView = (ImageView) findViewById(R.id.imageView4);
 
         if(intent != null){
             if (intent.hasExtra("position")){
@@ -112,12 +111,15 @@ public class AnuncioActivity extends BaseActivity {
             }
         }
 
+        downloadPictures(post);
+        index = 0;
         setListeners();
 
         anuncianteNome = (TextView) findViewById(R.id.anuncianteNome);
         anuncianteFoto = (CircleImageView) findViewById(R.id.profile_image);
 
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit_perfil, menu);
@@ -125,7 +127,7 @@ public class AnuncioActivity extends BaseActivity {
     }
 
     public void startFromSearch() {
-        Post post = MainActivity.searchPosts.get(positionSearch);
+        post = MainActivity.searchPosts.get(positionSearch);
 
         TextView title = (TextView) findViewById(R.id.textView_title);
         TextView subtitle = (TextView) findViewById(R.id.textView_describ);
@@ -231,6 +233,7 @@ public class AnuncioActivity extends BaseActivity {
             title.setText(post.getTitle());
             subtitle.setText(post.getSubtitle());
             price.setText("R$ "+post.getPrice());
+//            this.applyImage(post.getImageCover(), imageView);
             if (localUserId.equals(post.getUserId())) {
                 fab.setVisibility(View.GONE);
             }
@@ -324,7 +327,7 @@ public class AnuncioActivity extends BaseActivity {
                     //transforma o stream em um array de bytes
                     image = stream.toByteArray();
                     //método que aplica a imagem nos lugares desejsdos
-                    applyImageAnunciante(image);
+                    applyImage(image, anuncianteFoto);
 //                    Toast.makeText(getActivity(),profilePictureRef.getName(), Toast.LENGTH_LONG).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -341,14 +344,118 @@ public class AnuncioActivity extends BaseActivity {
         }
     }
 
-    public void applyImageAnunciante(byte[] imagem){
+    public Task<byte[]> downloadImage(String path){
+        StorageReference storageReference = FirebaseConfig.getStorage()
+                .child("PostsPictures/" + post.getId() + "/" + path);
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        Task<byte[]> task = storageReference.getBytes(ONE_MEGABYTE);
+
+        return task;
+    }
+
+    public void downloadPictures(Post post){
+        pictures = new ArrayList<byte[]>();
+        images = new ArrayList<ImageView>();
+        gridLayout = (GridLayout) findViewById(R.id.miniaturas);
+
+        images.add((ImageView) findViewById(R.id.image0));
+        images.add((ImageView) findViewById(R.id.image1));
+        images.add((ImageView) findViewById(R.id.image2));
+        images.add((ImageView) findViewById(R.id.image3));
+        images.add((ImageView) findViewById(R.id.image4));
+        images.add((ImageView) findViewById(R.id.image5));
+        images.add((ImageView) findViewById(R.id.image6));
+        images.add((ImageView) findViewById(R.id.image7));
+        images.add((ImageView) findViewById(R.id.image8));
+        images.add((ImageView) findViewById(R.id.image9));
+
+        for(int i = 0; i < post.getPictures().size(); i++){
+            StorageReference storageReference = FirebaseConfig.getStorage()
+                    .child("PostsPictures/" + post.getId() + "/" + post.getPictures().get(i));
+
+            final long ONE_MEGABYTE = 1024 * 1024;
+            storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>(){
+                @Override
+                //monitora o sucesso do download
+                public void onSuccess(byte[] bytes) {
+                    Log.d("TAG","Imagem baixada com sucesso! ");
+                    pictures.add(bytes);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                //monitora a falha do downlaod
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("TAG","Imagem não foi baixada! "+e);
+
+                }
+            }).addOnCompleteListener(new OnCompleteListener<byte[]>() {
+                @Override
+                public void onComplete(@NonNull Task<byte[]> task){
+//                Log.d("TAG","Imagem terminou de ser baixada! "+task.getResult());
+                    Log.d("TAG","Imagem terminou de ser baixada! "+task.getResult());
+                    ImageView imageView = (ImageView)findViewById(R.id.imageView4);
+                    applyImage(pictures.get(0),(ImageView)findViewById(R.id.imageView4));
+                    for(int i = 0; i < pictures.size(); i++){
+                        applyImage(pictures.get(i), images.get(i));
+                    }
+                }
+            });
+
+//            GridLayout.Spec row = GridLayout.spec(0);
+//            GridLayout.Spec column = GridLayout.spec(i);
+//            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams(row, column);
+////            DrawerLayout.LayoutParams imageParams = new DrawerLayout.LayoutParams();
+////            ImageView imageView = new ImageView(this);
+//            ImageView imageView = (ImageView)findViewById(R.id.image0);
+////            imageView.setImageResource(R.drawable.default_img);
+//            gridLayout.addView(imageView, layoutParams);
+
+            images.get(i).setVisibility(View.VISIBLE);
+
+        }
+    }
+
+    public void fullImage(View view){
+        Intent intent = new Intent(this, PhotoActivity.class);
+        intent.putExtra("index", index);
+        startActivity(intent);
+    }
+
+    public void setImage(View view){
+        ImageView thumb = (ImageView)view;
+        view.setBackgroundResource(R.drawable.border);
+        view.setSelected(true);
+        ImageView imageView = (ImageView)findViewById(R.id.imageView4);
+        imageView.setImageDrawable(thumb.getDrawable());
+        index = images.indexOf(thumb);
+    }
+
+    public void share(View view){
+        TextView textView_title = (TextView)findViewById(R.id.textView_title);
+        TextView textView_describ = (TextView)findViewById(R.id.textView_describ);
+        TextView textView_price = (TextView)findViewById(R.id.textView_price);
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, textView_title.getText() +
+                " - " + textView_describ.getText() +
+                " - " + textView_price.getText());
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
+    public void up(View view){
+
+    }
+
+    public void applyImage(byte[] imagem, ImageView  image){
         RequestOptions requestOptions = new RequestOptions();
         //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
         requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
         requestOptions.skipMemoryCache(true);
         Glide.with(this).load(imagem)
                 .apply(requestOptions)
-                .into(anuncianteFoto);
+                .into(image);
     }
-
 }

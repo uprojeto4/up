@@ -4,10 +4,8 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -20,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,24 +33,18 @@ import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
 
 import br.ufc.quixada.up.Adapters.NovoAnuncioRecyclerViewImageAdapter;
-import br.ufc.quixada.up.Adapters.PostAdapter;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.R;
 import br.ufc.quixada.up.Utils.DateTimeControl;
@@ -374,7 +365,7 @@ public class NovoAnuncioActivity extends BaseActivity {
                 post.setDataCadastro(DateTimeControl.getCurrentDateTime());
         //        Toast.makeText(this, "opa: "+post.toString(), Toast.LENGTH_SHORT).show();
 
-                post.upload(images);
+                post.uploadPost(images);
                 this.finish();
         }else{
             Toast.makeText(this, "Por favor, preencha todos os campos!", Toast.LENGTH_SHORT).show();

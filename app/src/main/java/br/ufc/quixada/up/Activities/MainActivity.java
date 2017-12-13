@@ -1,17 +1,10 @@
 package br.ufc.quixada.up.Activities;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,45 +22,26 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.util.Util;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.like.LikeButton;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.like.Utils;
 
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
 import br.ufc.quixada.up.Models.Constant;
-import br.ufc.quixada.up.Models.Message;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Adapters.PostAdapter;
-import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
-import br.ufc.quixada.up.TesteActivity;
-import br.ufc.quixada.up.Utils.ChatControl;
-import br.ufc.quixada.up.Utils.FirebasePreferences;
 import br.ufc.quixada.up.Utils.Network;
 
 public class MainActivity extends BaseActivity implements RecyclerViewOnClickListener{
@@ -379,7 +353,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                         }else{
                             recyclerView.scrollToPosition(0);
                             if(!BaseActivity.posts.contains(post)){
-                                post.downloadImages(post.getPictures().get(0), postAdapter, post);
+                                post.downloadImageCover(post.getPictures().get(0), postAdapter, post);
                             }
                             Log.d("testando", "entrou");
                             postAdapter.addTopListItem(post);
@@ -428,7 +402,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                         if (dataSnapshot.getChildrenCount() == numPostsByTime) {
                             if (last > 1) {
                                 if (!BaseActivity.posts.contains(post)) {
-                                    post.downloadImages(post.getPictures().get(0), postAdapter, post);
+                                    post.downloadImageCover(post.getPictures().get(0), postAdapter, post);
                                 }
                                 Log.d("testando", "entrou");
                                 postAdapter.addBottomListItem(post);
@@ -439,7 +413,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                             }
                         } else {
                             if (!BaseActivity.posts.contains(post)) {
-                                post.downloadImages(post.getPictures().get(0), postAdapter, post);
+                                post.downloadImageCover(post.getPictures().get(0), postAdapter, post);
                             }
                             postAdapter.addBottomListItem(post);
                             lastPost = true;
@@ -469,10 +443,9 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
         postsReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                if(!posts.contains(dataSnapshot)){
-//                    post.downloadImages(post.getPictures().get(0), postAdapter, posts.indexOf(post));
+//                if(!BaseActivity.posts.contains(dataSnapshot.getValue(Post.class))){
+//                    Log.d("lepo", "entrou");
 //                }
-                Log.d("lepo", "entrou");
             }
 
             @Override
