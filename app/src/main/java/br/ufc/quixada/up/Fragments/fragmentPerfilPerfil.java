@@ -590,19 +590,22 @@ public class fragmentPerfilPerfil extends Fragment {
         requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
         requestOptions.skipMemoryCache(true);
 
-        //carrega a imagem
-        Glide.with(this).load(bytes)
-                //aplica as options de cache
-                .apply(requestOptions)
-                //aplica as options de transformação
-                .apply(RequestOptions.bitmapTransform(multi))
-                //insere a imagem no imageView
-                .into((ImageView) getView().findViewById((R.id.header_cover_image)));
+        if (PerfilActivity.isActivityOpen || PerfilPublicoActivity.isActivityOpen){
+            Glide.with(this).load(bytes)
+                    //aplica as options de cache
+                    .apply(requestOptions)
+                    //aplica as options de transformação
+                    .apply(RequestOptions.bitmapTransform(multi))
+                    //insere a imagem no imageView
+                    .into((ImageView) getView().findViewById((R.id.header_cover_image)));
 
-        Glide.with(this).load(bytes)
-                .apply(requestOptions)
-                .apply(RequestOptions.bitmapTransform(new RoundedCorners(200)))
-                .into((ImageView) getView().findViewById((R.id.profile_image)));
+            Glide.with(this).load(bytes)
+                    .apply(requestOptions)
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(200)))
+                    .into((ImageView) getView().findViewById((R.id.profile_image)));
+        }
+
+        //carrega a imagem
     }
 
     @Override

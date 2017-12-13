@@ -159,7 +159,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
             public void onRefresh() {
                 lastPost = false;
                 boolean show = false;
-                final Snackbar snackbar = Snackbar.make(recyclerView, "Sinto Muito! não há conexão com a internet.", Snackbar.LENGTH_INDEFINITE)
+                final Snackbar snackbar = Snackbar.make(recyclerView, "Que pena! Não há conexão com a internet.", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Settings", new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
@@ -369,7 +369,7 @@ public class MainActivity extends BaseActivity implements RecyclerViewOnClickLis
                 }
             });
         }else{
-            Snackbar.make(recyclerView, "Sinto Muito! não há conexão com a internet.", Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(recyclerView, "Que pena! Não há conexão com a internet.", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Settings", new View.OnClickListener(){
                         @Override
                         public void onClick(View v) {

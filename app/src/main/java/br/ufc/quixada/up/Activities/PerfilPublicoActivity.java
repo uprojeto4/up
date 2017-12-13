@@ -15,8 +15,9 @@ public class PerfilPublicoActivity extends BaseActivity {
 
     private TabLayout perfilTabLayout;
     public static ViewPager perfilViewPager;
-
     public static String anuncianteId;
+
+    public static boolean isActivityOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,6 @@ public class PerfilPublicoActivity extends BaseActivity {
         setContentView(R.layout.activity_perfil_publico);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarPP);
         setSupportActionBar(toolbar);
-
 
         if (getSupportActionBar() != null) {
 
@@ -42,6 +42,8 @@ public class PerfilPublicoActivity extends BaseActivity {
 //        perfilViewPager.setCurrentItem(fragmentASerAberta);
 
         perfilTabLayout.setupWithViewPager(perfilViewPager);
+
+        isActivityOpen = true;
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,6 +55,7 @@ public class PerfilPublicoActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        isActivityOpen = true;
         Intent intent = getIntent();
         anuncianteId = intent.getStringExtra("idAnunciante");
         getSupportActionBar().setTitle(intent.getStringExtra("nomeAnunciante"));
@@ -63,5 +66,20 @@ public class PerfilPublicoActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         anuncianteId = null;
+        isActivityOpen = false;
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isActivityOpen = false;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityOpen = true;
+
     }
 }

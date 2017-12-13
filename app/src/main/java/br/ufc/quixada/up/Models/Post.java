@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -490,7 +491,7 @@ public class Post {
         });
     }
 
-    public void downloadImagesForSearchResult(String path, final SearchResultsAdapter searchResultsAdapter, final Post post){
+    public void downloadImagesForSearchResult(String path, final RecyclerView.Adapter searchResultsAdapter, final Post post){
         StorageReference storageReference = FirebaseConfig.getStorage();
         StorageReference imageRef;
 

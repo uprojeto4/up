@@ -81,7 +81,7 @@
                     android:paddingRight="16dp">
 
                     <TextView
-                        android:id="@+id/LD_textView_title"
+                        android:id="@+id/lista_textView_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
@@ -90,7 +90,7 @@
                         android:textSize="24sp" />
 
                     <TextView
-                        android:id="@+id/LD_textView_describ"
+                        android:id="@+id/lista_textView_describ"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -98,7 +98,7 @@
                         android:text="Apenas uma breve desrição do produto nada que seja maior do que tres linhas" />
 
                     <TextView
-                        android:id="@+id/LD_textView_price"
+                        android:id="@+id/lista_textView_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -111,7 +111,7 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/LD_imageView_photo"
+                    android:id="@+id/lista_imageView_photo"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_gravity="right"

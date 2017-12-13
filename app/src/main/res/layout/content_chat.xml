@@ -1,76 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <LinearLayout
-        android:id="@+id/noMessagesLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/editTextMessageInput"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
 
-        <TextView
-            android:id="@+id/noMessagesLabel"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/noMessagesLayout"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
+                android:id="@+id/noMessagesLabel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/label_no_messages"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewConversation"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical"
+            android:visibility="gone"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/label_no_messages"
-            android:textAlignment="center" />
-    </LinearLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="0dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:id="@+id/constraintLayout">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewConversation"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="4dp"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"
-        android:visibility="gone"
-        app:layoutManager="LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/editTextMessageInput"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+            <TextView
+                android:id="@+id/negociacaoFinalizadaLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/item_info_message_background"
+                android:padding="8dp"
+                android:text="@string/negociacao_finalizada_message"
+                android:textAlignment="center"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextMessageInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="@string/escreva_mensagem"
-        android:inputType="textMultiLine"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/buttonSend"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+            <EditText
+                android:id="@+id/editTextMessageInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:ems="10"
+                android:hint="@string/escreva_mensagem"
+                android:inputType="textMultiLine"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/buttonSend" />
 
-    <Button
-        android:id="@+id/buttonSend"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginRight="8dp"
-        android:text="@string/enviar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="8dp" />
+            <Button
+                android:id="@+id/buttonSend"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/enviar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+        </android.support.constraint.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

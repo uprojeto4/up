@@ -34,11 +34,11 @@ import br.ufc.quixada.up.Adapters.NegociacoesAdapter;
 import br.ufc.quixada.up.Adapters.NegociacoesFragmentPagerAdapter;
 import br.ufc.quixada.up.DAO.FirebaseConfig;
 import br.ufc.quixada.up.Fragments.ComprasFragment;
-import br.ufc.quixada.up.Interfaces.NegotiationFragmentDisplay;
+import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Models.Negociacao;
 import br.ufc.quixada.up.R;
 
-public class NegociacoesActivity extends BaseActivity implements NegotiationFragmentDisplay {
+public class NegociacoesActivity extends BaseActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -148,17 +148,28 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
+                        String title = dataSnapshot.child("title").getValue(String.class);
+                        if (title == null) {
+                            title = "Anúncio finalizado";
+                            negociacao.setStatus(Constant.CLOSED_NEGOTIATION);
+                        }
+                        negociacao.setTitle(title);
 
                         dbReference.child("users").child(remoteUserId).addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                String vendorName = dataSnapshot.child("nome").getValue(String.class);
+                                if (vendorName == null) {
+                                    vendorName = "Usuário removido";
+                                }
+                                negociacao.setVendorName(vendorName);
 
-                                negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
                                 if (negociacao.getVendorId().equals(userId)) {
+                                    negociacao.downloadCover(sellAdapter, negociacao);
                                     sellAdapter.addNegociacao(negotiationKey, negociacao);
                                 } else {
+                                    negociacao.downloadCover(buyAdapter, negociacao);
                                     buyAdapter.addNegociacao(negotiationKey, negociacao);
                                 }
                             }
@@ -183,21 +194,28 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
                 final Negociacao negociacao = dataSnapshot.getValue(Negociacao.class);
                 final String negotiationKey = dataSnapshot.getKey();
 
-//                    manageNegotiationsVisibility(Constant.SHOW_BUY_NEGOTIATIONS);
-//
                 dbReference.child("posts").child(negociacao.getAdId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    //
+
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        negociacao.setTitle(dataSnapshot.child("title").getValue(String.class));
+                        String title = dataSnapshot.child("title").getValue(String.class);
+                        if (title == null) {
+                            title = "[Anúncio finalizado]";
+                        }
+                        negociacao.setTitle(title);
 
                         dbReference.child("users").child(negociacao.getRemoteUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                negociacao.setVendorName(dataSnapshot.child("nome").getValue(String.class));
+                                String vendorName = dataSnapshot.child("nome").getValue(String.class);
+                                if (vendorName == null) {
+                                    vendorName = "[Usuário removido]";
+                                }
+                                negociacao.setVendorName(vendorName);
+
                                 if (negociacao.getVendorId().equals(userId)) {
                                     sellAdapter.updateNegociacao(sellAdapter.getIndexOfKey(negotiationKey), negociacao);
                                 } else {
@@ -239,24 +257,6 @@ public class NegociacoesActivity extends BaseActivity implements NegotiationFrag
 
             }
         });
-    }
-
-    public void manageNegotiationsVisibility(int control) {
-        int position = tabLayout.getSelectedTabPosition();
-        Fragment fragment = negociacoesFragmentPagerAdapter.getItem(tabLayout.getSelectedTabPosition());
-        if (fragment != null) {
-            switch (position) {
-                case 0:
-                    System.out.println("compras");
-                    ((ComprasFragment) fragment).manageNegotiationsVisibility(control);
-//                    ((ComprasFragment) fragment).noBuy.setVisibility(View.GONE);
-                    break;
-                case 1:
-                    System.out.println("vendas");
-//                    ((VendasFragment) fragment).onRefresh();
-                    break;
-            }
-        }
     }
 
     public void vibrate() {

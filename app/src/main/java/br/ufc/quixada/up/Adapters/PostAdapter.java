@@ -17,14 +17,18 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -85,7 +89,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         vh1 = holder;
 
-        Post post = posts.get(position);
+        final Post post = posts.get(position);
+
+        final int pos = position;
 
 //        Log.d("entrou", "netrou");
 
@@ -109,6 +115,31 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 holder.upButton.setColorFilter(Color.argb(255, 102, 102, 102));
             }
         }
+
+        if (MainActivity.isLogged){
+            Query usuario = FirebaseConfig.getDatabase().child("users").orderByChild("email").equalTo(user.getCurrentUser().getEmail());
+            Log.d("TAG3", ""+user.getCurrentUser().getUid());
+            usuario.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                        User u = singleSnapshot.getValue(User.class);
+                        if (u.getListaDesejos().contains(post.getId())){
+                            holder.likeButton.setLiked(true);
+                            BaseActivity.savedPosts.add(post.getId());
+                        }else{
+                            holder.likeButton.setLiked(false);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
         holder.title.setText(post.getTitle());
         holder.subtitle.setText(post.getSubtitle());
         holder.price.setText("R$ " + price);
@@ -116,32 +147,47 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 //                    likeButton.onClick(view);
                 if (MainActivity.isLogged){
 //                        post.addOnWishList(user.getCurrentUser().getUid(), post.getId());
-                    DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(user.getCurrentUser().getUid());
+//                    if(user.getCurrentUser().getUid() != local)
+                    Query usuario = FirebaseConfig.getDatabase().child("users").orderByChild("email").equalTo(user.getCurrentUser().getEmail());
                             Log.d("TAG3", ""+user.getCurrentUser().getUid());
-                    postRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    usuario.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                            Log.d("single", dataSnapshot+"");
-                            User u = dataSnapshot.getValue(User.class);
-                            ArrayList<String> aux = u.getListaDesejos();
-                            if (u.getListaDesejos().contains(holder.post.getId())){
-//                                    likeButton.setLiked(false);
-                                holder.likeButton.setLiked(false);
-                                u.getListaDesejos().remove(u.getListaDesejos().indexOf(holder.post.getId()));
-                                u.save();
-                            } else{
-                                holder.likeButton.setLiked(true);
-                                aux.add(holder.post.getId());
-//                                    likeButton.setLiked(true);
-                                u.setListaDesejos(aux);
-                                u.save();
+                            for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                                Log.d("single", dataSnapshot+"");
+                                User u = singleSnapshot.getValue(User.class);
+                                ArrayList<String> aux = u.getListaDesejos();
+                                if (aux.contains(holder.post.getId())){
+    //                                    likeButton.setLiked(false);
+                                    Log.d("tegue", u.getListaDesejos().indexOf(holder.post.getId())+"");
+                                    Log.d("tegue", u.getListaDesejos()+"");
+                                    BaseActivity.savedPosts.remove(BaseActivity.savedPosts.indexOf(holder.post.getId()));
+                                    aux.remove(aux.indexOf(holder.post.getId()));
+                                    FirebaseConfig.getDatabase().child("users").child(u.getId()).child("listaDesejos").setValue(aux).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            holder.likeButton.setLiked(false);
+                                        }
+                                    });
+//                                    u.save();
+                                } else{
+                                    BaseActivity.savedPosts.add(holder.post.getId());
+                                    aux.add(holder.post.getId());
+    //                                    likeButton.setLiked(true);
+//                                    u.setListaDesejos(aux);
+//                                    u.save();
+                                    FirebaseConfig.getDatabase().child("users").child(u.getId()).child("listaDesejos").setValue(aux).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            holder.likeButton.setLiked(true);
+                                        }
+                                    });
+                                }
                             }
-//                }
                         }
 
                         @Override
@@ -157,7 +203,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //                            finish();
-                                    Intent intent = new Intent(v1.getContext(), LoginActivity.class);
+                                    Intent intent = new Intent(view.getContext(), LoginActivity.class);
                                     context.startActivity(intent);
                                 }
                             }).setNegativeButton(view.getContext().getString(R.string.nao), null)
@@ -169,6 +215,52 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         if (holder.post.getUserId().equals(BaseActivity.localUserId)) {
             holder.openChatButton.setVisibility(View.GONE);
             holder.markAsSelled.setVisibility(View.VISIBLE);
+            holder.markAsSelled.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    new AlertDialog.Builder(view.getContext())
+                            .setTitle(R.string.action_marcar_anuncio_vendido)
+                            .setMessage(R.string.texto_marcar_vendido_anuncio)
+                            .setPositiveButton(R.string.action_marcar_anuncio_vendido, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DatabaseReference post_node = FirebaseDatabase.getInstance().getReference().getRoot().child("posts").child(holder.post.getId());
+                                    post_node.setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(view.getContext(), "Anúncio finalizado", Toast.LENGTH_SHORT).show();
+                                            removeListItem(pos);
+                                        }
+                                    });
+                                }
+                            }).setNegativeButton(R.string.cancelar, null)
+                            .show();
+                }
+            });
+            holder.buttonDelete.setVisibility(View.VISIBLE);
+            holder.buttonDelete.setClickable(true);
+            holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    new AlertDialog.Builder(view.getContext())
+                            .setTitle(R.string.excluir_anuncio_dialog_title)
+                            .setMessage(R.string.excluir_anuncio_dialog_text)
+                            .setPositiveButton(R.string.excluir_anuncio_dialog_title, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DatabaseReference post_node = FirebaseDatabase.getInstance().getReference().getRoot().child("posts").child(holder.post.getId());
+                                    post_node.setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(view.getContext(), "Anúncio removido", Toast.LENGTH_SHORT).show();
+                                            removeListItem(pos);
+                                        }
+                                    });
+                                }
+                            }).setNegativeButton(R.string.cancelar, null)
+                            .show();
+                }
+            });
         } else {
             holder.openChatButton.setVisibility(View.VISIBLE);
             holder.markAsSelled.setVisibility(View.GONE);
@@ -186,6 +278,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         TextView price;
         ImageView image;
         LikeButton likeButton;
+        ImageView buttonDelete;
 
         private Button openChatButton;
         private Button markAsSelled;
@@ -199,7 +292,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             price = (TextView) itemView.findViewById(R.id.textView_price);
             image = (ImageView) itemView.findViewById(R.id.imageView3);
             likeButton = (LikeButton) itemView.findViewById(R.id.heart_button);
-
+            buttonDelete = (ImageView) itemView.findViewById(R.id.buttonDelete);
 
             itemView.setOnClickListener(this);
 
@@ -250,6 +343,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     post.up(user.getCurrentUser().getUid(), post.getId());
                 }
             });
+
         }
 
         @Override
@@ -286,6 +380,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         notifyItemChanged(position);
     }
 
+    public void removeListItem(int position) {
+        posts.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public int searchListItem(String id){
         for(Post i : posts) {
             if (id.equals(i.getId())) {
@@ -298,7 +397,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void applyImage(byte[] bytes, ImageView imageView){
         //options para o glide
         RequestOptions requestOptions = new RequestOptions();
-        //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
+        //não salva a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
         requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
         requestOptions.skipMemoryCache(true);
 

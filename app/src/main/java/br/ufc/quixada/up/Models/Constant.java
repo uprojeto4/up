@@ -10,6 +10,7 @@ public class Constant {
     public static final int CLOSED_NEGOTIATION = 0;
     public static final int OPENED_NEGOTIATION = 1;
     public static final int CANCELLED_NEGOTIATION = 2;
+    public static final int FINALIZED_NEGOTIATION = 3;
 
 //    Tipos de negociações
     public static final int NEGOTIATION_TYPE_BUY = 0;
@@ -22,6 +23,10 @@ public class Constant {
 //    Callers da activity anúncio
     public static final int POST_CALLER_MAIN_ACTIVITY = 0;
     public static final int POST_CALLER_CHAT_ACTIVITY = 1;
+
+//    Callers da activity perfil
+    public static final int PERFIL_CALLER_BASE_ACTIVITY = 0;
+    public static final int PERFIL_CALLER_CHAT_ACTIVITY = 1;
 
 //    Controle de exibição das negociações
     public static final int SHOW_SELL_NEGOTIATIONS = 0;

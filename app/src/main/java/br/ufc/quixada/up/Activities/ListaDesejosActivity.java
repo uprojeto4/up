@@ -1,10 +1,13 @@
 package br.ufc.quixada.up.Activities;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +24,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.like.LikeButton;
 
 import java.lang.reflect.Array;
@@ -30,13 +37,16 @@ import java.util.List;
 
 import br.ufc.quixada.up.Adapters.ListaDesejosPostsAdapter;
 import br.ufc.quixada.up.Adapters.TagAdapter;
+import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Interfaces.RecyclerViewOnClickListener;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Models.Tag;
+import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
 
 import br.ufc.quixada.up.Activities.MainActivity;
 
-public class ListaDesejosActivity extends BaseActivity {
+public class ListaDesejosActivity extends BaseActivity implements RecyclerViewOnClickListener {
 
 //    private String[] items = {"acessórios", "móveis", "roupas"};
 //    TagAdapter tagAdapter = new TagAdapter(this, arrayOfTags);
@@ -52,9 +62,11 @@ public class ListaDesejosActivity extends BaseActivity {
 
     ListaDesejosPostsAdapter listaDesejosPostsAdapter;
 
-    List<Tag> arrayOfTags = new ArrayList<Tag>();
+//    List<Tag> arrayOfTags = new ArrayList<Tag>();
 
-    List<Post> posts = new ArrayList<Post>();
+    public static ArrayList<Post> posts = new ArrayList<Post>();
+
+    ArrayList<String> postsIds  = new ArrayList<String>();
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
@@ -72,7 +84,7 @@ public class ListaDesejosActivity extends BaseActivity {
 
     NavigationView navigationView;
 
-
+    String postsDesejadosIds;
 
 
     @Override
@@ -93,21 +105,101 @@ public class ListaDesejosActivity extends BaseActivity {
 
 //        likeButton = (LikeButton) findViewById(R.id.heart_button);
 
-        tagAdapter = new TagAdapter(this, arrayOfTags);
+//        tagAdapter = new TagAdapter(this, arrayOfTags);
 
 
 //        listViewTags = (ListView) findViewById(R.id.tagListView);
 //        listViewTags.setAdapter(tagAdapter);
-        myList = (RecyclerView) findViewById(R.id.my_recycler_view);
-        myList.setLayoutManager(layoutManager);
-        myList.setAdapter(tagAdapter);
+//        myList = (RecyclerView) findViewById(R.id.my_recycler_view);
+//        myList.setLayoutManager(layoutManager);
+//        myList.setAdapter(tagAdapter);
 
-        addTags();
+//        addTags();
 
-        listaDesejosPostsAdapter = new ListaDesejosPostsAdapter(this, posts);
+        FirebaseConfig.getDatabase().child("users").child(localUser.getId()).child("listaDesejos").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("ajuda", dataSnapshot+"");
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                    Log.d("ajuda1", singleSnapshot+"");
+//                    postsDesejadosIds = singleSnapshot.getValue(String.class);
+//                    Log.d("ajuda2", postsDesejadosIds);
+                    if(singleSnapshot.getValue(String.class) == null){
+                        new AlertDialog.Builder(ListaDesejosActivity.this)
+                                .setTitle(R.string.no_address_dialog_title)
+                                .setMessage(ListaDesejosActivity.this.getString(R.string.nao_salvo))
+                                .setPositiveButton(ListaDesejosActivity.this.getString(R.string.sim), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //                            finish();
+                                        Intent intent = new Intent(ListaDesejosActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }).setNegativeButton(ListaDesejosActivity.this.getString(R.string.nao), null)
+                                .show();
+
+                    }else{
+                        FirebaseConfig.getDatabase().child("posts").child(singleSnapshot.getValue(String.class)).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Log.d("data", dataSnapshot +"");
+        //                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                                Post currentPost = dataSnapshot.getValue(Post.class);
+                                Log.d("ajuda2", currentPost.getId()+"");
+                                posts.add(currentPost);
+        //                            if (posts.size() == dataSnapshot.getValue()){
+        //
+        //                            }
+    //                            listaDesejosPostsAdapter = new ListaDesejosPostsAdapter(ListaDesejosActivity.this, posts);
+    //                            postsList.setAdapter(listaDesejosPostsAdapter);
+    //                            if (posts.size() == 7){
+                                    listaDesejosPostsAdapter = new ListaDesejosPostsAdapter(ListaDesejosActivity.this, posts);
+                                    listaDesejosPostsAdapter.setRecyclerViewOnClickListener(ListaDesejosActivity.this);
+                                    postsList.setAdapter(listaDesejosPostsAdapter);
+    //                            }
+                                Log.d("ajuda1", posts+"");
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+//                    Log.d("ajuda", posts+"");
+                }
+//                User u = dataSnapshot.getValue(User.class);
+//                Log.d("data1", u+"");
+//                postsIds = u.getListaDesejos();
+//                Log.d("data1", posts.get(posicao)+"");
+//                listaDesejosPostsAdapter = new ListaDesejosPostsAdapter(ListaDesejosActivity.this, postsIds);
+//                postsList.setAdapter(listaDesejosPostsAdapter);
+//                FirebaseConfig.getDatabase().child("posts").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        Log.d("data", dataSnapshot +"");
+////                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+//                        Post currentPost = dataSnapshot.getValue(Post.class);
+//                        posts.add(currentPost);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         postsList = (RecyclerView) findViewById(R.id.posts_recycler_view);
         postsList.setLayoutManager(postsLayoutManager);
-        postsList.setAdapter(listaDesejosPostsAdapter);
+//        postsList.setHasFixedSize(false);
+//        postsList.setItemViewCacheSize(0);
         postsList.setNestedScrollingEnabled(false);
 
 //        updateProfile();
@@ -118,7 +210,7 @@ public class ListaDesejosActivity extends BaseActivity {
 
 //        Log.d("TESTE", "nome: "+ MainActivity.localUser.getNome());
 
-        addPosts();
+//        addPosts();
 
 
         filters.addAll(Arrays.asList(getResources().getStringArray(R.array.categorias_lista_desejos)));
@@ -145,6 +237,14 @@ public class ListaDesejosActivity extends BaseActivity {
             updateUserInfo();
         }
 
+        if (posts.size() == 0){
+//            notFound.setVisibility(View.VISIBLE);
+        } else{
+            for (Post post : posts){
+                post.downloadImagesForSearchResult(post.getPictures().get(0), listaDesejosPostsAdapter, post);
+            }
+        }
+
     }
 
     @Override
@@ -162,62 +262,69 @@ public class ListaDesejosActivity extends BaseActivity {
     }
 
 
-    public void addTags(){
-//        ArrayList<Tag> tags;
-        Tag newTag = new Tag("acessórios");
-        Tag newTag2 = new Tag("roupas");
-        Tag newTag3 = new Tag("móveis");
-        Tag newTag4 = new Tag("smartphones");
-        arrayOfTags.add(newTag2);
-        arrayOfTags.add(newTag);
-        arrayOfTags.add(newTag4);
-        arrayOfTags.add(newTag3);
-    }
+//    public void addTags(){
+////        ArrayList<Tag> tags;
+//        Tag newTag = new Tag("acessórios");
+//        Tag newTag2 = new Tag("roupas");
+//        Tag newTag3 = new Tag("móveis");
+//        Tag newTag4 = new Tag("smartphones");
+//        arrayOfTags.add(newTag2);
+//        arrayOfTags.add(newTag);
+//        arrayOfTags.add(newTag4);
+//        arrayOfTags.add(newTag3);
+//    }
 
-    public void addPosts(){
-        Post post = new Post();
-        Post post2 = new Post();
-        Post post3 = new Post();
-        Post post4 = new Post();
+//    public void addPosts(){
+//        Post post = new Post();
+//        Post post2 = new Post();
+//        Post post3 = new Post();
+//        Post post4 = new Post();
+//
+//        post.setTitle("Pão fresquinho");
+//        post.setSubtitle("Pense num pão bom, mais é bom, é bom mesmo!");
+//        post.setPrice(12.99);
+////        post.setImgRef(R.drawable.image_test_1);
+//
+//
+//        post2.setTitle("Bicicleta Caloi 100");
+//        post2.setSubtitle("Bike semi nova, 3 meses de uso, perfeito estado, ótimo preço");
+//        post2.setPrice(469.99);
+////        post2.setImgRef(R.drawable.image_test_2);
+//
+//
+//        post3.setTitle("Sapato salto Vizano");
+//        post3.setSubtitle("Sapato em ótimo estado, apenas uns 7 anos de uso, cor de carnaval, muito confortável, tipo uma pedra");
+//        post3.setPrice(59.99);
+////        post3.setImgRef(R.drawable.image_test_3);
+//
+//        post4.setTitle("Sapato salto Vizano");
+//        post4.setSubtitle("Sapato em ótimo estado, apenas uns 7 anos de uso, cor de carnaval, muito confortável, tipo uma pedra");
+//        post4.setPrice(59.99);
+////        post4.setImgRef(R.drawable.image_test_1);
+//
+//        posts.add(post);
+//        posts.add(post2);
+//        posts.add(post3);
+//        posts.add(post4);
+//    }
 
-        post.setTitle("Pão fresquinho");
-        post.setSubtitle("Pense num pão bom, mais é bom, é bom mesmo!");
-        post.setPrice(12.99);
-//        post.setImgRef(R.drawable.image_test_1);
 
-
-        post2.setTitle("Bicicleta Caloi 100");
-        post2.setSubtitle("Bike semi nova, 3 meses de uso, perfeito estado, ótimo preço");
-        post2.setPrice(469.99);
-//        post2.setImgRef(R.drawable.image_test_2);
-
-
-        post3.setTitle("Sapato salto Vizano");
-        post3.setSubtitle("Sapato em ótimo estado, apenas uns 7 anos de uso, cor de carnaval, muito confortável, tipo uma pedra");
-        post3.setPrice(59.99);
-//        post3.setImgRef(R.drawable.image_test_3);
-
-        post4.setTitle("Sapato salto Vizano");
-        post4.setSubtitle("Sapato em ótimo estado, apenas uns 7 anos de uso, cor de carnaval, muito confortável, tipo uma pedra");
-        post4.setPrice(59.99);
-//        post4.setImgRef(R.drawable.image_test_1);
-
-        posts.add(post);
-        posts.add(post2);
-        posts.add(post3);
-        posts.add(post4);
-    }
-
-
-    public void negociar(View view){
-        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
-    }
-
-    public void unfavorite(View view){
-//        favorite = (ImageButton) findViewById(R.id.favorite);
-//        favorite.setColorFilter(Color.argb(255, 68, 68, 68));
-//        likeButton.setLiked(true);
+//    public void negociar(View view){
 //        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
-    }
+//    }
+//
+//    public void unfavorite(View view){
+////        favorite = (ImageButton) findViewById(R.id.favorite);
+////        favorite.setColorFilter(Color.argb(255, 68, 68, 68));
+////        likeButton.setLiked(true);
+////        Toast.makeText(getBaseContext(),"Abrir tela de chat", Toast.LENGTH_SHORT).show();
+//    }
 
+    @Override
+    public void onClickListener(View view, int position) {
+        Intent intent = new Intent(getBaseContext(), AnuncioActivity.class);
+        intent.putExtra("positionSearch", position);
+        Log.d("posicao", position+"");
+        startActivity(intent);
+    }
 }

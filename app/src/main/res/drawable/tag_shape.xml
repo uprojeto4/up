@@ -2,8 +2,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
     <item>
         <shape android:shape="rectangle"  >
-            <corners android:radius="100dip" />
-            <solid android:color="@color/colorPrimary"></solid>
+            <corners android:radius="5dip" />
+            <solid android:color="@color/colorAccent"/>
+            <padding
+                android:left="20dp"
+                android:top="10dp"
+                android:right="20dp"
+                android:bottom="10dp" />
         </shape>
     </item>
     <!--<item android:state_focused="true">-->
