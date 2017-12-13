@@ -66,6 +66,8 @@ public class PerfilActivity extends BaseActivity {
 
     NavigationView navigationView;
 
+    public static boolean isActivityOpen;
+
 //    public static String logradouro;
 //    public static String numero;
 //    public static String complemento;
@@ -166,16 +168,21 @@ public class PerfilActivity extends BaseActivity {
 //            }
 //        }
 
+        isActivityOpen = true;
+
     }
 
     @Override
     public void onStart(){
         super.onStart();
+        isActivityOpen = true;
+
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        isActivityOpen = true;
 
         if(fragmentASerAberta == 0){
             MenuItem menuItem = (MenuItem)navigationView.getMenu().findItem(R.id.nav_perfil);
@@ -193,6 +200,7 @@ public class PerfilActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        isActivityOpen = false;
 //        fotoPerfil = localUser.getFotoPerfil();
         if (localUser.getFotoPerfil() != null){
             localUser.setFotoPerfil(fotoPerfil);
@@ -204,6 +212,7 @@ public class PerfilActivity extends BaseActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        isActivityOpen = false;
     }
 
     @Override

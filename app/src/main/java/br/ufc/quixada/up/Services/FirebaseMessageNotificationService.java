@@ -28,8 +28,12 @@ public class FirebaseMessageNotificationService extends FirebaseMessagingService
 
         String adId = remoteMessage.getData().get("adId");
         String remoteUserId = remoteMessage.getData().get("remoteUserId");
-        int negotiationType = Integer.parseInt(remoteMessage.getData().get("negotiationType"));
+        int negotiationType = -1;
         String adTitle = remoteMessage.getData().get("adTitle");
+        String notificationType = remoteMessage.getData().get("type");
+        if (notificationType.equals("mensagem")){
+            negotiationType = Integer.parseInt(remoteMessage.getData().get("negotiationType"));
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                                             .setSmallIcon(R.mipmap.ic_launcher)
@@ -42,7 +46,10 @@ public class FirebaseMessageNotificationService extends FirebaseMessagingService
         resultIntent.putExtra("adId", adId);
         resultIntent.putExtra("adTitle", adTitle);
         resultIntent.putExtra("remoteUserId", remoteUserId);
-        resultIntent.putExtra("negotiationType", negotiationType);
+        if (negotiationType != -1){
+            resultIntent.putExtra("negotiationType", negotiationType);
+        }
+        resultIntent.putExtra("notificationType", notificationType);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(resultPendingIntent);

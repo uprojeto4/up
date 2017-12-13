@@ -136,7 +136,13 @@ public class LoginActivity extends AppCompatActivity {
                                     FirebasePreferences preferences = new FirebasePreferences(LoginActivity.this);
                                     preferences.SaveUserPreferences(userQ.getId(), userQ.getNome(), userQ.getEmail(), userQ.getFotoPerfil(), userQ.getAddress(),
                                             userQ.getNumVendas(), userQ.getAvVendedor(), userQ.getNumCompras(), userQ.getAvComprador());
-                                    openHome();
+                                    databaseReference.child("users").child(userQ.getId()).child("device_token").setValue(FirebaseInstanceId.getInstance().getToken()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            openHome();
+                                        }
+                                    });
+//                                    openHome();
                                 }else{
                                     localUser = new User();
                                     Log.d("TAGFACE", user.getUid());
@@ -148,7 +154,13 @@ public class LoginActivity extends AppCompatActivity {
                                     FirebasePreferences preferences = new FirebasePreferences(LoginActivity.this);
                                     preferences.SaveUserPreferences(user.getUid(), localUser.getNome(), localUser.getEmail(), localUser.getFotoPerfil(), localUser.getAddress(),
                                             localUser.getNumVendas(), localUser.getAvVendedor(), localUser.getNumCompras(), localUser.getAvComprador());
-                                    openHome();
+                                    databaseReference.child("users").child(localUser.getId()).child("device_token").setValue(FirebaseInstanceId.getInstance().getToken()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            openHome();
+                                        }
+                                    });
+//                                    openHome();
                                 }
                             }
                         }
