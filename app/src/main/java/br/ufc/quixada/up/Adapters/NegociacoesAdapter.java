@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -75,6 +80,14 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
             negociacaoViewHolder.responseIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_reply_24dp));
             negociacaoViewHolder.textViewLastMessage.setTextColor(Color.parseColor("#FF00948C"));
         }
+
+        Log.d("ADAPTER", "" + negociacaoViewHolder.negociacao.getStatus());
+
+        if (negociacaoViewHolder.negociacao.getStatus() == Constant.CLOSED_NEGOTIATION) {
+            negociacaoViewHolder.textViewTituloNegociacao.setTextColor(Color.parseColor("#808080"));
+        }
+
+        applyImage(negotiationSet.get(position).getImageCover(), negociacaoViewHolder.adPicture);
     }
 
     @Override
@@ -174,11 +187,22 @@ public class NegociacoesAdapter extends RecyclerView.Adapter<NegociacoesAdapter.
                     intent.putExtra("negotiationKey", negotiationKey);
                     intent.putExtra("negotiationType", negotiationType);
                     intent.putExtra("submitDate", negociacao.getStartDate());
+                    intent.putExtra("negotiationStatus", negociacao.getStatus());
                     intent.putExtra("callerId", Constant.CHAT_CALLER_NEGOTIATION_ADAPTER);
                     context.startActivity(intent);
                 }
             });
         }
+    }
+
+    public void applyImage(byte[] bytes, ImageView imageView){
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+        requestOptions.skipMemoryCache(true);
+
+        Glide.with(context).load(bytes)
+                           .apply(requestOptions)
+                           .into(imageView);
     }
 
 }

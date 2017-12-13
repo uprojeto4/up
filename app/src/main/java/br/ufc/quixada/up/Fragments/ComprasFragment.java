@@ -8,16 +8,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import br.ufc.quixada.up.Activities.NegociacoesActivity;
-import br.ufc.quixada.up.Interfaces.NegotiationFragmentDisplay;
+import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.R;
 
-public class ComprasFragment extends Fragment implements NegotiationFragmentDisplay {
+public class ComprasFragment extends Fragment {
 
     private RecyclerView recyclerViewBuyChatList;
     private LinearLayoutManager linearLayoutManager;
-//    public LinearLayout noBuy;
+    private LinearLayout noBuy;
     private NegociacoesActivity negociacoesActivity;
 
     @Nullable
@@ -30,27 +31,14 @@ public class ComprasFragment extends Fragment implements NegotiationFragmentDisp
 
         negociacoesActivity = (NegociacoesActivity) getActivity();
 
-        recyclerViewBuyChatList = (RecyclerView) rootView.findViewById(R.id.recyclerViewBuyChatList);
+        recyclerViewBuyChatList = rootView.findViewById(R.id.recyclerViewBuyChatList);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewBuyChatList.setLayoutManager(linearLayoutManager);
-//        noBuy = rootView.findViewById(R.id.noBuyLayout);
+        noBuy = rootView.findViewById(R.id.noBuyLayout);
 
         recyclerViewBuyChatList.setAdapter(negociacoesActivity.buyAdapter);
 
         return rootView;
-    }
-
-    public void manageNegotiationsVisibility(int control) {
-//        if (control == Constant.HIDE_BUY_NEGOTIATIONS) {
-//            noBuy.setVisibility(View.VISIBLE);
-//            recyclerViewBuyChatList.setVisibility(View.GONE);
-//        } else if (control == Constant.SHOW_BUY_NEGOTIATIONS) {
-//            System.out.println(noBuy);
-//            System.out.println(recyclerViewBuyChatList);
-//            noBuy.setVisibility(View.GONE);
-//            recyclerViewBuyChatList.setVisibility(View.VISIBLE);
-//        }
-        System.out.println("ComprasFragment manageNegotiationsVisibility " + control);
     }
 }

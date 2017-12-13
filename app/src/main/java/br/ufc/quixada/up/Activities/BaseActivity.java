@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import br.ufc.quixada.up.DAO.FirebaseConfig;
+import br.ufc.quixada.up.Models.Constant;
 import br.ufc.quixada.up.Models.Post;
 import br.ufc.quixada.up.Models.User;
 import br.ufc.quixada.up.R;
@@ -278,9 +279,9 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_meus_anuncios) {
 //            fragmentClass = fragmentPerfilAnuncios.class;
             if (localUser.getEmail() != null) {
-
                 Intent intent = new Intent(this, PerfilActivity.class);
                 intent.putExtra("fragment", 1);
+                intent.putExtra("idAnunciante", localUserId);
                 startActivity(intent);
             }else{
                 new AlertDialog.Builder(this)

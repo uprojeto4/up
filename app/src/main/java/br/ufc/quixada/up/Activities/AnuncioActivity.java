@@ -105,10 +105,16 @@ public class AnuncioActivity extends BaseActivity {
         if(intent != null){
             if (intent.hasExtra("position")){
                 position = intent.getIntExtra("position", -1);
+                callerId = Constant.POST_CALLER_MAIN_ACTIVITY;
                 start();
             } else if (intent.hasExtra("positionSearch")){
                 positionSearch = intent.getIntExtra("positionSearch", -1);
                 startFromSearch();
+            } else if (intent.hasExtra("postId")){
+                postId = intent.getStringExtra("postId");
+                callerId = Constant.POST_CALLER_CHAT_ACTIVITY;
+                Log.d("INTENT ANUNCIO", postId);
+                start();
             }
         }
 
@@ -225,7 +231,8 @@ public class AnuncioActivity extends BaseActivity {
     }
 
     public void start(){
-
+        System.out.println("callerID " + callerId);
+        System.out.println("postID " + postId);
         if (callerId == Constant.POST_CALLER_MAIN_ACTIVITY) {
             post = BaseActivity.posts.get(position);
             title.setText(post.getTitle());
