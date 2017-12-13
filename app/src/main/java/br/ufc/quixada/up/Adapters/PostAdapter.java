@@ -104,6 +104,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         if(post.getImageCover()!= null){
             applyImage(post.getImageCover(), holder.image);
             Log.d("chamou","applyImage");
+        }else{
+            holder.image.setImageResource(post.getDefaultImage());
         }
 
         if (post.getUpsList()!= null){
@@ -142,6 +144,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.subtitle.setText(post.getSubtitle());
         holder.price.setText("R$ " + price);
         holder.post = post;
+
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {

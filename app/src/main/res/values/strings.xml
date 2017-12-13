@@ -161,6 +161,7 @@
 
     <string name="searchNotFound">Desculpe, não encontramos nenhum anúncio com esse título
         :(\n\ntente buscar com outros termos</string>
+    <string name="title_activity_photo">PhotoActivity</string>
 
     <string name="negociacao_finalizada_message">Essa negociação foi finalizada. \nVocê não pode enviar ou receber mensagens, mas ainda pode acessar todo o histórico.</string>
 

@@ -50,7 +50,7 @@ import static br.ufc.quixada.up.R.layout.post;
  * Created by Isaac Bruno on 09/10/2017.
  */
 
-    public class Post {
+public class Post {
 
     private String title;
     private String subtitle;
@@ -60,22 +60,21 @@ import static br.ufc.quixada.up.R.layout.post;
     private int ups;
     private String userId;
     private ArrayList<String> pictures;
+    private String imageCoverName;
     private String id;
     private ArrayList<String> upsList = new ArrayList<String>();
     private byte[] imageCover;
-
-    Post postTemp;
     private long dataCadastro;
 
-//    private List<String> upsList;
-
+    Post postTemp;
     int i;
 
+    public int getUps() {
+        return ups;
+    }
 
-
-    public void save(){
-        DatabaseReference databaseReference = FirebaseConfig.getDatabase();
-        databaseReference.child("posts").child(getId()).setValue(this);
+    private void setUps() {
+        this.ups = upsList.size();
     }
 
     public ArrayList<String> getUpsList() {
@@ -84,14 +83,6 @@ import static br.ufc.quixada.up.R.layout.post;
 
     public void setUpsList(ArrayList<String> upsList) {
         this.upsList = upsList;
-    }
-
-    public int getUps() {
-        return ups;
-    }
-
-    private void setUps() {
-        this.ups = upsList.size();
     }
 
     public Double getPrice() {
@@ -150,7 +141,18 @@ import static br.ufc.quixada.up.R.layout.post;
     }
 
     public void addPictureName(String imageName) {
+        if(this.pictures == null){
+            this.pictures = new ArrayList<String>();
+        }
         this.pictures.add(imageName);
+    }
+
+    public String getImageCoverName() {
+        return imageCoverName;
+    }
+
+    public void setImageCoverName(String imageCoverName) {
+        this.imageCoverName = imageCoverName;
     }
 
     public String getId() {
@@ -181,270 +183,312 @@ import static br.ufc.quixada.up.R.layout.post;
         return R.drawable.default_img;
     }
 
-    public void up(final String uid, final String id){
-        DatabaseReference postRef = FirebaseConfig.getDatabase().child("posts").child(id);
-        postRef.runTransaction(new Transaction.Handler() {
-
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-
-                Post post = mutableData.getValue(Post.class);
-                if (post == null) {
-                    return Transaction.success(mutableData);
-                }
-
-                ArrayList<String> aux = post.getUpsList();
-                if (post.getUpsList().contains(uid)) {
-                // Unstar the post and remove self from stars
-                    aux.remove(uid);
-                } else {
-                // Star the post and add self to stars
-                    aux.add(uid);
-                }
-                post.setUpsList(aux);
-                post.setUps();
-
-                // Set value and report transaction success
-                mutableData.setValue(post);
-//                mutableData.child("upsList").setValue(post.getUpsList());
-//                mutableData.child("ups").setValue(post.getUps());
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                // Transaction completed
-                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
-            }
-        });
+    @Override
+    public String toString() {
+        return "Post{" +
+                "title='" + title + '\'' +
+                ", subtitle='" + subtitle + '\'' +
+                ", price=" + price +
+                ", qtd=" + qtd +
+                ", categoria='" + categoria + '\'' +
+                ", ups=" + ups +
+                ", upsList=" + upsList +
+                '}';
     }
 
-//    public void addOnWishList (String uid, final String pid){
-//        Log.d("uid", uid);
-//        DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(uid);
-//        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-////                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//                Log.d("single", dataSnapshot+"");
-//                    User u = dataSnapshot.getValue(User.class);
-//                    ArrayList<String> aux = u.getListaDesejos();
-//                    if (u.getListaDesejos().contains(pid)){
-//                        u.getListaDesejos().remove(u.getListaDesejos().indexOf(pid));
-//                        u.save();
-//                    } else{
-//                        aux.add(pid);
-//                        u.setListaDesejos(aux);
-//                        u.save();
-//                    }
-////                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
 
-    public int[] scaleImage(double width, double height){
-
-        Double h;
-        Double w;
-        Double scale;
-        int[] dimensoes = {0,0};
-
-        if (width > height){
-            scale=new Double(68000/width);
-            w =new Double(680);
-            h = new Double(height*(scale/100));
-            Log.d("Widht_Height", ""+h);
-            Log.d("Widht_Height", ""+w);
-            dimensoes[0] = w.intValue();
-            dimensoes[1] = h.intValue();
-            return dimensoes;
-//            file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
-        }else if (height > width){
-            scale=new Double(68000/height);
-            h =new Double(680);
-            w = new Double(width*(scale/100));
-            Log.d("Widht_Height", ""+h);
-            Log.d("Widht_Height", ""+w);
-            dimensoes[0] = w.intValue();
-            dimensoes[1] = h.intValue();
-            return dimensoes;
-//            file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
-        }else{
-            dimensoes[0] = 680;
-            dimensoes[1] = 680;
-            return dimensoes;
-//            file = Bitmap.createScaledBitmap(file, 680, 680, false);
-        }
+    //Métodos especiais
+    public void save(){
+        DatabaseReference databaseReference = FirebaseConfig.getDatabase();
+        databaseReference.child("posts").child(getId()).setValue(this);
     }
 
-    public void upload(final ArrayList<Image> images) {
+    public void uploadPost(final ArrayList<Image> images) {
         //pega a referencia
         DatabaseReference databaseReference = FirebaseConfig.getDatabase();
-        StorageReference storageReference = FirebaseConfig.getStorage();
-        //cria a variavel para receber a referencia
-        StorageReference imageRef;
-        pictures = new ArrayList<String>();
-
-        //cria nó no banco e retorna id
         setId(databaseReference.child("posts").push().getKey());
 
-        i = 1;
-        //Faz upload das novas imagens para o servidor.
-        //pega o caminho do arquivo a ser enviado
-            for (Image image : images){
-                byte[] imageData=null;
-                //pega o caminho da imagem no disco
-//            Uri file = Uri.fromFile(new File(image.getPath()));
-                Bitmap file = BitmapFactory.decodeFile(image.getPath());
+        final Image image = images.get(0);
+        UploadTask uploadImageCover = uploadImage(image, "PostsImagesCover/" + getId() + "/" + image.getName(), 680);
 
-//                int width = file.getWidth();
-//                int height = file.getHeight();
+        uploadImageCover
+            //monitora caso de falha
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("TAG", "Erro ao enviar a imagem");
+                }
+            })
+            //monitora caso de sucesso
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Log.d("TAG", "Imagem enviada com sucesso "+downloadUrl);
+                    setImageCoverName(image.getName());
+
+                }
+            })
+            //Monitora quando completa
+            .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                Log.d("TAG", "Imagem terminou de ser enviada");
+            }
+        });
+
+        UploadTask uploadPictures = uploadImages(images, "PostsPictures/" + getId() + "/", 1080);
+
+        uploadPictures
+            //monitora caso de falha
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("TAG", "Erro ao enviar a imagem");
+                }
+            })
+            //monitora caso de sucesso
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Log.d("TAG", "Imagem enviada com sucesso "+downloadUrl);
+                }
+            })
+            //Monitora quando completa
+            .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    Log.d("TAG", "Imagens terminaram de ser enviadas");
+                    save();
+                }
+            });
+
+//        i = 1;
+//        //Faz upload das novas imagens para o servidor.
+//        //pega o caminho do arquivo a ser enviado
+//        for (Image image : images){
 //
-//                Double h;
-//                Double w;
-//                Double scale;
-
-                int[] dimensoes = scaleImage(file.getWidth(),file.getHeight());
-
-                file = Bitmap.createScaledBitmap(file, dimensoes[0], dimensoes[1], false);
-//                if (width > height){
-//                    scale=new Double(68000/width);
-//                    w =new Double(680);
-//                    h = new Double(height*(scale/100));
-//                    Log.d("Widht_Height", ""+h);
-//                    Log.d("Widht_Height", ""+w);
-//                    file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
-//                }else if (height > width){
-//                    scale=new Double(68000/height);
-//                    h =new Double(680);
-//                    w = new Double(width*(scale/100));
-//                    Log.d("Widht_Height", ""+h);
-//                    Log.d("Widht_Height", ""+w);
-//                    file = Bitmap.createScaledBitmap(file, w.intValue(), h.intValue(), false);
-//                }else{
+//            byte[] imageData = null;
+//            //pega o caminho da imagem no disco
+//            Bitmap file = BitmapFactory.decodeFile(image.getPath());
+//
+//            int[] dimensoes = scaleImage(file.getWidth(),file.getHeight(), 1920);
+//            if(dimensoes != null){
+//                file = Bitmap.createScaledBitmap(file, dimensoes[0], dimensoes[1], false);
+//            }
+//
+//            //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
+//            //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
+//            imageRef = storageReference.child("PostsPictures/" + getId() + "/" + image.getName());
+//            final String imageName = imageRef.getName();
+//            //cria os metadados
+//            StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
+//
+//            ByteArrayOutputStream fileStream = new ByteArrayOutputStream();
+//            file.compress(Bitmap.CompressFormat.JPEG, 50, fileStream);
+//            imageData = fileStream.toByteArray();
+//            //faz upload do arquivo junto com os metadados
+//            final UploadTask uploadTask = imageRef.putBytes(imageData, metadata);
+//            //monitora o andamento do upload
+//            uploadTask
+//                    //monitora caso de falha
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            //                            Toast.makeText(context, "Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
+//                            Log.d("TAG", "Erro ao enviar a imagem");
+//                        }
+//                    })
+//                    //monitora caso de sucesso
+//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//                            Log.d("TAG2", "Imagem enviada com sucesso "+downloadUrl);
+//                            //                    Toast.makeText(context, "Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
+//                            addPictureName(imageName);
+//
+//                        }
+//                    }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+//                    if(i == images.size()){
+//                        //                        downloadImages("PostsPictures/" + getId() + "/" +getPictures().get(0));
+//                        Log.d("TAG", "Anuncio Inserido com Sucesso!");
+//                        save();
+//
+//                    }else{
+//                        i++;
+//                    }
 //                }
+//            });
+//        }
 
-//            .fromFile(new File(image.getPath()));
-                //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
-                //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
-                imageRef = storageReference.child("PostsPictures/" + getId() + "/" + image.getName());
-                final String imageName = imageRef.getName();
-                //cria os metadados
+    }
+
+//    public void uploadPost(final ArrayList<Image> images) {
+//        //pega a referencia
+//        DatabaseReference databaseReference = FirebaseConfig.getDatabase();
+//        StorageReference storageReference = FirebaseConfig.getStorage();
+//        //cria a variavel para receber a referencia
+//        StorageReference imageRef;
+//        pictures = new ArrayList<String>();
+//
+//        //cria nó no banco e retorna id
+//        setId(databaseReference.child("posts").push().getKey());
+//
+//        i = 1;
+//        //Faz upload das novas imagens para o servidor.
+//        //pega o caminho do arquivo a ser enviado
+//            for (Image image : images){
+//
+//                byte[] imageData = null;
+//                //pega o caminho da imagem no disco
+//                Bitmap file = BitmapFactory.decodeFile(image.getPath());
+//
+//                int[] dimensoes = scaleImage(file.getWidth(),file.getHeight(), 1920);
+//                if(dimensoes != null){
+//                    file = Bitmap.createScaledBitmap(file, dimensoes[0], dimensoes[1], false);
+//                }
+//
+//                //cria a referencia para o arquivo no caminho a ser enviado, pasta UsersProfilePictures > [ID_do_usuário_logado] > [nome_do_arquivo]
+//                //se o caminho não existir ele é criado, se já existir as imagens são enviadas para ele, portanto enviar duas imagens com o mesmo nome resulta na sobrescrita da anterior
+//                imageRef = storageReference.child("PostsPictures/" + getId() + "/" + image.getName());
+//                final String imageName = imageRef.getName();
+//                //cria os metadados
+//                StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
+//
+//                ByteArrayOutputStream fileStream = new ByteArrayOutputStream();
+//                file.compress(Bitmap.CompressFormat.JPEG, 50, fileStream);
+//                imageData = fileStream.toByteArray();
+//                //faz upload do arquivo junto com os metadados
+//                final UploadTask uploadTask = imageRef.putBytes(imageData, metadata);
+//                //monitora o andamento do upload
+//                uploadTask
+//                        //monitora caso de falha
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//    //                            Toast.makeText(context, "Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
+//                                Log.d("TAG", "Erro ao enviar a imagem");
+//                            }
+//                        })
+//                        //monitora caso de sucesso
+//                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                            @Override
+//                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//                                Log.d("TAG2", "Imagem enviada com sucesso "+downloadUrl);
+//    //                    Toast.makeText(context, "Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
+//                                addPictureName(imageName);
+//
+//                            }
+//                        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+//                        if(i == images.size()){
+//    //                        downloadImages("PostsPictures/" + getId() + "/" +getPictures().get(0));
+//                            Log.d("TAG", "Anuncio Inserido com Sucesso!");
+//                            save();
+//
+//                        }else{
+//                            i++;
+//                        }
+//                    }
+//                });
+//
+//                //         #monitora o progresso
+//                //        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                //            @Override
+//                //            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                //                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+//                //                if (progress < 100.0){
+//                //                    //deixa o loading visivel
+//                //                    loading.setVisibility(View.VISIBLE);
+//                //                }else{
+//                //                    //deixa o loading invisível
+//                //                    loading.setVisibility(View.GONE);
+//                //                }
+//                //            }
+//                //        });
+//
+//        }
+//    }
+
+    public UploadTask uploadImage(Image image, String path, int tam){
+        StorageReference storageReference = FirebaseConfig.getStorage().child(path);
+        byte[] imageData = null;
+        Bitmap file = BitmapFactory.decodeFile(image.getPath());
+
+        int[] dimensoes = scaleImage(file.getWidth(),file.getHeight(), tam);
+        if(dimensoes != null){
+            file = Bitmap.createScaledBitmap(file, dimensoes[0], dimensoes[1], false);
+        }
+
+        StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
+
+        ByteArrayOutputStream fileStream = new ByteArrayOutputStream();
+        file.compress(Bitmap.CompressFormat.JPEG, 50, fileStream);
+        imageData = fileStream.toByteArray();
+
+        UploadTask uploadTask = storageReference.putBytes(imageData, metadata);
+
+        return uploadTask;
+    }
+
+    public UploadTask uploadImages(ArrayList<Image> images, String path, int tam){
+        UploadTask uploadTask = null;
+        for (Image image : images){
+            StorageReference storageReference = FirebaseConfig.getStorage().child(path+image.getName());
+            byte[] imageData = null;
+            Bitmap file = BitmapFactory.decodeFile(image.getPath());
+
+            int[] dimensoes = scaleImage(file.getWidth(),file.getHeight(), tam);
+            if(dimensoes != null){
+                file = Bitmap.createScaledBitmap(file, dimensoes[0], dimensoes[1], false);
+            }
+
             StorageMetadata metadata = new StorageMetadata.Builder().setContentType("image/jpg").build();
 
             ByteArrayOutputStream fileStream = new ByteArrayOutputStream();
             file.compress(Bitmap.CompressFormat.JPEG, 50, fileStream);
             imageData = fileStream.toByteArray();
-            //faz upload do arquivo junto com os metadados
-//            final UploadTask uploadTask = imageRef.putFile(file, metadata);
-            final UploadTask uploadTask = imageRef.putBytes(imageData, metadata);
-            //monitora o andamento do upload
-            uploadTask
-                    //monitora caso de falha
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-//                            Toast.makeText(context, "Erro ao enviar a imagem", Toast.LENGTH_LONG).show();
-                            Log.d("TAG", "Erro ao enviar a imagem");
-                        }
-                    })
-                    //monitora caso de sucesso
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            Log.d("TAG2", "Imagem enviada com sucesso "+downloadUrl);
-//                    Toast.makeText(context, "Imagem enviada com sucesso", Toast.LENGTH_LONG).show();
-                            addPictureName(imageName);
 
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if(i == images.size()){
-//                        downloadImages("PostsPictures/" + getId() + "/" +getPictures().get(0));
-                        Log.d("TAG", "Anuncio Inserido com Sucesso!");
-                        save();
-
-                    }else{
-                        i++;
-                    }
-                }
-            });
-
-            //         #monitora o progresso
-            //        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            //            @Override
-            //            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-            //                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-            //                if (progress < 100.0){
-            //                    //deixa o loading visivel
-            //                    loading.setVisibility(View.VISIBLE);
-            //                }else{
-            //                    //deixa o loading invisível
-            //                    loading.setVisibility(View.GONE);
-            //                }
-            //            }
-            //        });
-
+            uploadTask = storageReference.putBytes(imageData, metadata);
+            addPictureName(image.getName());
         }
+
+        return uploadTask;
     }
 
-    public void downloadImages(String path, final PostAdapter postAdapter, final Post post){
-        StorageReference storageReference = FirebaseConfig.getStorage();
-        StorageReference imageRef;
+    public void downloadImageCover(String path, final PostAdapter postAdapter, final Post post){
+        StorageReference storageReference = FirebaseConfig.getStorage()
+                .child("PostsImagesCover/" + getId() + "/" + path);
 
         this.postTemp = post;
 
-        //recupera apenas a primeira imagem
-        imageRef = storageReference.child("PostsPictures/" + getId() + "/" + path);
-
-        try{
-            //cria o arquivo temporário local onde a imagem será armazenada
-            final File localFile = File.createTempFile("jpg", "image");
-             imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                //monitora o sucesso do download
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    //transforma a imagem baixada em um bitmap
-                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    Log.d("TAG", ""+localFile);
-                    //transforma o bitmap em stream
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    //transforma o stream em um array de bytes
-//                    byte[] picture = stream.toByteArray();
-                    postTemp.setImageCover(stream.toByteArray());
-                    //método que aplica a imagem nos lugares desejsdos
-//                    applyImage(pictureCover);
-                    Log.d("TAG","Imagem baixada com sucesso! ");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                //monitora a falha do downlaod
-                public void onFailure(@NonNull Exception e) {
+        final long ONE_MEGABYTE = 1024 * 1024;
+        storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>(){
+            @Override
+            //monitora o sucesso do download
+            public void onSuccess(byte[] bytes) {
+                postTemp.setImageCover(bytes);
+                Log.d("TAG","Imagem baixada com sucesso! ");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            //monitora a falha do downlaod
+            public void onFailure(@NonNull Exception e) {
 //                    Toast.makeText(context,"Imagem não foi baixada", Toast.LENGTH_SHORT).show();
-                    Log.d("TAG","Imagem não foi baixada! "+e);
-                }
-            }).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-                    Log.d("Entrou2", "entrou2");
-                    postAdapter.notifyDataSetChanged();
-//                    Log.d("TAG", " "+task.getResult().getTotalByteCount());
-//                    MainActivity.getInstance().mudarImage(postTemp.getPictures().get(0));
-                }
-            });
-        } catch (IOException e){
-            e.printStackTrace();
-            //manipular exceções
-            Log.e("Main", "IOE exception");
-        }
+                Log.d("TAG","Imagem não foi baixada! "+e);
+            }
+        }).addOnCompleteListener(new OnCompleteListener<byte[]>() {
+            @Override
+            public void onComplete(@NonNull Task<byte[]> task) {
+                postAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void downloadImagesForSearchResult(String path, final RecyclerView.Adapter searchResultsAdapter, final Post post){
@@ -499,16 +543,84 @@ import static br.ufc.quixada.up.R.layout.post;
         }
     }
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "title='" + title + '\'' +
-                ", subtitle='" + subtitle + '\'' +
-                ", price=" + price +
-                ", qtd=" + qtd +
-                ", categoria='" + categoria + '\'' +
-                ", ups=" + ups +
-                ", upsList=" + upsList +
-                '}';
+    public int[] scaleImage(double width, double height, int tam){
+
+        Double h;
+        Double w;
+        Double scale;
+        int[] dimensoes = {0,0};
+
+        if (width > height){
+            if(width < tam){
+                return null;
+            }
+            scale = new Double((tam*100)/width);
+            w = new Double(tam);
+            h = new Double(height*(scale/100));
+            Log.d("Widht_Height", ""+h);
+            Log.d("Widht_Height", ""+w);
+            dimensoes[0] = w.intValue();
+            dimensoes[1] = h.intValue();
+            return dimensoes;
+
+        }else if (height > width){
+            if(height < tam){
+                return null;
+            }
+            scale=new Double((tam*100)/height);
+            h =new Double(tam);
+            w = new Double(width*(scale/100));
+            Log.d("Widht_Height", ""+h);
+            Log.d("Widht_Height", ""+w);
+            dimensoes[0] = w.intValue();
+            dimensoes[1] = h.intValue();
+            return dimensoes;
+
+        }else{
+            if(width < tam){
+                return null;
+            }
+            dimensoes[0] = tam;
+            dimensoes[1] = tam;
+            return dimensoes;
+        }
+    }
+
+    public void up(final String uid, final String id){
+        DatabaseReference postRef = FirebaseConfig.getDatabase().child("posts").child(id);
+        postRef.runTransaction(new Transaction.Handler() {
+
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+
+                Post post = mutableData.getValue(Post.class);
+                if (post == null) {
+                    return Transaction.success(mutableData);
+                }
+
+                ArrayList<String> aux = post.getUpsList();
+                if (post.getUpsList().contains(uid)) {
+                    // Unstar the post and remove self from stars
+                    aux.remove(uid);
+                } else {
+                    // Star the post and add self to stars
+                    aux.add(uid);
+                }
+                post.setUpsList(aux);
+                post.setUps();
+
+                // Set value and report transaction success
+                mutableData.setValue(post);
+//                mutableData.child("upsList").setValue(post.getUpsList());
+//                mutableData.child("ups").setValue(post.getUps());
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d("TAG", "postTransaction:onComplete:" + databaseError);
+            }
+        });
     }
 }
