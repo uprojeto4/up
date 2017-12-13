@@ -52,6 +52,8 @@ public class BaseActivity extends AppCompatActivity
 
     static ArrayList<Post> posts = new ArrayList<Post>();
 
+    public static ArrayList<String> savedPosts = new ArrayList<String>();
+
     FirebaseAuth auth;
     FirebaseUser user;
     FirebasePreferences firebasePreferences;

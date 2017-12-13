@@ -45,6 +45,9 @@ public class User {
     private float avComprador = 0;
     private int numCompras = 0;
 
+    private String ultimaAvaliacao;
+    private String ultimoAvaliador;
+
     private ArrayList<String> listaDesejos = new ArrayList<String>();
 
 
@@ -74,6 +77,22 @@ public class User {
 //        return userHashMap;
 //    }
 
+
+    public String getUltimaAvaliacao() {
+        return ultimaAvaliacao;
+    }
+
+    public void setUltimaAvaliacao(String ultimaAvaliacao) {
+        this.ultimaAvaliacao = ultimaAvaliacao;
+    }
+
+    public String getUltimoAvaliador() {
+        return ultimoAvaliador;
+    }
+
+    public void setUltimoAvaliador(String ultimoAvaliador) {
+        this.ultimoAvaliador = ultimoAvaliador;
+    }
 
     public ArrayList<String> getListaDesejos() {
         return listaDesejos;

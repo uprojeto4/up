@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
@@ -88,7 +89,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         vh1 = holder;
 
-        Post post = posts.get(position);
+        final Post post = posts.get(position);
 
         final int pos = position;
 
@@ -112,38 +113,78 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 holder.upButton.setColorFilter(Color.argb(255, 102, 102, 102));
             }
         }
+
+        if (MainActivity.isLogged){
+            Query usuario = FirebaseConfig.getDatabase().child("users").orderByChild("email").equalTo(user.getCurrentUser().getEmail());
+            Log.d("TAG3", ""+user.getCurrentUser().getUid());
+            usuario.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                        User u = singleSnapshot.getValue(User.class);
+                        if (u.getListaDesejos().contains(post.getId())){
+                            holder.likeButton.setLiked(true);
+                            BaseActivity.savedPosts.add(post.getId());
+                        }else{
+                            holder.likeButton.setLiked(false);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
         holder.title.setText(post.getTitle());
         holder.subtitle.setText(post.getSubtitle());
         holder.price.setText("R$ " + price);
         holder.post = post;
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 //                    likeButton.onClick(view);
                 if (MainActivity.isLogged){
 //                        post.addOnWishList(user.getCurrentUser().getUid(), post.getId());
-                    DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(user.getCurrentUser().getUid());
+//                    if(user.getCurrentUser().getUid() != local)
+                    Query usuario = FirebaseConfig.getDatabase().child("users").orderByChild("email").equalTo(user.getCurrentUser().getEmail());
                             Log.d("TAG3", ""+user.getCurrentUser().getUid());
-                    postRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    usuario.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-//                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                            Log.d("single", dataSnapshot+"");
-                            User u = dataSnapshot.getValue(User.class);
-                            ArrayList<String> aux = u.getListaDesejos();
-                            if (u.getListaDesejos().contains(holder.post.getId())){
-//                                    likeButton.setLiked(false);
-                                holder.likeButton.setLiked(false);
-                                u.getListaDesejos().remove(u.getListaDesejos().indexOf(holder.post.getId()));
-                                u.save();
-                            } else{
-                                holder.likeButton.setLiked(true);
-                                aux.add(holder.post.getId());
-//                                    likeButton.setLiked(true);
-                                u.setListaDesejos(aux);
-                                u.save();
+                            for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                                Log.d("single", dataSnapshot+"");
+                                User u = singleSnapshot.getValue(User.class);
+                                ArrayList<String> aux = u.getListaDesejos();
+                                if (aux.contains(holder.post.getId())){
+    //                                    likeButton.setLiked(false);
+                                    Log.d("tegue", u.getListaDesejos().indexOf(holder.post.getId())+"");
+                                    Log.d("tegue", u.getListaDesejos()+"");
+                                    BaseActivity.savedPosts.remove(BaseActivity.savedPosts.indexOf(holder.post.getId()));
+                                    aux.remove(aux.indexOf(holder.post.getId()));
+                                    FirebaseConfig.getDatabase().child("users").child(u.getId()).child("listaDesejos").setValue(aux).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            holder.likeButton.setLiked(false);
+                                        }
+                                    });
+//                                    u.save();
+                                } else{
+                                    BaseActivity.savedPosts.add(holder.post.getId());
+                                    aux.add(holder.post.getId());
+    //                                    likeButton.setLiked(true);
+//                                    u.setListaDesejos(aux);
+//                                    u.save();
+                                    FirebaseConfig.getDatabase().child("users").child(u.getId()).child("listaDesejos").setValue(aux).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            holder.likeButton.setLiked(true);
+                                        }
+                                    });
+                                }
                             }
-//                }
                         }
 
                         @Override
@@ -159,7 +200,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //                            finish();
-                                    Intent intent = new Intent(v1.getContext(), LoginActivity.class);
+                                    Intent intent = new Intent(view.getContext(), LoginActivity.class);
                                     context.startActivity(intent);
                                 }
                             }).setNegativeButton(view.getContext().getString(R.string.nao), null)
@@ -300,55 +341,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 }
             });
 
-//            likeButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-////                    likeButton.onClick(view);
-//                    likeButton.setLiked(true);
-//                    if (MainActivity.isLogged){
-////                        post.addOnWishList(user.getCurrentUser().getUid(), post.getId());
-//                        DatabaseReference postRef = FirebaseConfig.getDatabase().child("users").child(user.getCurrentUser().getUid());
-//                        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-////                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-//                                Log.d("single", dataSnapshot+"");
-//                                User u = dataSnapshot.getValue(User.class);
-//                                ArrayList<String> aux = u.getListaDesejos();
-//                                if (u.getListaDesejos().contains(post.getId())){
-////                                    likeButton.setLiked(false);
-//                                    u.getListaDesejos().remove(u.getListaDesejos().indexOf(post.getId()));
-//                                    u.save();
-//                                } else{
-//                                    aux.add(post.getId());
-////                                    likeButton.setLiked(true);
-//                                    u.setListaDesejos(aux);
-//                                    u.save();
-//                                }
-////                }
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//                    } else{
-//                        new AlertDialog.Builder(view.getContext())
-//                                .setTitle(R.string.no_address_dialog_title)
-//                                .setMessage(view.getContext().getString(R.string.faca_login))
-//                                .setPositiveButton(view.getContext().getString(R.string.sim), new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        //                            finish();
-//                                        Intent intent = new Intent(v1.getContext(), LoginActivity.class);
-//                                        context.startActivity(intent);
-//                                    }
-//                                }).setNegativeButton(view.getContext().getString(R.string.nao), null)
-//                                .show();
-//                    }
-//                }
-//            });
         }
 
         @Override

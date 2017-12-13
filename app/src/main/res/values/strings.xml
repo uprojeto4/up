@@ -123,6 +123,7 @@
         as chances de negociações. Gostaria de adicioná-las agora?</string>
 
     <string name="faca_login">Apenas usuários logados podem executar essa ação, gostaria de fazer login agora?</string>
+    <string name="nao_salvo">Parece que você ainda não salvou nenhum anúncio, que tal adicionar algo na sua lista de desejos agora?</string>
 
     <string name="insert_profile_picture_message">Parece que você não forneceu uma foto de perfil, gostaria de adicioná-la agora?</string>
 

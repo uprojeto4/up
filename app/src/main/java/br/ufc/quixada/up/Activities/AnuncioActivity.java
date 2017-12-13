@@ -78,6 +78,7 @@ public class AnuncioActivity extends BaseActivity {
     String postId;
     FloatingActionButton fab;
 
+    public static boolean isActivityOpen;
 //    User usuarioAnunciante;
 
     @Override
@@ -123,7 +124,34 @@ public class AnuncioActivity extends BaseActivity {
         anuncianteNome = (TextView) findViewById(R.id.anuncianteNome);
         anuncianteFoto = (CircleImageView) findViewById(R.id.profile_image);
 
+        isActivityOpen = true;
+
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isActivityOpen = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isActivityOpen = false;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityOpen = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isActivityOpen = true;
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit_perfil, menu);
@@ -131,7 +159,14 @@ public class AnuncioActivity extends BaseActivity {
     }
 
     public void startFromSearch() {
-        Post post = MainActivity.searchPosts.get(positionSearch);
+        Post post = new Post();
+        if (MainActivity.searchPosts != null){
+            Log.d("hjhjh",MainActivity.searchPosts+"");
+            post = MainActivity.searchPosts.get(positionSearch);
+        } else if(ListaDesejosActivity.posts != null ){
+            post = ListaDesejosActivity.posts.get(positionSearch);
+        }
+
 
         TextView title = (TextView) findViewById(R.id.textView_title);
         TextView subtitle = (TextView) findViewById(R.id.textView_describ);
@@ -353,9 +388,12 @@ public class AnuncioActivity extends BaseActivity {
         //não salava a imagem em cache, para que ela possa ser alterada caso outra pessoa se logue
         requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
         requestOptions.skipMemoryCache(true);
-        Glide.with(this).load(imagem)
-                .apply(requestOptions)
-                .into(anuncianteFoto);
+        if (isActivityOpen){
+            Glide.with(this).load(imagem)
+                    .apply(requestOptions)
+                    .into(anuncianteFoto);
+
+        }
     }
 
 }
