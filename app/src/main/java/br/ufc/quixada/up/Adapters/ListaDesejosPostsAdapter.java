@@ -81,23 +81,28 @@ public class ListaDesejosPostsAdapter extends RecyclerView.Adapter<ListaDesejosP
         DecimalFormat formatoMoeda = new DecimalFormat("##,###,###,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
         formatoMoeda.setMinimumFractionDigits(2);
         formatoMoeda.setParseBigDecimal (true);
-        String price = formatoMoeda.format(post.getPrice());
+        if (post != null){
+            String price = formatoMoeda.format(post.getPrice());
 
-        holder.title.setText(post.getTitle());
-        holder.subtitle.setText(post.getSubtitle());
-        holder.price.setText("R$ " + price);
+            holder.title.setText(post.getTitle());
+            holder.subtitle.setText(post.getSubtitle());
+            holder.price.setText("R$ " + price);
+
+            if(post.getImageCover()!= null){
+                applyImage(post.getImageCover(), holder.image);
+                Log.d("chamou","applyImage");
+            }
+        } else{
+
+        }
+            Glide.with(context)
+                    .load(R.drawable.image_loading_square)
+                    .into(holder.image);
 //        Glide.with(context).load(post.getDefaultImage()).into(holder.image);
 
-        Log.d("postvido", post.getImageCover()+"");
-        Glide.with(context)
-                .load(R.drawable.image_loading_square)
-                .into(holder.image);
+//        Log.d("postvido", post.getImageCover()+"");
 
-        Log.d("imageCOver", post.getImageCover()+"");
-        if(post.getImageCover()!= null){
-            applyImage(post.getImageCover(), holder.image);
-            Log.d("chamou","applyImage");
-        }
+//        Log.d("imageCOver", post.getImageCover()+"");
     }
 
     @Override

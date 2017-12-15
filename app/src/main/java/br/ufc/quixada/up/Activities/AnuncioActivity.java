@@ -507,7 +507,7 @@ public class AnuncioActivity extends BaseActivity {
         if (isActivityOpen){
             Glide.with(this).load(imagem)
                     .apply(requestOptions)
-                    .into(anuncianteFoto);
+                    .into(image);
 
         }
 //>>>>>>> sprint-final
